@@ -1,5 +1,9 @@
 # EL-TA3BAN Pharmacy Management System
 
+<p align="center">
+  <img src="elta3ban-logo.png" alt="EL-TA3BAN Pharmacy Logo" width="200"/>
+</p>
+
 ## Student Project Information
 - **Student Name:** Mohamed Abdelsalam
 - **University:** British University in Egypt (BUE)

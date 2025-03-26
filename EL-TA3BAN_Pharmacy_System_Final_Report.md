@@ -102,10 +102,9 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 3. **✓ Utility Layer**: Helper functions (FileHandler, ConsoleUI, etc.)
 4. **✓ Persistence Layer**: Data storage and retrieval (Serialization)
 
-### 3.2 Class Diagram and Relationships
+## Class Diagram and Relationships
 
-#### Class Diagram
-![Class Diagram](attached_assets/class.drawio.pdf)
+![Class Diagram - EL-TA3BAN Pharmacy System](https://raw.githubusercontent.com/your-repo/el-ta3ban-pharmacy/main/docs/class-diagram.png)
 
 The above class diagram illustrates the complete structure of our pharmacy management system, showing all classes and their relationships. The diagram follows standard UML notation:
 - Solid lines with arrows represent inheritance

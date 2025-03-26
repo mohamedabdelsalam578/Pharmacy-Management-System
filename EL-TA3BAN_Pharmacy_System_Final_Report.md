@@ -1,5 +1,16 @@
 # Pharmacy Management System – Final Report
 
+## Project Timeline
+| Phase | Task Description | Start Date | End Date |
+|-------|-----------------|------------|----------|
+| Phase 1 | Requirement Analysis | March 1, 2025 | March 5, 2025 |
+| Phase 2 | System Design and Class Diagram | March 6, 2025 | March 10, 2025 |
+| Phase 3 | Core Model Implementation | March 11, 2025 | March 15, 2025 |
+| Phase 4 | Service Layer Implementation | March 16, 2025 | March 19, 2025 |
+| Phase 5 | User Interface Development | March 20, 2025 | March 22, 2025 |
+| Phase 6 | Testing & Debugging | March 23, 2025 | March 24, 2025 |
+| Phase 7 | Documentation & Report | March 25, 2025 | March 26, 2025 |
+
 ## 1. Project Identification
 - **Project Title**: EL-TA3BAN Pharmacy Management System
 - **Course Name**: Programming in Java (24CSCI04C)
@@ -65,21 +76,9 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 - **✓ IDE**: NetBeans
 - **✓ Documentation**: JavaDoc, Markdown
 
-## 3. Timeline
+## 3. System Architecture
 
-| Phase | Task Description | Start Date | End Date |
-|-------|-----------------|------------|----------|
-| Phase 1 | Requirement Analysis | March 1, 2025 | March 5, 2025 |
-| Phase 2 | System Design and Class Diagram | March 6, 2025 | March 10, 2025 |
-| Phase 3 | Core Model Implementation | March 11, 2025 | March 15, 2025 |
-| Phase 4 | Service Layer Implementation | March 16, 2025 | March 19, 2025 |
-| Phase 5 | User Interface Development | March 20, 2025 | March 22, 2025 |
-| Phase 6 | Testing & Debugging | March 23, 2025 | March 24, 2025 |
-| Phase 7 | Documentation & Report | March 25, 2025 | March 26, 2025 |
-
-## 4. System Architecture
-
-### 4.1 Architectural Overview
+### 3.1 Architectural Overview
 **We implemented a service-oriented architecture with clear separation between**:
 
 1. **✓ Model Layer**: Core data entities (User, Patient, Doctor, Medicine, etc.)
@@ -87,7 +86,7 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 3. **✓ Utility Layer**: Helper functions (FileHandler, ConsoleUI, etc.)
 4. **✓ Persistence Layer**: Data storage and retrieval (Serialization)
 
-### 4.2 Class Relationships
+### 3.2 Class Relationships
 
 #### Complete Class Hierarchy
 - **✓ User (Abstract Parent Class)**: Base class for all system users
@@ -127,9 +126,9 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 | **✓ Wallet → Transaction** | Composition | Transactions belong to Wallet and cannot exist independently |
 | **✓ All Model Classes → Serializable** | Implementation | Interface implementation for data persistence |
 
-## 5. Implementation Details
+## 4. Implementation Details
 
-### 5.1 Java Collections Used
+### 4.1 Java Collections Used
 
 | Collection | Used In | Purpose |
 | --- | --- | --- |
@@ -137,7 +136,7 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 | **✓ `Map<K,V>`** | Prescription class | Storing medicine-quantity pairs |
 | **✓ `HashMap<K,V>`** | Prescription, Pharmacy classes | Implementing medicine associations |
 
-### 5.2 Object-Oriented Programming Features
+### 4.2 Object-Oriented Programming Features
 
 | Feature | Used In | Purpose |
 | --- | --- | --- |
@@ -146,18 +145,18 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 | **✓ Encapsulation** | All model classes | Private fields with public getters/setters |
 | **✓ Abstraction** | User class | Forcing subclasses to implement methods |
 
-## 6. User Interface Design
+## 5. User Interface Design
 
 **We implemented an enhanced console user interface with the following features**:
 
-### 6.1 UI Enhancement Features
+### 5.1 UI Enhancement Features
 - **✓ Color-coded output** for better visual hierarchy
 - **✓ Unicode box-drawing characters** for menu boundaries
 - **✓ Emojis as visual indicators** for different functions
 - **✓ Loading animations** for processing operations
 - **✓ Clear success/error messaging** with distinctive formatting
 
-### 6.2 Main Menu Interface
+### 5.2 Main Menu Interface
 ```
 ╔══════════════════════════════════════════════════╗
 ║            EL-TA3BAN PHARMACY SYSTEM             ║
@@ -173,7 +172,7 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 ──────────────────────────────────────────────────
 ```
 
-## 7. Data Persistence Implementation
+## 6. Data Persistence Implementation
 
 **We implemented data persistence using Java's serialization mechanism**:
 
@@ -182,9 +181,9 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 - **✓ Data stored in separate files** for different entity types
 - **✓ Error handling** ensures data integrity during I/O operations
 
-## 8. Testing and Validation
+## 7. Testing and Validation
 
-### 8.1 Test Scenarios Implemented
+### 7.1 Test Scenarios Implemented
 1. **✓ Patient Registration and Authentication**
    - Testing user creation with valid/invalid data
    - Testing login with correct/incorrect credentials
@@ -204,9 +203,9 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
    - Payments are processed for prescriptions
    - Transaction history is maintained
 
-## 9. Unique Contributions & Achievements
+## 8. Unique Contributions & Achievements
 
-### 9.1 Key Achievements
+### 8.1 Key Achievements
 - **✓ Complete healthcare workflow** with doctor-pharmacist-patient interaction
 - **✓ Implemented security features** including password hashing and login attempt limiting
 - **✓ Full chat functionality** between doctors and patients
@@ -214,13 +213,13 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 - **✓ Local wallet payment system** without relying on external services
 - **✓ Enhanced console interface** with colors, animations, and emojis
 
-### 9.2 Additional Features Beyond Requirements
+### 8.2 Additional Features Beyond Requirements
 - **✓ Advanced messaging system** between doctors and patients
 - **✓ Medical reports generation**
 - **✓ Digital wallet system** with transaction history
 - **✓ Direct integration** between prescriptions and consultations
 
-## 10. Team Member Contributions
+## 9. Team Member Contributions
 
 | Team Member | ID | Section | Primary Contributions |
 |-------------|----|---------|-----------------------|
@@ -231,7 +230,7 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 | Nouran Khaled Mohamed | 245309 | A10 | **✓ Prescription class and related functionality** |
 | Moaz Mohamed Saed | 242675 | A8 | **✓ Medicine class and inventory management** |
 
-## 11. Conclusion
+## 10. Conclusion
 
 The EL-TA3BAN Pharmacy Management System successfully implements a comprehensive pharmacy solution with extended healthcare workflow functionality. By following object-oriented design principles, the system provides a robust, maintainable, and extensible platform for pharmacy operations.
 

@@ -4,7 +4,7 @@
 - **Student Name:** Mohamed Abdelsalam
 - **University:** British University in Egypt (BUE)
 - **Faculty:** Computer Science
-- **Course:** Object-Oriented Programming
+- **Course:** Programming in Java
 
 ## Table of Contents
 1. [System Overview](#system-overview)

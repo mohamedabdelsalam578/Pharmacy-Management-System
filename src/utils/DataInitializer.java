@@ -3,6 +3,7 @@ package utils;
 import models.*;
 import services.PharmacyService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -324,6 +325,50 @@ public class DataInitializer {
         pharmacy.addPrescription(prescription);
         
         System.out.println("Sent prescription to pharmacy: " + pharmacy.getName());
+        
+        // Create a test consultation between doctor and patient
+        Consultation consultation = new Consultation(
+            1, 
+            doctor.getId(), 
+            patient.getId(), 
+            "Initial consultation for headache and fever"
+        );
+        
+        // Add the consultation to both doctor and patient
+        doctor.addConsultation(consultation);
+        patient.addConsultation(consultation);
+        
+        // Add a few test messages to the consultation
+        Message doctorMessage1 = new Message(
+            1, 
+            doctor.getId(), 
+            patient.getId(), 
+            "Hello Amr, what symptoms are you experiencing?"
+        );
+        
+        Message patientMessage1 = new Message(
+            2, 
+            patient.getId(), 
+            doctor.getId(), 
+            "Hi Doctor, I've been having headaches and fever for the past two days."
+        );
+        
+        Message doctorMessage2 = new Message(
+            3, 
+            doctor.getId(), 
+            patient.getId(), 
+            "I'll prescribe some medication for you. Please take it as directed and let me know if the symptoms persist."
+        );
+        
+        // Add messages to the consultation
+        consultation.addMessage(doctorMessage1);
+        consultation.addMessage(patientMessage1);
+        consultation.addMessage(doctorMessage2);
+        
+        // Add consultation to pharmacy service
+        pharmacyService.getConsultations().add(consultation);
+        
+        System.out.println("Created test consultation between Dr. " + doctor.getName() + " and " + patient.getName());
         System.out.println("Doctor functionalities tested successfully.");
     }
     

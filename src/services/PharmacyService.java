@@ -28,6 +28,7 @@ public class PharmacyService {
     private List<Pharmacist> pharmacists;
     private List<Pharmacy> pharmacies;
     private List<Prescription> prescriptions;
+    private List<Consultation> consultations;
     
     private AdminService adminService;
     private PatientService patientService;
@@ -50,6 +51,7 @@ public class PharmacyService {
         this.pharmacists = new ArrayList<>();
         this.pharmacies = new ArrayList<>();
         this.prescriptions = new ArrayList<>();
+        this.consultations = new ArrayList<>();
         
         this.nextOrderId = 1;
         this.scanner = new Scanner(System.in);
@@ -65,7 +67,7 @@ public class PharmacyService {
         
         this.adminService = new AdminService(medicines, orders);
         this.patientService = new PatientService(patients, orders, medicines, nextOrderId);
-        this.doctorService = new DoctorService(doctors, patients, prescriptions, medicines);
+        this.doctorService = new DoctorService(doctors, patients, prescriptions, medicines, consultations);
         this.pharmacistService = new PharmacistService(pharmacists, pharmacies, prescriptions, medicines);
         this.authService = new AuthenticationService(admins, patients, doctors, pharmacists);
     }
@@ -146,6 +148,15 @@ public class PharmacyService {
      */
     public List<Prescription> getPrescriptions() {
         return prescriptions;
+    }
+    
+    /**
+     * Get consultations managed by this service
+     * 
+     * @return List of consultations
+     */
+    public List<Consultation> getConsultations() {
+        return consultations;
     }
     
     /**
@@ -795,8 +806,9 @@ public class PharmacyService {
             System.out.println("3. 📋 View My Orders");
             System.out.println("4. ❌ Cancel an Order");
             System.out.println("5. 💰 Manage Wallet");
-            System.out.println("6. 📝 Update My Account");
-            System.out.println("7. 🚪 Logout");
+            System.out.println("6. 💬 Doctor Consultations");
+            System.out.println("7. 📝 Update My Account");
+            System.out.println("8. 🚪 Logout");
             System.out.print("Enter your choice: ");
             
             int choice = getIntInput();
@@ -818,9 +830,12 @@ public class PharmacyService {
                     manageWallet(patient);
                     break;
                 case 6:
-                    updatePatientAccount(patient);
+                    manageConsultations(patient);
                     break;
                 case 7:
+                    updatePatientAccount(patient);
+                    break;
+                case 8:
                     logout = true;
                     saveDataToFiles();
                     System.out.println("Logged out successfully.");
@@ -829,6 +844,271 @@ public class PharmacyService {
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+    
+    /**
+     * Manage consultations for a patient
+     * 
+     * @param patient The patient managing consultations
+     */
+    private void manageConsultations(Patient patient) {
+        System.out.println("\n💬 ===== DOCTOR CONSULTATIONS ===== 💬");
+        
+        while (true) {
+            System.out.println("\n1. View My Consultations");
+            System.out.println("2. Request New Consultation");
+            System.out.println("3. Send Message to Doctor");
+            System.out.println("4. Back to Main Menu");
+            System.out.print("Enter your choice: ");
+            
+            int choice = getIntInput();
+            
+            switch (choice) {
+                case 1:
+                    viewConsultations(patient);
+                    break;
+                case 2:
+                    requestNewConsultation(patient);
+                    break;
+                case 3:
+                    sendMessageToDoctor(patient);
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+    
+    /**
+     * View all consultations for a patient
+     * 
+     * @param patient The patient viewing consultations
+     */
+    private void viewConsultations(Patient patient) {
+        System.out.println("\n📋 ===== MY CONSULTATIONS ===== 📋");
+        
+        List<Consultation> consultations = patient.getConsultations();
+        
+        if (consultations.isEmpty()) {
+            System.out.println("You don't have any consultations yet.");
+            return;
+        }
+        
+        for (int i = 0; i < consultations.size(); i++) {
+            Consultation consultation = consultations.get(i);
+            
+            // Find the doctor name
+            Doctor doctor = doctors.stream()
+                .filter(d -> d.getId() == consultation.getDoctorId())
+                .findFirst()
+                .orElse(null);
+            
+            String doctorName = (doctor != null) ? doctor.getName() : "Unknown Doctor";
+            
+            System.out.println("\n" + (i + 1) + ". Consultation with Dr. " + doctorName);
+            System.out.println("   Date: " + consultation.getDateTime());
+            System.out.println("   Messages: " + consultation.getMessages().size());
+        }
+        
+        System.out.print("\nSelect a consultation to view (0 to go back): ");
+        int consultationIndex = getIntInput() - 1;
+        
+        if (consultationIndex < 0 || consultationIndex >= consultations.size()) {
+            return;
+        }
+        
+        viewConsultationDetails(consultations.get(consultationIndex));
+    }
+    
+    /**
+     * View details of a specific consultation
+     * 
+     * @param consultation The consultation to view
+     */
+    private void viewConsultationDetails(Consultation consultation) {
+        // Find the doctor
+        Doctor doctor = doctors.stream()
+            .filter(d -> d.getId() == consultation.getDoctorId())
+            .findFirst()
+            .orElse(null);
+        
+        String doctorName = (doctor != null) ? doctor.getName() : "Unknown Doctor";
+        
+        // Find the patient
+        Patient patient = patients.stream()
+            .filter(p -> p.getId() == consultation.getPatientId())
+            .findFirst()
+            .orElse(null);
+            
+        String patientName = (patient != null) ? patient.getName() : "Unknown Patient";
+        
+        System.out.println("\n💬 ===== CONSULTATION DETAILS ===== 💬");
+        System.out.println("Doctor: Dr. " + doctorName);
+        System.out.println("Patient: " + patientName);
+        System.out.println("Date: " + consultation.getDateTime());
+        System.out.println("Notes: " + consultation.getNotes());
+        
+        System.out.println("\nMessages:");
+        if (consultation.getMessages().isEmpty()) {
+            System.out.println("No messages yet.");
+        } else {
+            for (Message message : consultation.getMessages()) {
+                String sender;
+                if (message.getSenderId() == consultation.getDoctorId()) {
+                    sender = "Dr. " + doctorName;
+                } else if (message.getSenderId() == consultation.getPatientId()) {
+                    sender = patientName;
+                } else {
+                    sender = "Unknown";
+                }
+                
+                System.out.println("[" + message.getTimestamp() + "] " + sender + ": " + message.getContent());
+            }
+        }
+        
+        // Option to send a new message
+        System.out.print("\nSend a message? (y/n): ");
+        String choice = scanner.nextLine().trim().toLowerCase();
+        if (choice.equals("y") || choice.equals("yes")) {
+            System.out.print("Enter your message: ");
+            String messageContent = scanner.nextLine().trim();
+            
+            if (!messageContent.isEmpty()) {
+                int messageId = consultation.getMessages().size() + 1;
+                Message message = new Message(messageId, consultation.getPatientId(), consultation.getDoctorId(), messageContent);
+                consultation.addMessage(message);
+                System.out.println("Message sent successfully.");
+            }
+        }
+    }
+    
+    /**
+     * Request a new consultation with a doctor
+     * 
+     * @param patient The patient requesting the consultation
+     */
+    private void requestNewConsultation(Patient patient) {
+        System.out.println("\n➕ ===== REQUEST NEW CONSULTATION ===== ➕");
+        
+        // Show available doctors
+        System.out.println("\nSelect a doctor:");
+        for (int i = 0; i < doctors.size(); i++) {
+            System.out.println((i + 1) + ". Dr. " + doctors.get(i).getName() + " (" + doctors.get(i).getSpecialization() + ")");
+        }
+        
+        System.out.print("Enter doctor number: ");
+        int doctorIndex = getIntInput() - 1;
+        
+        if (doctorIndex < 0 || doctorIndex >= doctors.size()) {
+            System.out.println("Invalid doctor selection.");
+            return;
+        }
+        
+        Doctor doctor = doctors.get(doctorIndex);
+        
+        // Create a new consultation
+        System.out.print("Enter reason for consultation: ");
+        String notes = scanner.nextLine();
+        
+        int consultationId = 1;
+        // Get the highest consultation ID currently in use
+        for (Consultation consultation : patient.getConsultations()) {
+            if (consultation.getId() >= consultationId) {
+                consultationId = consultation.getId() + 1;
+            }
+        }
+        
+        Consultation consultation = new Consultation(consultationId, doctor.getId(), patient.getId(), notes);
+        
+        // Add consultation to doctor and patient
+        doctor.addConsultation(consultation);
+        patient.addConsultation(consultation);
+        
+        System.out.println("Consultation request sent successfully to Dr. " + doctor.getName() + ".");
+        
+        // Option to send an initial message
+        System.out.print("Send an initial message? (y/n): ");
+        String choice = scanner.nextLine().trim().toLowerCase();
+        if (choice.equals("y") || choice.equals("yes")) {
+            System.out.print("Enter your message: ");
+            String messageContent = scanner.nextLine().trim();
+            
+            if (!messageContent.isEmpty()) {
+                Message message = new Message(1, patient.getId(), doctor.getId(), messageContent);
+                consultation.addMessage(message);
+                System.out.println("Message sent successfully.");
+            }
+        }
+    }
+    
+    /**
+     * Send a message to a doctor in an existing consultation
+     * 
+     * @param patient The patient sending the message
+     */
+    private void sendMessageToDoctor(Patient patient) {
+        System.out.println("\n✉️ ===== SEND MESSAGE ===== ✉️");
+        
+        List<Consultation> consultations = patient.getConsultations();
+        
+        if (consultations.isEmpty()) {
+            System.out.println("You don't have any consultations yet. Request a new consultation first.");
+            return;
+        }
+        
+        // List all consultations
+        for (int i = 0; i < consultations.size(); i++) {
+            Consultation consultation = consultations.get(i);
+            
+            // Find the doctor name
+            Doctor doctor = doctors.stream()
+                .filter(d -> d.getId() == consultation.getDoctorId())
+                .findFirst()
+                .orElse(null);
+            
+            String doctorName = (doctor != null) ? doctor.getName() : "Unknown Doctor";
+            
+            System.out.println((i + 1) + ". Consultation with Dr. " + doctorName + " (" + consultation.getDateTime() + ")");
+        }
+        
+        System.out.print("Select a consultation: ");
+        int consultationIndex = getIntInput() - 1;
+        
+        if (consultationIndex < 0 || consultationIndex >= consultations.size()) {
+            System.out.println("Invalid consultation selection.");
+            return;
+        }
+        
+        Consultation selectedConsultation = consultations.get(consultationIndex);
+        
+        // Get the doctor
+        Doctor doctor = doctors.stream()
+            .filter(d -> d.getId() == selectedConsultation.getDoctorId())
+            .findFirst()
+            .orElse(null);
+        
+        if (doctor == null) {
+            System.out.println("Error: Doctor not found.");
+            return;
+        }
+        
+        System.out.println("Sending message to Dr. " + doctor.getName());
+        System.out.print("Enter your message: ");
+        String messageContent = scanner.nextLine().trim();
+        
+        if (messageContent.isEmpty()) {
+            System.out.println("Message cannot be empty.");
+            return;
+        }
+        
+        // Create and add the message
+        int messageId = selectedConsultation.getMessages().size() + 1;
+        Message message = new Message(messageId, patient.getId(), doctor.getId(), messageContent);
+        selectedConsultation.addMessage(message);
+        
+        System.out.println("Message sent successfully to Dr. " + doctor.getName() + ".");
     }
     
     /**

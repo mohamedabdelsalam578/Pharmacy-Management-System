@@ -25,10 +25,6 @@ import utils.FileHandler;
  *    - Doctor functionalities: create prescriptions and medical reports for patients
  *    - Pharmacist functionalities: fill prescriptions, manage pharmacy inventory
  * 
- * ✅ Two Operation Modes:
- *    - Extended Mode (Default): Complete healthcare workflow with all features
- *    - Basic Mode: Standard pharmacy operations (use --basic parameter if needed)
- * 
  * The project is structured in packages to maintain clean separation of concerns:
  *    - models: Data structures representing real-world entities
  *    - services: Business logic for different system roles
@@ -45,7 +41,7 @@ public class PharmacyManagementSystem {
     /**
      * Main method to start the application
      * 
-     * @param args Command line arguments (use "--basic" to run in basic mode)
+     * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
         System.out.println("Starting Pharmacy Management System...");
@@ -56,22 +52,11 @@ public class PharmacyManagementSystem {
         // Create the pharmacy service
         PharmacyService pharmacyService = new PharmacyService();
         
-        // Always enable extended mode by default
-        boolean extendedMode = true;
+        System.out.println("Starting with extended healthcare functionality...");
+        // Initialize with extended test data
+        DataInitializer.initializeExtendedSystem(pharmacyService);
         
-        // Check if any command line argument explicitly requests basic mode
-        if (args.length > 0 && args[0].equals("--basic")) {
-            System.out.println("Starting with basic functionality...");
-            extendedMode = false;
-            // Initialize with basic test data
-            DataInitializer.initializeAndTest(pharmacyService);
-        } else {
-            System.out.println("Starting with extended healthcare functionality...");
-            // Initialize with extended test data
-            DataInitializer.initializeExtendedSystem(pharmacyService);
-        }
-        
-        // Start the interactive console interface
-        pharmacyService.run(extendedMode);
+        // Start the interactive console interface with extended mode always true
+        pharmacyService.run(true);
     }
 }

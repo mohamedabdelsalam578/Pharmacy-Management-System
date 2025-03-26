@@ -3,7 +3,7 @@
 # 🏥 EL-TA3BAN Pharmacy Management System 🐍
 ### Final Project Report
 
-![Pharmacy Logo](generated-icon.png)
+![Pharmacy Logo](elta3ban-logo.png)
 
 *A Comprehensive Healthcare Management Solution*
 

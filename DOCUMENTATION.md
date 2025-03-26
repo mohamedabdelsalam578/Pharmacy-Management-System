@@ -164,6 +164,7 @@ The system now runs in extended mode by default, providing access to all feature
 | Function | Description | Parameters | Return Type |
 |----------|-------------|------------|-------------|
 | `DoctorService(List<Doctor> doctors, List<Patient> patients, List<Prescription> prescriptions, List<Medicine> medicines)` | Constructor initializing service | Service dependencies | - |
+| `DoctorService(List<Doctor> doctors, List<Patient> patients, List<Prescription> prescriptions, List<Medicine> medicines, List<Consultation> consultations)` | Alternative constructor that accepts a consultations list | Service dependencies including consultations | - |
 | `loginDoctor(String username, String password)` | Authenticates doctor | Login credentials | `Doctor` |
 | `doctorMenu(Doctor doctor)` | Shows interactive menu | Doctor | `boolean` |
 | `createPrescription(int doctorId, int patientId, String instructions)` | Creates a new prescription | Doctor ID, Patient ID, instructions | `Prescription` |
@@ -175,6 +176,11 @@ The system now runs in extended mode by default, providing access to all feature
 | `viewMedicinesList()` | Shows all available medicines | - | `void` |
 | `createMedicalReport(int doctorId, int patientId, String diagnosis, String treatment)` | Creates medical report | Doctor ID, Patient ID, diagnosis, treatment | `boolean` |
 | `viewPatientPrescriptions(int patientId)` | Views patient's prescriptions | Patient ID | `void` |
+| `manageConsultations(Doctor doctor)` | Shows consultation management menu | Doctor | `void` |
+| `viewConsultations(Doctor doctor)` | Displays doctor's consultations | Doctor | `void` |
+| `viewConsultationDetails(Consultation consultation)` | Shows details of a consultation | Consultation | `void` |
+| `startNewConsultation(Doctor doctor)` | Creates a new doctor-patient consultation | Doctor | `void` |
+| `sendMessageToPatient(Doctor doctor)` | Sends message in an existing consultation | Doctor | `void` |
 
 ### 6. Pharmacist Service Functions
 

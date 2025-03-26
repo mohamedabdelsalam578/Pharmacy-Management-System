@@ -16,6 +16,7 @@ A comprehensive pharmacy management system built in Java, featuring a complete h
 - Digital wallet system
 - Medical records
 - Order processing
+- Doctor-patient chat system
 
 ## Project Structure
 - `src/`: Source code
@@ -92,6 +93,7 @@ After launching the application, you'll be presented with a main menu:
    - Login with existing doctor account
    - Default doctor: username: mohamed, password: doc123
    - Doctors can create prescriptions and medical reports for patients
+   - Doctors can manage patient consultations and exchange messages
 
 4. **Login as Pharmacist** 👩‍⚕️
    - Login with existing pharmacist account

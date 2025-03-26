@@ -83,6 +83,25 @@ MedicalReport         Medicine Order             Pharmacy
          consults         places       manages
 ```
 
+## Doctor-Patient Chat System
+
+The pharmacy management system includes a complete doctor-patient chat functionality:
+
+### Chat Features
+
+- **Consultations**: Doctors can create and manage patient consultations
+- **Messaging**: Real-time messaging between doctors and patients
+- **History**: Complete message history with timestamps
+- **Patient Selection**: Doctors can initiate chats with any patient
+- **Integration**: Fully integrated with the prescription workflow
+
+### Consultation Workflow
+
+1. **Initiation**: Doctor or patient creates a new consultation
+2. **Messaging**: Both parties exchange messages about health concerns
+3. **Prescription**: Doctor can create a prescription directly from the consultation
+4. **Follow-up**: Ongoing communication about treatment progress
+
 ## System Statistics
 
 - **Users:** 4
@@ -94,6 +113,7 @@ MedicalReport         Medicine Order             Pharmacy
 - **Medicines:** 5
 - **Orders:** 0
 - **Prescriptions:** 1
+- **Consultations:** 1
 
 ### System Features
 
@@ -103,5 +123,6 @@ MedicalReport         Medicine Order             Pharmacy
 - Medical record keeping with patient history
 - Multi-pharmacy support with location management
 - Order processing with prescription validation
+- Doctor-patient communication through secure chat
 - Reporting capabilities for inventory and revenue
 

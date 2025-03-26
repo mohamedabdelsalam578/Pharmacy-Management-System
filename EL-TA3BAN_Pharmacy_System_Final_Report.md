@@ -102,7 +102,16 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 3. **✓ Utility Layer**: Helper functions (FileHandler, ConsoleUI, etc.)
 4. **✓ Persistence Layer**: Data storage and retrieval (Serialization)
 
-### 3.2 Class Relationships
+### 3.2 Class Diagram and Relationships
+
+#### Class Diagram
+![Class Diagram](attached_assets/class.drawio.pdf)
+
+The above class diagram illustrates the complete structure of our pharmacy management system, showing all classes and their relationships. The diagram follows standard UML notation:
+- Solid lines with arrows represent inheritance
+- Dotted lines represent implementation
+- Lines with diamonds represent composition/aggregation
+- Simple lines represent associations
 
 #### Complete Class Hierarchy
 - **✓ User (Abstract Parent Class)**: Base class for all system users
@@ -120,7 +129,23 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 - **✓ Wallet**: Patient's payment system with balance and transaction history
 - **✓ Transaction**: Record of financial exchanges in the system
 
-#### Key Relationship Types
+#### Key Class Relationships
+
+The following table details the relationships between major classes in our system:
+
+| Class Relationship | Type | Cardinality | Description |
+|-------------------|------|-------------|-------------|
+| User → Roles | Inheritance | 1 : 4 | One abstract User class inherited by Admin, Patient, Doctor, and Pharmacist |
+| Patient ↔ Prescription | Association | 1 : * | One patient can have multiple prescriptions |
+| Doctor ↔ Prescription | Association | 1 : * | One doctor can create multiple prescriptions |
+| Pharmacist ↔ Pharmacy | Association | * : 1 | Multiple pharmacists can work at one pharmacy |
+| Prescription ↔ Medicine | Association | * : * | Many prescriptions can contain many medicines |
+| Patient ↔ Wallet | Composition | 1 : 1 | Each patient has exactly one wallet |
+| Wallet ↔ Transaction | Composition | 1 : * | One wallet contains multiple transactions |
+| Doctor ↔ Consultation | Association | 1 : * | One doctor can have multiple consultations |
+| Patient ↔ Order | Association | 1 : * | One patient can place multiple orders |
+
+#### Detailed Relationship Types
 
 | Relationship | Relationship Type | Notes |
 | --- | --- | --- |

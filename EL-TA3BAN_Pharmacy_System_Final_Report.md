@@ -12,7 +12,7 @@
   - Nouran Khaled Mohamed (245309) - Section A10
   - Moaz Mohamed Saed (242675) - Section A8
 - **Supervisor**: Dr. Khaled Alsheshtawi
-- **Date**: February 28, 2025
+- **Date**: March 26, 2025
 
 ## 2. Overview
 
@@ -69,13 +69,13 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 
 | Phase | Task Description | Start Date | End Date |
 |-------|-----------------|------------|----------|
-| Phase 1 | Requirement Analysis | February 10, 2025 | February 12, 2025 |
-| Phase 2 | System Design and Class Diagram | February 13, 2025 | February 15, 2025 |
-| Phase 3 | Core Model Implementation | February 16, 2025 | February 18, 2025 |
-| Phase 4 | Service Layer Implementation | February 19, 2025 | February 22, 2025 |
-| Phase 5 | User Interface Development | February 23, 2025 | February 25, 2025 |
-| Phase 6 | Testing & Debugging | February 26, 2025 | February 27, 2025 |
-| Phase 7 | Documentation & Report | February 28, 2025 | February 28, 2025 |
+| Phase 1 | Requirement Analysis | March 1, 2025 | March 5, 2025 |
+| Phase 2 | System Design and Class Diagram | March 6, 2025 | March 10, 2025 |
+| Phase 3 | Core Model Implementation | March 11, 2025 | March 15, 2025 |
+| Phase 4 | Service Layer Implementation | March 16, 2025 | March 19, 2025 |
+| Phase 5 | User Interface Development | March 20, 2025 | March 22, 2025 |
+| Phase 6 | Testing & Debugging | March 23, 2025 | March 24, 2025 |
+| Phase 7 | Documentation & Report | March 25, 2025 | March 26, 2025 |
 
 ## 4. System Architecture
 
@@ -89,22 +89,43 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 
 ### 4.2 Class Relationships
 
-#### User Hierarchy Relationships (Inheritance)
-- **✓ User (Abstract Parent Class)**:
-    - **✓ Admin (1:1)**: System management capabilities
-    - **✓ Patient (1:1)**: Healthcare service recipient 
-    - **✓ Doctor (1:1)**: Medical consultation provider
-    - **✓ Pharmacist (1:1)**: Medication management
+#### Complete Class Hierarchy
+- **✓ User (Abstract Parent Class)**: Base class for all system users
+    - **✓ Admin**: System administrators with full access rights
+    - **✓ Patient**: Healthcare recipients with prescriptions and wallet
+    - **✓ Doctor**: Medical providers who create prescriptions and reports
+    - **✓ Pharmacist**: Medicine dispensers who process prescriptions
+- **✓ Medicine**: Pharmaceutical products with name, price, and description
+- **✓ Prescription**: Doctor's orders for patient medications
+- **✓ Order**: Patient requests for specific medicines
+- **✓ Pharmacy**: Physical or virtual establishment for filling prescriptions
+- **✓ Consultation**: Communication session between doctor and patient
+- **✓ Message**: Individual communications within consultations
+- **✓ MedicalReport**: Patient health documentation
+- **✓ Wallet**: Patient's payment system with balance and transaction history
+- **✓ Transaction**: Record of financial exchanges in the system
 
 #### Key Relationship Types
 
 | Relationship | Relationship Type | Notes |
 | --- | --- | --- |
 | **✓ User → Admin/Patient/Doctor/Pharmacist** | Inheritance | "is-a" relationship with User parent class |
-| **✓ Patient → Wallet** | Composition | Wallet is part of Patient |
-| **✓ Pharmacy → Pharmacist** | Aggregation | Pharmacy contains pharmacists |
-| **✓ Consultation → Message** | Composition | Messages are parts of a Consultation |
-| **✓ All Model Classes → Serializable** | Implementation | For data persistence |
+| **✓ Patient → Wallet** | Composition | Wallet is part of Patient and cannot exist independently |
+| **✓ Patient → Order** | Association | Patients create orders but orders can exist independently |
+| **✓ Patient → Prescription** | Association | Prescriptions persist independently after creation |
+| **✓ Patient → MedicalReport** | Association | Medical reports persist independently for record-keeping |
+| **✓ Patient → Consultation** | Association | Consultations persist independently in the system |
+| **✓ Doctor → Prescription** | Association | Doctors create prescriptions but no lifecycle dependency |
+| **✓ Doctor → MedicalReport** | Association | Reports persist independently for medical records |
+| **✓ Doctor → Consultation** | Association | No lifecycle dependency between doctor and consultations |
+| **✓ Pharmacist → Pharmacy** | Association | Employment relationship without ownership |
+| **✓ Pharmacy → Pharmacist** | Aggregation | Pharmacy contains pharmacists, but pharmacists can exist independently |
+| **✓ Pharmacy → Medicine** | Association | Inventory relationship without lifecycle dependency |
+| **✓ Prescription → Medicine** | Association | Many-to-many relationship with quantities |
+| **✓ Order → Medicine** | Association | Many-to-many relationship with quantities |
+| **✓ Consultation → Message** | Composition | Messages are integral parts of a Consultation |
+| **✓ Wallet → Transaction** | Composition | Transactions belong to Wallet and cannot exist independently |
+| **✓ All Model Classes → Serializable** | Implementation | Interface implementation for data persistence |
 
 ## 5. Implementation Details
 

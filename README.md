@@ -1,5 +1,11 @@
 # EL-TA3BAN Pharmacy Management System
 
+## Student Project Information
+- **Student Name:** Mohamed Abdelsalam
+- **University:** British University in Egypt (BUE)
+- **Faculty:** Computer Science
+- **Course:** Object-Oriented Programming
+
 ## Project Overview
 A comprehensive pharmacy management system built in Java, featuring a complete healthcare workflow between patients, doctors, and pharmacists with secure wallet payment processing, prescription management, and inventory tracking. The system is now configured to automatically run in extended mode with all features enabled by default.
 

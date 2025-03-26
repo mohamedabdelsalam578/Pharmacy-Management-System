@@ -1,4 +1,10 @@
-# Pharmacy Management System Documentation
+# EL-TA3BAN Pharmacy Management System Documentation
+
+## Student Information
+- **Student Name:** Mohamed Abdelsalam
+- **University:** British University in Egypt (BUE)
+- **Faculty:** Computer Science
+- **Course:** Object-Oriented Programming
 
 ## Table of Contents
 1. [System Overview](#system-overview)

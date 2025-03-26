@@ -75,6 +75,23 @@ public class PatientService {
             return false;
         }
         
+        // Simple validation
+        if (name == null || name.trim().isEmpty()) {
+            System.out.println("Name cannot be empty.");
+            return false;
+        }
+        
+        if (email == null || email.trim().isEmpty()) {
+            System.out.println("Email cannot be empty.");
+            return false;
+        }
+        
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            System.out.println("Phone number cannot be empty.");
+            return false;
+        }
+        
+        // Update patient information
         patientToUpdate.setName(name);
         patientToUpdate.setEmail(email);
         patientToUpdate.setPhoneNumber(phoneNumber);
@@ -294,6 +311,11 @@ public class PatientService {
                                 break;
                             }
                             
+                            // Display masked card number for security
+                            String lastFour = cardNumber.substring(cardNumber.length() - 4);
+                            String masked = "*".repeat(cardNumber.length() - 4) + lastFour;
+                            System.out.println("Processing payment with card: " + masked);
+                            
                             paymentSuccess = order.processPaymentWithCard(patient, cardNumber);
                             break;
                         case 3:
@@ -385,8 +407,8 @@ public class PatientService {
         
         if (added) {
             System.out.println("\n💰 Funds added successfully!");
-            System.out.println("Amount: " + String.format("%.2f", amount) + " LE");
-            System.out.println("New Balance: " + String.format("%.2f", wallet.getBalance()) + " LE");
+            System.out.println("Amount: " + String.format("%.2f LE", amount));
+            System.out.println("New Balance: " + String.format("%.2f LE", wallet.getBalance()));
             return true;
         } else {
             System.out.println("Failed to add funds to wallet.");
@@ -485,8 +507,25 @@ public class PatientService {
             return false;
         }
         
+        // Simple validation for card number
+        if (cardNumber.length() < 12 || !cardNumber.matches("\\d+")) {
+            System.out.println("Invalid card number format.");
+            return false;
+        }
+        
+        // Simple validation for card holder name
+        if (cardHolderName == null || cardHolderName.trim().length() < 2) {
+            System.out.println("Invalid card holder name.");
+            return false;
+        }
+        
         // Get patient's wallet
         Wallet wallet = patient.getWallet();
+        
+        // Display masked card number for security
+        String lastFour = cardNumber.substring(cardNumber.length() - 4);
+        String masked = "*".repeat(cardNumber.length() - 4) + lastFour;
+        System.out.println("Adding card: " + masked);
         
         // Add card to wallet
         boolean added = wallet.addCard(cardNumber, cardHolderName, expiryDate, cardType);

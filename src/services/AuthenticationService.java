@@ -478,6 +478,8 @@ public class AuthenticationService {
      * @param plainPassword The plain text password to hash and store
      */
     public void setHashedPassword(User user, String plainPassword) {
+        // We still use the local hashPassword method since it's a public interface
+        // that might be used elsewhere in the codebase
         String hashedPassword = hashPassword(plainPassword);
         user.setPassword(hashedPassword);
     }

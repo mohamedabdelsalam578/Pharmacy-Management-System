@@ -203,12 +203,12 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 
 | Team Member | ID | Section | Primary Contributions |
 |-------------|----|---------|-----------------------|
-| Mohamed Mohamed Abdelsalam | 245296 | A9 | **✓ System architecture, Authentication service** |
-| Mazen Mohamed Masoud | 246994 | A8 | **✓ Doctor service, Consultation system** |
-| Mariam Tamer Mostafa | 239279 | A7 | **✓ Patient service, Wallet implementation** |
-| Nour Ahmed Ali | 241603 | A10 | **✓ Pharmacy service, Prescription management** |
-| Nouran Khaled Mohamed | 245309 | A10 | **✓ UI design, Documentation** |
-| Moaz Mohamed Saed | 242675 | A8 | **✓ Testing, Data initialization** |
+| Mohamed Mohamed Abdelsalam | 245296 | A9 | **✓ Overall architecture and implementation** <br>**✓ Project coordination and integration** <br>**✓ System design and code review** |
+| Mazen Mohamed Masoud | 246994 | A8 | **✓ Doctor class and DoctorService implementation** |
+| Mariam Tamer Mostafa | 239279 | A7 | **✓ Patient class and PatientService implementation** |
+| Nour Ahmed Ali | 241603 | A10 | **✓ Pharmacy class and PharmacyService implementation** |
+| Nouran Khaled Mohamed | 245309 | A10 | **✓ Prescription class and related functionality** |
+| Moaz Mohamed Saed | 242675 | A8 | **✓ Medicine class and inventory management** |
 
 ## 11. Conclusion
 

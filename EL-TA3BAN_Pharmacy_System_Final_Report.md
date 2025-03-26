@@ -24,12 +24,12 @@ March 26, 2025
 | Field | Details |
 |-------|---------|
 | Project Title | EL-TA3BAN Pharmacy Management System |
-| Course Name | Programming in Java (24CSCI04C) |
-| University | British University in Egypt (BUE) |
-| Students | • Mohamed Mohamed Abdelsalam (245296) - Section A9 <br>• Mazen Mohamed Masoud (246994) - Section A8 <br>• Mariam Tamer Mostafa (239279) - Section A7 <br>• Nour Ahmed Ali (241603) - Section A10 <br>• Nouran Khaled Mohamed (245309) - Section A10 <br>• Moaz Mohamed Saed (242675) - Section A8 |
-| Supervisor | Dr. Khaled Alsheshtawi |
-| Teaching Assistant | Eng. Amira Gamal |
-| Date | March 26, 2025 |
+| Course | Programming in Java |
+| Course Code | 24CSCI04C |
+| Institution | British University in Egypt (BUE) |
+| Department | Faculty of Informatics and Computer Science |
+| Academic Year | 2024/2025 |
+| Submission Date | March 26, 2025 |
 
 ## Project Timeline
 | Phase | Task Description | Start Date | End Date |

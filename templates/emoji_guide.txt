@@ -1,0 +1,19 @@
+Emoji Usage Guide:
+
+👤 User-related classes and methods
+💊 Medicine-related classes and methods
+🏥 Healthcare facility-related classes and methods 
+📋 Prescription-related classes and methods
+🛒 Order-related classes and methods
+👨‍⚕️ Doctor-related classes and methods
+👩‍⚕️ Pharmacist-related classes and methods
+🔐 Authentication and security features
+💰 Payment and wallet features
+📊 Reporting functions
+⚠️ Warning messages
+✅ Success indicators
+❌ Error messages
+🔄 Process/workflow related functions
+🧾 Transaction-related functions
+📋 List or collection handling
+💻 UI/Console-related functions

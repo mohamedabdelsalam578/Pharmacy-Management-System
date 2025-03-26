@@ -1,0 +1,2 @@
+1|John Admin|john_admin|password|john@pharmacy.com|123-456-7890|Manager|Management
+2|Jane Admin|jane_admin|password|jane@pharmacy.com|123-456-7891|Assistant Manager|Management

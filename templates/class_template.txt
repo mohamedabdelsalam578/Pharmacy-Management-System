@@ -1,0 +1,18 @@
+/**
+ * 📝 [CLASS_NAME] - [ONE_LINE_DESCRIPTION] 📝
+ * 
+ * [DETAILED_DESCRIPTION_2-3_LINES]
+ * 
+ * 🔑 OOP Concepts Demonstrated:
+ * - [OOP_CONCEPT_1]: [BRIEF_EXPLANATION]
+ * - [OOP_CONCEPT_2]: [BRIEF_EXPLANATION]
+ * - [OOP_CONCEPT_3]: [BRIEF_EXPLANATION]
+ * 
+ * 📚 Class Responsibilities:
+ * - [RESPONSIBILITY_1]
+ * - [RESPONSIBILITY_2]
+ * - [RESPONSIBILITY_3]
+ * 
+ * 🌐 Role in System:
+ * [EXPLANATION_OF_HOW_CLASS_FITS_IN_SYSTEM]
+ */

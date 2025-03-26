@@ -1,0 +1,5 @@
+1|Paramol|Pain reliever|EIPICO|20.50|100|Pain Relief|false
+2|Megamox|Antibiotic|Pharco|35.75|50|Antibiotics|true
+3|Lopresor|Blood pressure medication|Novartis Egypt|65.25|75|Blood Pressure|true
+4|Brufen|Anti-inflammatory|Kahira Pharmaceuticals|18.50|150|Pain Relief|false
+5|Claritine|Antihistamine|Eva Pharma|32.00|80|Allergy|false

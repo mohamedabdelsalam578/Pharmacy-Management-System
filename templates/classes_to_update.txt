@@ -1,0 +1,32 @@
+Package: models
+- User.java (already standardized)
+- Admin.java
+- Patient.java
+- Doctor.java
+- Pharmacist.java
+- Medicine.java
+- Order.java
+- Prescription.java
+- MedicalReport.java
+- Consultation.java
+- Message.java
+- Wallet.java (already standardized)
+- CreditCard.java
+- Pharmacy.java
+
+Package: services
+- AdminService.java
+- PatientService.java
+- DoctorService.java
+- PharmacistService.java
+- PharmacyService.java
+- AuthenticationService.java
+- WalletService.java
+
+Package: utils
+- FileHandler.java
+- ConsoleUI.java
+- DataInitializer.java
+
+Main Class:
+- PharmacyManagementSystem.java

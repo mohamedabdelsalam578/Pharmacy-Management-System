@@ -1,0 +1,42 @@
+modules = ["java"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Pharmacy System"
+
+[[workflows.workflow]]
+name = "Pharmacy System"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd ${REPL_HOME} && javac -d . src/*/*.java src/*.java && java PharmacyManagementSystem"
+
+[[workflows.workflow]]
+name = "Pharmacy System Extended"
+author = 40792102
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd ${REPL_HOME} && javac -d . src/*/*.java src/*.java && java PharmacyManagementSystem --extended"
+
+[deployment]
+run = ["sh", "-c", "cd ${REPL_HOME} && javac -d . src/*/*.java src/*.java && java PharmacyManagementSystem"]

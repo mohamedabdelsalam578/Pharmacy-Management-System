@@ -22,7 +22,7 @@ A comprehensive pharmacy management system built in Java, featuring a complete h
 - `src/`: Source code
   - `models/`: Data models (User, Admin, Patient, Doctor, etc.)
   - `services/`: Business logic services
-  - `utils/`: Helper utilities
+  - `utils/`: Helper utilities and tools
 - `data/`: Data storage files
 - `docs/`: Documentation
 - `nbproject/`: NetBeans configuration
@@ -164,6 +164,7 @@ All data is stored in text files in the `/data` directory:
 - **Wallet**: Manages patient wallet functionality for secure in-app payments
 - **CreditCard**: Handles credit card functionality with secure number masking
 - **ConsoleUI**: Provides colorful and interactive console UI elements with emojis and text formatting
+- **SystemTools**: Helper utility class with methods for validation, formatting, security, and data manipulation
 
 ## Object-Oriented Programming Concepts
 This project was designed as an educational tool to demonstrate core OOP principles:

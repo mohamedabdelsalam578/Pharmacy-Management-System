@@ -1,2 +1,3 @@
-1|Dr. Ahmed Mahmoud|dr_ahmed|password|ahmed@elta3ban.com|01212345678|EGP12345|Cardiology
-2|Dr. Nour El-Din|dr_nour|password|nour@elta3ban.com|01512345678|EGP67890|Neurology
+
+1|Dr. Ahmed Mahmoud|dr_ahmed|password|ahmed@elta3ban.com|01212345678|Cardiology|EGP12345
+2|Dr. Nour El-Din|dr_nour|password|nour@elta3ban.com|01512345678|Neurology|EGP67890

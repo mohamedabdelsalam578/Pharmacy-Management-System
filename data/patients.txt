@@ -1,2 +1,3 @@
-1|Amr Khaled|alice|alice123|amr@gmail.com|01112345679|22 Tahrir St, Cairo|0.00
+
+1|Amr Khaled|alice|alice123|amr@gmail.com|01087654321|45 Salah Salem St, Cairo|500.00
 2|Laila Mostafa|laila_patient|password|laila@gmail.com|01012345670|15 Pyramids St, Giza|0.00

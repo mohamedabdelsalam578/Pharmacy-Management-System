@@ -1,4 +1,35 @@
-# Pharmacy Management System – Final Report
+<div align="center">
+
+# 🏥 EL-TA3BAN Pharmacy Management System 🐍
+### Final Project Report
+
+![Pharmacy Logo](generated-icon.png)
+
+*A Comprehensive Healthcare Management Solution*
+
+---
+
+**British University in Egypt (BUE)**  
+Faculty of Informatics and Computer Science  
+Programming in Java (24CSCI04C)
+
+March 26, 2025
+
+</div>
+
+---
+
+## 1. Project Identification
+
+| Field | Details |
+|-------|---------|
+| Project Title | EL-TA3BAN Pharmacy Management System |
+| Course Name | Programming in Java (24CSCI04C) |
+| University | British University in Egypt (BUE) |
+| Students | • Mohamed Mohamed Abdelsalam (245296) - Section A9 <br>• Mazen Mohamed Masoud (246994) - Section A8 <br>• Mariam Tamer Mostafa (239279) - Section A7 <br>• Nour Ahmed Ali (241603) - Section A10 <br>• Nouran Khaled Mohamed (245309) - Section A10 <br>• Moaz Mohamed Saed (242675) - Section A8 |
+| Supervisor | Dr. Khaled Alsheshtawi |
+| Teaching Assistant | Eng. Amira Gamal |
+| Date | March 26, 2025 |
 
 ## Project Timeline
 | Phase | Task Description | Start Date | End Date |
@@ -11,21 +42,6 @@
 | Phase 6 | Testing & Debugging | March 23, 2025 | March 24, 2025 |
 | Phase 7 | Documentation & Report | March 25, 2025 | March 26, 2025 |
 
-## 1. Project Identification
-- **Project Title**: EL-TA3BAN Pharmacy Management System
-- **Course Name**: Programming in Java (24CSCI04C)
-- **University**: British University in Egypt (BUE)
-- **Student Names & IDs**:
-  - Mohamed Mohamed Abdelsalam (245296) - Section A9
-  - Mazen Mohamed Masoud (246994) - Section A8
-  - Mariam Tamer Mostafa (239279) - Section A7
-  - Nour Ahmed Ali (241603) - Section A10
-  - Nouran Khaled Mohamed (245309) - Section A10
-  - Moaz Mohamed Saed (242675) - Section A8
-- **Supervisor**: Dr. Khaled Alsheshtawi
-- **Teaching Assistant**: Eng. Amira Gamal
-- **Date**: March 26, 2025
-
 ## 2. Overview
 
 ### 2.1 Introduction
@@ -34,7 +50,6 @@ The EL-TA3BAN Pharmacy Management System is a comprehensive Java-based applicati
 By digitalizing pharmacy processes, the system reduces errors, improves patient care, and enhances operational efficiency. The significance of this project lies in its ability to create a cohesive healthcare ecosystem where information flows seamlessly between stakeholders.
 
 ### 2.2 Project Scope
-
 #### Key Functionalities Implemented:
 - **✓ User authentication with role-based access control**
 - **✓ Complete prescription lifecycle management**

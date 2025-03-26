@@ -246,12 +246,10 @@ public class PharmacyService {
                 ConsoleUI.printMenuItem(3, "Login as Doctor", "👨‍⚕️", ConsoleUI.GREEN);
                 ConsoleUI.printMenuItem(4, "Login as Pharmacist", "👩‍⚕️", ConsoleUI.GREEN);
                 ConsoleUI.printMenuItem(5, "Create Patient Account", "✏️", ConsoleUI.YELLOW);
-                ConsoleUI.printMenuItem(6, "Generate Documentation", "📑", ConsoleUI.PURPLE);
-                ConsoleUI.printMenuItem(7, "Exit", "🚪", ConsoleUI.RED);
+                ConsoleUI.printMenuItem(6, "Exit", "🚪", ConsoleUI.RED);
             } else {
                 ConsoleUI.printMenuItem(3, "Create Patient Account", "✏️", ConsoleUI.YELLOW);
-                ConsoleUI.printMenuItem(4, "Generate Documentation", "📑", ConsoleUI.PURPLE);
-                ConsoleUI.printMenuItem(5, "Exit", "🚪", ConsoleUI.RED);
+                ConsoleUI.printMenuItem(4, "Exit", "🚪", ConsoleUI.RED);
             }
             
             ConsoleUI.printLine(50, ConsoleUI.BLUE);
@@ -290,9 +288,6 @@ public class PharmacyService {
                         createPatientAccount();
                         break;
                     case 6:
-                        generateDocumentation();
-                        break;
-                    case 7:
                         exit = true;
                         saveDataToFiles();
                         System.out.println("Thank you for using the EL-TA3BAN Pharmacy Management System!");
@@ -313,9 +308,6 @@ public class PharmacyService {
                         createPatientAccount();
                         break;
                     case 4:
-                        generateDocumentation();
-                        break;
-                    case 5:
                         exit = true;
                         saveDataToFiles();
                         System.out.println("Thank you for using the EL-TA3BAN Pharmacy Management System!");
@@ -327,122 +319,7 @@ public class PharmacyService {
         }
     }
 
-    /**
-     * Generate documentation for the pharmacy management system
-     * This function creates a comprehensive documentation of the system
-     * in Markdown format and saves it to a file
-     */
-    private void generateDocumentation() {
-        System.out.println("\n📑 ===== GENERATE DOCUMENTATION ===== 📑");
-        
-        // Create docs directory if it doesn't exist
-        File docsDir = new File("docs");
-        if (!docsDir.exists()) {
-            if (docsDir.mkdir()) {
-                System.out.println("Created documentation directory: docs");
-            } else {
-                System.out.println("Failed to create documentation directory.");
-                return;
-            }
-        }
-        
-        String docFilePath = "docs/generated_documentation.md";
-        
-        try {
-            // Create the documentation file
-            File docFile = new File(docFilePath);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(docFile));
-            
-            // Write documentation content
-            writer.write("# EL-TA3BAN Pharmacy Management System Documentation\n\n");
-            writer.write("*Generated on: " + java.time.LocalDate.now() + "*\n\n");
-            
-            writer.write("## Table of Contents\n\n");
-            writer.write("1. [System Overview](#system-overview)\n");
-            writer.write("2. [Classes](#classes)\n");
-            writer.write("3. [Services](#services)\n");
-            writer.write("4. [Data Flow](#data-flow)\n\n");
-            
-            writer.write("## System Overview\n\n");
-            writer.write("The EL-TA3BAN Pharmacy Management System is a comprehensive application that manages ");
-            writer.write("pharmacy operations including inventory, patient accounts, prescriptions, and orders. ");
-            writer.write("It follows object-oriented design principles and provides functionality for ");
-            writer.write("different user roles including administrators, patients, doctors, and pharmacists.\n\n");
-            
-            // Document model classes
-            writer.write("## Classes\n\n");
-            writer.write("### User Class Hierarchy\n\n");
-            writer.write("| Class | Description |\n");
-            writer.write("|-------|-------------|\n");
-            writer.write("| `User` | Abstract base class for all users |\n");
-            writer.write("| `Admin` | System administrator with elevated privileges |\n");
-            writer.write("| `Patient` | Represents patients in the healthcare system |\n");
-            writer.write("| `Doctor` | Medical professionals who create prescriptions |\n");
-            writer.write("| `Pharmacist` | Pharmacy staff who process prescriptions |\n\n");
-            
-            writer.write("### Healthcare Entities\n\n");
-            writer.write("| Class | Description |\n");
-            writer.write("|-------|-------------|\n");
-            writer.write("| `Medicine` | Pharmaceutical products available in the system |\n");
-            writer.write("| `Prescription` | Medical orders created by doctors for patients |\n");
-            writer.write("| `Order` | Patient requests for medicines |\n");
-            writer.write("| `MedicalReport` | Patient health information and diagnosis |\n");
-            writer.write("| `Pharmacy` | Represents physical pharmacy location |\n\n");
-            
-            // Document services
-            writer.write("## Services\n\n");
-            writer.write("| Service | Description |\n");
-            writer.write("|---------|-------------|\n");
-            writer.write("| `AdminService` | Handles admin operations |\n");
-            writer.write("| `PatientService` | Manages patient functionality |\n");
-            writer.write("| `DoctorService` | Manages doctor operations |\n");
-            writer.write("| `PharmacistService` | Handles pharmacist functionality |\n");
-            writer.write("| `PharmacyService` | Core service integrating all functionality |\n\n");
-            
-            // Data flow diagram using ASCII art
-            writer.write("## Data Flow\n\n");
-            writer.write("```\n");
-            writer.write("Doctor ──────> Prescription ──────> Pharmacist\n");
-            writer.write("  │               │                   │\n");
-            writer.write("  │               │                   │\n");
-            writer.write("  ▼               ▼                   ▼\n");
-            writer.write("MedicalReport     Medicine        Pharmacy\n");
-            writer.write("  │               ▲                   │\n");
-            writer.write("  │               │                   │\n");
-            writer.write("  ▼               │                   ▼\n");
-            writer.write("Patient ─────────> Order <─────────> Admin\n");
-            writer.write("```\n\n");
-            
-            writer.write("### System Statistics\n\n");
-            writer.write("- **Users:** " + (admins.size() + patients.size() + doctors.size()) + "\n");
-            writer.write("  - Administrators: " + admins.size() + "\n");
-            writer.write("  - Patients: " + patients.size() + "\n");
-            writer.write("  - Doctors: " + doctors.size() + "\n");
-            writer.write("- **Medicines:** " + medicines.size() + "\n");
-            writer.write("- **Orders:** " + orders.size() + "\n\n");
-            
-            writer.close();
-            
-            System.out.println("Documentation generated successfully: " + docFile.getAbsolutePath());
-            System.out.println("\nDocumentation Preview:\n");
-            
-            // Display the first few lines of the documentation
-            try (BufferedReader reader = new BufferedReader(new FileReader(docFile))) {
-                String line;
-                int lineCount = 0;
-                while ((line = reader.readLine()) != null && lineCount < 20) {
-                    System.out.println(line);
-                    lineCount++;
-                }
-                if (lineCount >= 20) {
-                    System.out.println("...\n(Preview truncated, see the full documentation in the file)");
-                }
-            }
-            
-        } catch (IOException e) {
-            System.out.println("Error generating documentation: " + e.getMessage());
-        }
-    }
+
     
     /**
      * Get integer input from user

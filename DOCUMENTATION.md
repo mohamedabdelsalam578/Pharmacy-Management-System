@@ -24,7 +24,9 @@
 
 ## System Overview
 
-This documentation provides details about all classes and functions in the Pharmacy Management System. The system follows object-oriented design principles to create a healthcare management system connecting patients, doctors, and pharmacists. The system includes a complete healthcare workflow with integrated payment processing through a wallet system.
+This documentation provides details about all classes and functions in the EL-TA3BAN Pharmacy Management System. The system follows object-oriented design principles to create a comprehensive healthcare management system connecting patients, doctors, and pharmacists. The system includes a complete healthcare workflow with integrated payment processing through a secure wallet system, prescription management, and inventory tracking.
+
+The system now runs in extended mode by default, providing access to all features without requiring any command line arguments. This includes the complete healthcare workflow between doctors, pharmacists, and patients, with Egyptian localization of all sample data (names, medicines, and currency in LE).
 
 ## Model Classes
 
@@ -61,8 +63,7 @@ This documentation provides details about all classes and functions in the Pharm
 | `PatientService` | Manages patient functionality | `createPatient()`, `loginPatient()`, `placeOrder()`, `viewOrders()`, `patientMenu()`, `depositToWallet()`, `withdrawFromWallet()`, `payWithWallet()`, `addCreditCard()`, `removeCreditCard()`, `payWithCreditCard()` |
 | `DoctorService` | Manages doctor operations | `loginDoctor()`, `createPrescription()`, `viewDoctorPrescriptions()`, `addMedicineToPrescription()`, `sendPrescriptionToPharmacy()`, `createMedicalReport()`, `doctorMenu()` |
 | `PharmacistService` | Handles pharmacist functionality | `loginPharmacist()`, `fillPrescription()`, `getPendingPrescriptions()`, `getFilledPrescriptions()`, `addMedicineToPharmacy()`, `manageInventory()`, `pharmacistMenu()` |
-| `PharmacyService` | Core service integrating all functionality | `run()`, `loginUser()`, `initializeSystem()`, `mainMenu()` |
-| `UpdatedPharmacyService` | Extended version with complete healthcare workflow | `run()`, `performExtendedFunctionality()`, `initializeExtendedSystem()` |
+| `PharmacyService` | Core service integrating all functionality with complete healthcare workflow | `run()`, `loginUser()`, `initializeSystem()`, `mainMenu()` |
 | `AuthenticationService` | Security service for user login and account management | `loginUser()`, `registerUser()`, `validatePassword()`, `hashPassword()`, `validateLoginAttempts()` |
 
 ## Utility Classes
@@ -76,7 +77,7 @@ This documentation provides details about all classes and functions in the Pharm
 
 | Class | Description | Key Functions |
 |-------|-------------|---------------|
-| `PharmacyManagementSystem` | Application entry point | `main()` - Starts the system in standard or extended mode |
+| `PharmacyManagementSystem` | Application entry point | `main()` - Starts the system in extended mode by default (with full healthcare workflow and Egyptian localization); basic mode available with `--basic` flag |
 
 ## Detailed Function Documentation
 

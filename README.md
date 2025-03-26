@@ -1,7 +1,7 @@
-# Pharmacy Management System
+# EL-TA3BAN Pharmacy Management System
 
 ## Project Overview
-A comprehensive pharmacy management system built in Java, featuring patient, doctor, and pharmacist management with secure payment processing.
+A comprehensive pharmacy management system built in Java, featuring a complete healthcare workflow between patients, doctors, and pharmacists with secure wallet payment processing, prescription management, and inventory tracking. The system is now configured to automatically run in extended mode with all features enabled by default.
 
 ## Features
 - Multi-user authentication
@@ -24,8 +24,8 @@ A comprehensive pharmacy management system built in Java, featuring patient, doc
 ## Setup in NetBeans
 
 1. **Download Project**
-   - Download all files from Replit
-   - Extract to a local directory
+   - Clone from GitHub: https://github.com/mohamedabdelsalam578/Pharmacy-Management-System
+   - Or download ZIP and extract to a local directory
 
 2. **Open in NetBeans**
    - Open NetBeans IDE
@@ -41,7 +41,8 @@ A comprehensive pharmacy management system built in Java, featuring patient, doc
 4. **Running the Project**
    - Right-click project in Projects window
    - Select "Run" or press F6
-   - Program will start in extended mode
+   - The program will automatically start in extended mode with all features enabled
+   - No command line arguments are needed
 
 ## Test Credentials
 - Admin: username "admin", password "admin123"
@@ -54,17 +55,18 @@ A comprehensive pharmacy management system built in Java, featuring patient, doc
 The application can be run directly from NetBeans:
 1. Right-click the project in the Project Explorer
 2. Select "Run" or press F6
+3. The system will automatically start in extended mode with all features enabled
 
 Alternatively, you can run the project from the command line:
 ```
 # Compile Java files to classes directory
 javac -d classes src/*.java src/models/*.java src/services/*.java src/utils/*.java
 
-# Run the application from classes directory
+# Run the application from classes directory (runs in extended mode by default)
 java -cp classes PharmacyManagementSystem
 
-# To run with extended healthcare functionality
-java -cp classes PharmacyManagementSystem --extended
+# If you need basic mode for some reason, use the --basic flag
+java -cp classes PharmacyManagementSystem --basic
 ```
 
 ## Using the Application
@@ -141,7 +143,7 @@ All data is stored in text files in the `/data` directory:
 - wallet_transactions.txt: Patient wallet transaction data
 
 ## Main Classes
-- **PharmacyManagementSystem**: Entry point to the application with standard and extended mode
+- **PharmacyManagementSystem**: Entry point to the application that automatically runs in extended mode
 - **User**: Abstract base class for all user types (Admin, Patient, Doctor, Pharmacist)
 - **Medicine**: Represents medicine items in the pharmacy inventory
 - **Prescription**: Represents medical prescriptions created by doctors
@@ -149,10 +151,11 @@ All data is stored in text files in the `/data` directory:
 - **MedicalReport**: Stores patient medical information and diagnosis
 - **Consultation**: Manages doctor-patient consultations
 - **Pharmacy**: Central class representing the pharmacy entity
-- **PharmacyService**: Main service integrating all user operations with extended healthcare workflow
+- **PharmacyService**: Main service integrating all user operations with complete healthcare workflow
+- **AuthenticationService**: Handles secure user authentication with password hashing and login attempt limiting
 - **Wallet**: Manages patient wallet functionality for secure in-app payments
-- **CreditCard**: Handles credit card functionality with secure card masking
-- **ConsoleUI**: Provides colorful and interactive console UI elements
+- **CreditCard**: Handles credit card functionality with secure number masking
+- **ConsoleUI**: Provides colorful and interactive console UI elements with emojis and text formatting
 
 ## Object-Oriented Programming Concepts
 This project was designed as an educational tool to demonstrate core OOP principles:

@@ -1,7 +1,6 @@
 
 package models;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +18,7 @@ public class Wallet {
         this.creditCards = new ArrayList<>();
     }
     
-    public int getId() { return id; }
-    public int getPatientId() { return patientId; }
+    public Patient getOwner() { return owner; }
     public double getBalance() { return balance; }
     public List<Transaction> getTransactions() { return transactions; }
     
@@ -64,8 +62,7 @@ public class Wallet {
     }
     
     public void displayInfo() {
-        System.out.println("Wallet ID: " + id);
-        System.out.println("Patient ID: " + patientId);
+        System.out.println("Patient: " + owner.getName());
         System.out.println("Current Balance: " + String.format("%.2f LE", balance));
         System.out.println("Total Transactions: " + transactions.size());
     }
@@ -92,43 +89,41 @@ public class Wallet {
     }
     
     public List<CreditCard> getSavedCards() {
-        return savedCards;
+        return creditCards;
     }
     
     public boolean addCard(String cardNumber, String cardHolderName, String expiryDate, String cardType) {
         String lastFourDigits = cardNumber.substring(cardNumber.length() - 4);
         
-        for (CreditCard card : savedCards) {
+        for (CreditCard card : creditCards) {
             if (card.getLastFourDigits().equals(lastFourDigits)) {
                 return false;
             }
         }
         
-        savedCards.add(new CreditCard(cardNumber, cardHolderName, expiryDate, cardType));
+        creditCards.add(new CreditCard(cardNumber, cardHolderName, expiryDate, cardType));
         return true;
     }
     
     public boolean removeCard(String lastFourDigits) {
-        return savedCards.removeIf(card -> card.getLastFourDigits().equals(lastFourDigits));
+        return creditCards.removeIf(card -> card.getLastFourDigits().equals(lastFourDigits));
     }
     
     public void displaySavedCards() {
-        if (savedCards.isEmpty()) {
+        if (creditCards.isEmpty()) {
             System.out.println("No saved cards found.");
             return;
         }
         
         System.out.println("\n💳 ===== SAVED CARDS ===== 💳");
-        for (int i = 0; i < savedCards.size(); i++) {
-            CreditCard card = savedCards.get(i);
+        for (int i = 0; i < creditCards.size(); i++) {
+            CreditCard card = creditCards.get(i);
             System.out.println("\nCard #" + (i + 1));
             card.displayInfo();
         }
     }
     
-    public static class Transaction implements Serializable {
-        private static final long serialVersionUID = 1L;
-        
+    public static class Transaction {
         private int id;
         private double amount;
         private String type;

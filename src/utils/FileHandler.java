@@ -162,7 +162,7 @@ public class FileHandler {
                         String[] transactions = transactionsData.split(";");
                         
                         // Clear any existing transactions (the deposit from above)
-                        patient.setWallet(new Wallet(id, id));
+                        patient.setWallet(new Wallet(patient));
                         
                         // Add transactions from file
                         for (String txnStr : transactions) {
@@ -789,52 +789,28 @@ public class FileHandler {
     }
     
     /**
-     * Generic method to save a list of objects to a file using serialization
+     * Note: This method is deprecated and may be removed in the future.
+     * The system now uses text-based data persistence methods instead of serialization.
      * 
-     * @param <T> The type of objects to save
-     * @param objects The list of objects to save
-     * @param filePath The file path to save to
+     * @param <T> The type of objects (unused in the deprecated implementation)
+     * @param objects The list of objects to save (unused in the deprecated implementation)
+     * @param filePath The file path to save to (unused in the deprecated implementation)
      */
     public static <T> void saveToFile(List<T> objects, String filePath) {
-        try {
-            // Create parent directories if they don't exist
-            File file = new File(filePath);
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            
-            // Use Object Serialization for generic objects
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-                oos.writeObject(objects);
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving objects to file: " + e.getMessage());
-            e.printStackTrace();
-        }
+        System.err.println("Warning: saveToFile using serialization is deprecated and will be removed.");
+        System.err.println("Please use the appropriate text-based save method instead.");
     }
     
     /**
-     * Generic method to load a list of objects from a file using serialization
+     * Note: This method is deprecated and may be removed in the future.
+     * The system now uses text-based data persistence methods instead of serialization.
      * 
-     * @param filePath The file path to load from
-     * @return The loaded object, or null if loading failed
+     * @param filePath The file path to load from (unused in the deprecated implementation)
+     * @return An empty ArrayList since the method is deprecated
      */
     public static Object loadFromFile(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (!file.exists()) {
-                System.out.println("File does not exist: " + filePath);
-                return new ArrayList<>();
-            }
-            
-            // Use Object Serialization for generic objects
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-                return ois.readObject();
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Error loading objects from file: " + e.getMessage());
-            // Return empty list if file doesn't exist or can't be read
-            return new ArrayList<>();
-        }
+        System.err.println("Warning: loadFromFile using serialization is deprecated and will be removed.");
+        System.err.println("Please use the appropriate text-based load method instead.");
+        return new ArrayList<>();
     }
 }

@@ -48,7 +48,7 @@ public class WalletService {
      */
     public Wallet getWalletByPatientId(int patientId) {
         return wallets.stream()
-                     .filter(w -> w.getPatientId() == patientId)
+                     .filter(w -> w.getOwner().getId() == patientId)
                      .findFirst()
                      .orElse(null);
     }
@@ -60,11 +60,8 @@ public class WalletService {
      * @return Created wallet
      */
     public Wallet createWallet(Patient patient) {
-        // Generate wallet ID
-        int walletId = wallets.isEmpty() ? 1 : wallets.stream().mapToInt(Wallet::getId).max().orElse(0) + 1;
-        
         // Create new wallet
-        Wallet wallet = new Wallet(walletId, patient.getId());
+        Wallet wallet = new Wallet(patient);
         
         // Add to wallets list
         wallets.add(wallet);

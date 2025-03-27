@@ -1,7 +1,5 @@
 package models;
 
-import java.io.Serializable;
-
 /**
  * 💳 CreditCard - Secure payment method storage and handling 💳
  * 
@@ -25,9 +23,7 @@ import java.io.Serializable;
  * payment options for patients, allowing them to save payment methods
  * for future transactions without compromising financial security.
  */
-public class CreditCard implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
+public class CreditCard {
     private String cardNumber;      // Masked card number for security
     private String cardHolderName;  // Name on the card
     private String expiryDate;      // Expiry date in MM/YY format

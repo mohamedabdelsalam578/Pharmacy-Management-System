@@ -29,6 +29,7 @@ public class ConsoleUI {
     public static final String GREEN = "\u001B[32m";
     public static final String BLUE = "\u001B[34m";
     public static final String YELLOW = "\u001B[33m";
+    public static final String CYAN = "\u001B[36m";
 
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");

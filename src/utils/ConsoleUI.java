@@ -88,20 +88,31 @@ public class ConsoleUI {
         System.out.println();
     }
 
+    /**
+     * Print a message with a specific status icon and color
+     * 
+     * @param message Message to print
+     * @param icon Status icon to prefix
+     * @param color Color to use
+     */
+    private static void printStatusMessage(String message, String icon, String color) {
+        System.out.println(color + icon + " " + message + RESET);
+    }
+    
     public static void printSuccess(String message) {
-        System.out.println(GREEN + "✓ " + message + RESET);
+        printStatusMessage(message, "✓", GREEN);
     }
 
     public static void printError(String message) {
-        System.out.println(RED + "✗ " + message + RESET);
+        printStatusMessage(message, "✗", RED);
     }
 
     public static void printInfo(String message) {
-        System.out.println(BLUE + "ℹ " + message + RESET);
+        printStatusMessage(message, "ℹ", BLUE);
     }
 
     public static void printWarning(String message) {
-        System.out.println(YELLOW + "⚠ " + message + RESET);
+        printStatusMessage(message, "⚠", YELLOW);
     }
 
     public static void printLine(int width, String color) {
@@ -126,13 +137,33 @@ public class ConsoleUI {
         System.out.println();
     }
 
-    public static void printTableHeader(String[] columns, int[] widths, String color) {
+    /**
+     * Print a table row (used for both header and data rows)
+     * 
+     * @param data String array of data to print
+     * @param widths Array of column widths
+     * @param color Color to use
+     */
+    private static void printTableRowGeneric(String[] data, int[] widths, String color) {
         System.out.print(color);
-        for (int i = 0; i < columns.length; i++) {
-            System.out.print("│ " + padRight(columns[i], widths[i]) + " ");
+        for (int i = 0; i < data.length; i++) {
+            System.out.print("│ " + padRight(data[i], widths[i]) + " ");
         }
         System.out.println("│" + RESET);
-
+    }
+    
+    /**
+     * Print a table header with column names
+     * 
+     * @param columns String array of column names
+     * @param widths Array of column widths
+     * @param color Color to use
+     */
+    public static void printTableHeader(String[] columns, int[] widths, String color) {
+        // Print the header row
+        printTableRowGeneric(columns, widths, color);
+        
+        // Print the separator line
         System.out.print(color + "├");
         for (int width : widths) {
             System.out.print("─".repeat(width + 2) + "┼");
@@ -141,12 +172,15 @@ public class ConsoleUI {
         System.out.println();
     }
 
+    /**
+     * Print a table data row
+     * 
+     * @param data String array of data to print
+     * @param widths Array of column widths
+     * @param color Color to use
+     */
     public static void printTableRow(String[] data, int[] widths, String color) {
-        System.out.print(color);
-        for (int i = 0; i < data.length; i++) {
-            System.out.print("│ " + padRight(data[i], widths[i]) + " ");
-        }
-        System.out.println("│" + RESET);
+        printTableRowGeneric(data, widths, color);
     }
 
     private static String padRight(String s, int width) {

@@ -13,16 +13,22 @@ import java.util.*;
 public class FileHandler {
     // File paths for storing data
     private static final String DATA_DIR = "data";
-    private static final String ADMINS_FILE = DATA_DIR + "/admins.txt";
-    private static final String PATIENTS_FILE = DATA_DIR + "/patients.txt";
-    // Legacy file kept for backward compatibility (will be removed in future versions)
-    private static final String LEGACY_PATIENTS_FILE = DATA_DIR + "/clients.txt";
-    private static final String DOCTORS_FILE = DATA_DIR + "/doctors.txt";
-    private static final String PHARMACISTS_FILE = DATA_DIR + "/pharmacists.txt";
-    private static final String PHARMACIES_FILE = DATA_DIR + "/pharmacies.txt";
-    private static final String MEDICINES_FILE = DATA_DIR + "/medicines.txt";
-    private static final String ORDERS_FILE = DATA_DIR + "/orders.txt";
-    private static final String PRESCRIPTIONS_FILE = DATA_DIR + "/prescriptions.txt";
+    private static final String[] ALL_FILES = {
+        "admins.txt", "patients.txt", "clients.txt", "doctors.txt", 
+        "pharmacists.txt", "pharmacies.txt", "medicines.txt", 
+        "orders.txt", "prescriptions.txt"
+    };
+    
+    // File path constants for easier access
+    public static final String ADMINS_FILE = DATA_DIR + "/admins.txt";
+    public static final String PATIENTS_FILE = DATA_DIR + "/patients.txt";
+    public static final String LEGACY_PATIENTS_FILE = DATA_DIR + "/clients.txt";
+    public static final String DOCTORS_FILE = DATA_DIR + "/doctors.txt";
+    public static final String PHARMACISTS_FILE = DATA_DIR + "/pharmacists.txt";
+    public static final String PHARMACIES_FILE = DATA_DIR + "/pharmacies.txt";
+    public static final String MEDICINES_FILE = DATA_DIR + "/medicines.txt";
+    public static final String ORDERS_FILE = DATA_DIR + "/orders.txt";
+    public static final String PRESCRIPTIONS_FILE = DATA_DIR + "/prescriptions.txt";
     
     // Formatter for date time
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -38,16 +44,10 @@ public class FileHandler {
             dataDir.mkdir();
         }
         
-        // Create empty files if they don't exist
-        createFile(ADMINS_FILE);
-        createFile(PATIENTS_FILE);
-        createFile(LEGACY_PATIENTS_FILE);
-        createFile(DOCTORS_FILE);
-        createFile(PHARMACISTS_FILE);
-        createFile(PHARMACIES_FILE);
-        createFile(MEDICINES_FILE);
-        createFile(ORDERS_FILE);
-        createFile(PRESCRIPTIONS_FILE);
+        // Create all files in a loop
+        for (String file : ALL_FILES) {
+            createFile(DATA_DIR + "/" + file);
+        }
     }
     
     /**
@@ -308,36 +308,93 @@ public class FileHandler {
     }
     
     /**
+     * Generic interface for creating objects from file data
+     */
+    @FunctionalInterface
+    private interface EntityCreator<T> {
+        T create(String[] parts);
+    }
+    
+    /**
+     * Generic method to load data from a file
+     * 
+     * @param <T> Type of entity to load
+     * @param filePath Path to the file
+     * @param creator Function to create entity from string parts
+     * @param minParts Minimum number of parts required
+     * @return List of entities
+     */
+    private static <T> List<T> loadFromFile(String filePath, EntityCreator<T> creator, int minParts) {
+        List<T> entities = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= minParts) {
+                    T entity = creator.create(parts);
+                    if (entity != null) {
+                        entities.add(entity);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading from file " + filePath + ": " + e.getMessage());
+        }
+        
+        return entities;
+    }
+    
+    /**
      * Load doctors from file
      * 
      * @return List of Doctor objects
      */
     public static List<Doctor> loadDoctors() {
-        List<Doctor> doctors = new ArrayList<>();
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(DOCTORS_FILE))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length >= 8) {
-                    int id = Integer.parseInt(parts[0].trim());
-                    String name = parts[1].trim();
-                    String username = parts[2].trim();
-                    String password = parts[3].trim();
-                    String email = parts[4].trim();
-                    String phone = parts[5].trim();
-                    String specialization = parts[6].trim();
-                    String licenseNumber = parts[7].trim();
-                    
-                    Doctor doctor = new Doctor(id, name, username, password, email, phone, specialization, licenseNumber);
-                    doctors.add(doctor);
-                }
+        return loadFromFile(DOCTORS_FILE, parts -> {
+            try {
+                int id = Integer.parseInt(parts[0].trim());
+                String name = parts[1].trim();
+                String username = parts[2].trim();
+                String password = parts[3].trim();
+                String email = parts[4].trim();
+                String phone = parts[5].trim();
+                String specialization = parts[6].trim();
+                String licenseNumber = parts[7].trim();
+                
+                return new Doctor(id, name, username, password, email, phone, specialization, licenseNumber);
+            } catch (Exception e) {
+                System.err.println("Error parsing doctor data: " + e.getMessage());
+                return null;
+            }
+        }, 8);
+    }
+    
+    /**
+     * Generic interface for converting objects to string representations
+     */
+    @FunctionalInterface
+    private interface EntityFormatter<T> {
+        String format(T entity);
+    }
+    
+    /**
+     * Generic method to save data to a file
+     * 
+     * @param <T> Type of entity to save
+     * @param filePath Path to the file
+     * @param entities List of entities to save
+     * @param formatter Function to format entity to string
+     */
+    private static <T> void saveToFile(String filePath, List<T> entities, EntityFormatter<T> formatter) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (T entity : entities) {
+                writer.write(formatter.format(entity));
+                writer.newLine();
             }
         } catch (IOException e) {
-            System.err.println("Error loading doctors: " + e.getMessage());
+            System.err.println("Error saving to file " + filePath + ": " + e.getMessage());
         }
-        
-        return doctors;
     }
     
     /**
@@ -346,22 +403,15 @@ public class FileHandler {
      * @param doctors List of Doctor objects to save
      */
     public static void saveDoctors(List<Doctor> doctors) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(DOCTORS_FILE))) {
-            for (Doctor doctor : doctors) {
-                writer.write(String.format("%d|%s|%s|%s|%s|%s|%s|%s", 
-                    doctor.getId(), 
-                    doctor.getName(),
-                    doctor.getUsername(),
-                    doctor.getPassword(),
-                    doctor.getEmail(),
-                    doctor.getPhoneNumber(),
-                    doctor.getSpecialization(),
-                    doctor.getLicenseNumber()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving doctors: " + e.getMessage());
-        }
+        saveToFile(DOCTORS_FILE, doctors, doctor -> String.format("%d|%s|%s|%s|%s|%s|%s|%s", 
+            doctor.getId(), 
+            doctor.getName(),
+            doctor.getUsername(),
+            doctor.getPassword(),
+            doctor.getEmail(),
+            doctor.getPhoneNumber(),
+            doctor.getSpecialization(),
+            doctor.getLicenseNumber()));
     }
     
     /**
@@ -403,22 +453,15 @@ public class FileHandler {
      * @param medicines List of Medicine objects to save
      */
     public static void saveMedicines(List<Medicine> medicines) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(MEDICINES_FILE))) {
-            for (Medicine medicine : medicines) {
-                writer.write(String.format("%d|%s|%s|%s|%.2f|%d|%s|%b", 
-                    medicine.getId(), 
-                    medicine.getName(),
-                    medicine.getDescription(),
-                    medicine.getManufacturer(),
-                    medicine.getPrice(),
-                    medicine.getQuantity(),
-                    medicine.getCategory(),
-                    medicine.isRequiresPrescription()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving medicines: " + e.getMessage());
-        }
+        saveToFile(MEDICINES_FILE, medicines, medicine -> String.format("%d|%s|%s|%s|%.2f|%d|%s|%b", 
+            medicine.getId(), 
+            medicine.getName(),
+            medicine.getDescription(),
+            medicine.getManufacturer(),
+            medicine.getPrice(),
+            medicine.getQuantity(),
+            medicine.getCategory(),
+            medicine.isRequiresPrescription()));
     }
     
     /**
@@ -613,23 +656,16 @@ public class FileHandler {
      * @param pharmacists List of Pharmacist objects to save
      */
     public static void savePharmacists(List<Pharmacist> pharmacists) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PHARMACISTS_FILE))) {
-            for (Pharmacist pharmacist : pharmacists) {
-                writer.write(String.format("%d|%s|%s|%s|%s|%s|%s|%s|%d", 
-                    pharmacist.getId(), 
-                    pharmacist.getName(),
-                    pharmacist.getUsername(),
-                    pharmacist.getPassword(),
-                    pharmacist.getEmail(),
-                    pharmacist.getPhoneNumber(),
-                    pharmacist.getLicenseNumber(),
-                    pharmacist.getQualification(),
-                    pharmacist.getPharmacyId()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving pharmacists: " + e.getMessage());
-        }
+        saveToFile(PHARMACISTS_FILE, pharmacists, pharmacist -> String.format("%d|%s|%s|%s|%s|%s|%s|%s|%d", 
+            pharmacist.getId(), 
+            pharmacist.getName(),
+            pharmacist.getUsername(),
+            pharmacist.getPassword(),
+            pharmacist.getEmail(),
+            pharmacist.getPhoneNumber(),
+            pharmacist.getLicenseNumber(),
+            pharmacist.getQualification(),
+            pharmacist.getPharmacyId()));
     }
     
     /**
@@ -668,19 +704,12 @@ public class FileHandler {
      * @param pharmacies List of Pharmacy objects to save
      */
     public static void savePharmacies(List<Pharmacy> pharmacies) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PHARMACIES_FILE))) {
-            for (Pharmacy pharmacy : pharmacies) {
-                writer.write(String.format("%d|%s|%s|%s|%s", 
-                    pharmacy.getId(), 
-                    pharmacy.getName(),
-                    pharmacy.getAddress(),
-                    pharmacy.getPhoneNumber(),
-                    pharmacy.getEmail()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving pharmacies: " + e.getMessage());
-        }
+        saveToFile(PHARMACIES_FILE, pharmacies, pharmacy -> String.format("%d|%s|%s|%s|%s", 
+            pharmacy.getId(), 
+            pharmacy.getName(),
+            pharmacy.getAddress(),
+            pharmacy.getPhoneNumber(),
+            pharmacy.getEmail()));
     }
     
     /**

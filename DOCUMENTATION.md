@@ -77,7 +77,9 @@ The system now runs in extended mode by default, providing access to all feature
 | Class | Description | Key Functions |
 |-------|-------------|---------------|
 | `DataInitializer` | Creates test data for the system | `initializeAndTest()`, `initializeExtendedSystem()`, `createTestData()` |
-| `FileHandler` | Manages data persistence | `initializeFiles()`, `loadUsers()`, `saveMedicines()`, `loadOrders()`, various load/save methods |
+| `FileHandler` | Manages data persistence | `initializeFiles()`, `loadFromFile()`, `saveToFile()`, various entity-specific load/save methods |
+| `ConsoleUI` | Provides enhanced console interface | `clearScreen()`, `showMenu()`, `showTableHeader()`, `showTableRow()`, `showSuccess()`, `showError()`, `showLoading()` |
+| `SystemTools` | Utility methods for common operations | `validateEmail()`, `formatCurrency()`, `generateId()`, `validatePhoneNumber()` |
 
 ## Main Application
 
@@ -228,6 +230,7 @@ The system now runs in extended mode by default, providing access to all feature
 | `hashPassword(String password)` | Securely hashes password | Plain password | `String` |
 | `validatePassword(String inputPassword, String storedHash)` | Verifies password | Input password, stored hash | `boolean` |
 | `loginUser(String username, String password, List<? extends User> users)` | Generically authenticates users | Username, password, user list | `User` |
+| `<T extends User> T authenticate(String username, String password, Function<String, Optional<T>> userFinder)` | Generic authentication method using functional programming | Username, password, user finder function | `T` |
 | `registerUser(User user, List<? extends User> users)` | Registers new user | User object, user list | `boolean` |
 | `changePassword(User user, String oldPassword, String newPassword)` | Updates user password | User, old password, new password | `boolean` |
 | `validateLoginAttempts(String username)` | Prevents brute force attacks | Username | `boolean` |
@@ -254,6 +257,8 @@ The system now runs in extended mode by default, providing access to all feature
 | Function | Description | Parameters | Return Type |
 |----------|-------------|------------|-------------|
 | `initializeFiles()` | Creates data directory and files | - | `void` |
+| `<T> List<T> loadFromFile(String filePath, Function<String[], T> createEntity)` | Generic method to load any entity type from file | File path, entity creation function | `List<T>` |
+| `<T> void saveToFile(String filePath, List<T> entities, Function<T, String> formatter)` | Generic method to save any entity type to file | File path, entities, formatter function | `void` |
 | `loadAdmins()` | Loads admin users from file | - | `List<Admin>` |
 | `saveAdmins(List<Admin> admins)` | Saves admin data | Admin list | `void` |
 | `loadPatients()` | Loads patient users from file | - | `List<Patient>` |
@@ -274,6 +279,8 @@ The system now runs in extended mode by default, providing access to all feature
 | `saveConsultations(List<Consultation> consultations)` | Saves consultation data | Consultation list | `void` |
 | `loadMessages()` | Loads message data from file | - | `List<Message>` |
 | `saveMessages(List<Message> messages)` | Saves message data | Message list | `void` |
+| `saveToFile(List<T> objects, String filePath)` | Deprecated serialization method | Object list, file path | `void` |
+| `loadFromFile(String filePath)` | Deprecated deserialization method | File path | `Object` |
 
 ## Payment System
 

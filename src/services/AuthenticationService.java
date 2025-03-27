@@ -14,6 +14,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 🔐 AuthenticationService - Security management for user authentication 🔐
@@ -69,13 +70,15 @@ public class AuthenticationService {
     }
     
     /**
-     * Authenticate admin credentials with security measures
+     * Generic method to authenticate a user
      * 
-     * @param username Admin username
-     * @param password Admin password (plaintext)
-     * @return Admin object if authentication successful, null otherwise
+     * @param <T> Type of user
+     * @param username Username to authenticate
+     * @param password Password to authenticate
+     * @param userFinder Function to find a user by username
+     * @return User object if authentication successful, null otherwise
      */
-    public Admin authenticateAdmin(String username, String password) {
+    private <T extends User> T authenticate(String username, String password, Function<String, T> userFinder) {
         if (!validateLoginInput(username, password)) {
             return null;
         }
@@ -86,12 +89,9 @@ public class AuthenticationService {
             return null;
         }
         
-        Admin admin = admins.stream()
-                     .filter(a -> a.getUsername().equals(username))
-                     .findFirst()
-                     .orElse(null);
+        T user = userFinder.apply(username);
         
-        if (admin == null) {
+        if (user == null) {
             recordFailedLoginAttempt(username);
             return null;
         }
@@ -99,26 +99,41 @@ public class AuthenticationService {
         boolean authenticated = false;
         
         // Check if the password is already hashed
-        if (admin.getPassword().startsWith("$SHA$")) {
+        if (user.getPassword().startsWith("$SHA$")) {
             // Verify hashed password
-            authenticated = verifyPassword(password, admin.getPassword());
+            authenticated = verifyPassword(password, user.getPassword());
         } else {
             // Legacy authentication (plaintext password)
-            authenticated = admin.getPassword().equals(password);
+            authenticated = user.getPassword().equals(password);
             
             // Upgrade to hashed password if authentication successful
             if (authenticated) {
-                admin.setPassword(hashPassword(password));
+                user.setPassword(hashPassword(password));
             }
         }
         
         if (authenticated) {
             resetLoginAttempts(username);
-            return admin;
+            return user;
         } else {
             recordFailedLoginAttempt(username);
             return null;
         }
+    }
+    
+    /**
+     * Authenticate admin credentials with security measures
+     * 
+     * @param username Admin username
+     * @param password Admin password (plaintext)
+     * @return Admin object if authentication successful, null otherwise
+     */
+    public Admin authenticateAdmin(String username, String password) {
+        return authenticate(username, password, 
+            un -> admins.stream()
+                .filter(a -> a.getUsername().equals(un))
+                .findFirst()
+                .orElse(null));
     }
     
     /**
@@ -129,49 +144,11 @@ public class AuthenticationService {
      * @return Patient object if authentication successful, null otherwise
      */
     public Patient authenticatePatient(String username, String password) {
-        if (!validateLoginInput(username, password)) {
-            return null;
-        }
-        
-        if (isAccountLocked(username)) {
-            System.out.println("Account is temporarily locked due to multiple failed login attempts.");
-            System.out.println("Please try again after " + LOCKOUT_DURATION_MINUTES + " minutes.");
-            return null;
-        }
-        
-        Patient patient = patients.stream()
-                     .filter(p -> p.getUsername().equals(username))
-                     .findFirst()
-                     .orElse(null);
-        
-        if (patient == null) {
-            recordFailedLoginAttempt(username);
-            return null;
-        }
-        
-        boolean authenticated = false;
-        
-        // Check if the password is already hashed
-        if (patient.getPassword().startsWith("$SHA$")) {
-            // Verify hashed password
-            authenticated = verifyPassword(password, patient.getPassword());
-        } else {
-            // Legacy authentication (plaintext password)
-            authenticated = patient.getPassword().equals(password);
-            
-            // Upgrade to hashed password if authentication successful
-            if (authenticated) {
-                patient.setPassword(hashPassword(password));
-            }
-        }
-        
-        if (authenticated) {
-            resetLoginAttempts(username);
-            return patient;
-        } else {
-            recordFailedLoginAttempt(username);
-            return null;
-        }
+        return authenticate(username, password, 
+            un -> patients.stream()
+                .filter(p -> p.getUsername().equals(un))
+                .findFirst()
+                .orElse(null));
     }
     
     /**
@@ -182,49 +159,11 @@ public class AuthenticationService {
      * @return Doctor object if authentication successful, null otherwise
      */
     public Doctor authenticateDoctor(String username, String password) {
-        if (!validateLoginInput(username, password)) {
-            return null;
-        }
-        
-        if (isAccountLocked(username)) {
-            System.out.println("Account is temporarily locked due to multiple failed login attempts.");
-            System.out.println("Please try again after " + LOCKOUT_DURATION_MINUTES + " minutes.");
-            return null;
-        }
-        
-        Doctor doctor = doctors.stream()
-                     .filter(d -> d.getUsername().equals(username))
-                     .findFirst()
-                     .orElse(null);
-        
-        if (doctor == null) {
-            recordFailedLoginAttempt(username);
-            return null;
-        }
-        
-        boolean authenticated = false;
-        
-        // Check if the password is already hashed
-        if (doctor.getPassword().startsWith("$SHA$")) {
-            // Verify hashed password
-            authenticated = verifyPassword(password, doctor.getPassword());
-        } else {
-            // Legacy authentication (plaintext password)
-            authenticated = doctor.getPassword().equals(password);
-            
-            // Upgrade to hashed password if authentication successful
-            if (authenticated) {
-                doctor.setPassword(hashPassword(password));
-            }
-        }
-        
-        if (authenticated) {
-            resetLoginAttempts(username);
-            return doctor;
-        } else {
-            recordFailedLoginAttempt(username);
-            return null;
-        }
+        return authenticate(username, password, 
+            un -> doctors.stream()
+                .filter(d -> d.getUsername().equals(un))
+                .findFirst()
+                .orElse(null));
     }
     
     /**
@@ -235,49 +174,11 @@ public class AuthenticationService {
      * @return Pharmacist object if authentication successful, null otherwise
      */
     public Pharmacist authenticatePharmacist(String username, String password) {
-        if (!validateLoginInput(username, password)) {
-            return null;
-        }
-        
-        if (isAccountLocked(username)) {
-            System.out.println("Account is temporarily locked due to multiple failed login attempts.");
-            System.out.println("Please try again after " + LOCKOUT_DURATION_MINUTES + " minutes.");
-            return null;
-        }
-        
-        Pharmacist pharmacist = pharmacists.stream()
-                     .filter(p -> p.getUsername().equals(username))
-                     .findFirst()
-                     .orElse(null);
-        
-        if (pharmacist == null) {
-            recordFailedLoginAttempt(username);
-            return null;
-        }
-        
-        boolean authenticated = false;
-        
-        // Check if the password is already hashed
-        if (pharmacist.getPassword().startsWith("$SHA$")) {
-            // Verify hashed password
-            authenticated = verifyPassword(password, pharmacist.getPassword());
-        } else {
-            // Legacy authentication (plaintext password)
-            authenticated = pharmacist.getPassword().equals(password);
-            
-            // Upgrade to hashed password if authentication successful
-            if (authenticated) {
-                pharmacist.setPassword(hashPassword(password));
-            }
-        }
-        
-        if (authenticated) {
-            resetLoginAttempts(username);
-            return pharmacist;
-        } else {
-            recordFailedLoginAttempt(username);
-            return null;
-        }
+        return authenticate(username, password, 
+            un -> pharmacists.stream()
+                .filter(p -> p.getUsername().equals(un))
+                .findFirst()
+                .orElse(null));
     }
     
     /**

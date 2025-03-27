@@ -164,10 +164,11 @@ All data is stored in text files in the `/data` directory:
 - **Consultation**: Manages doctor-patient consultations
 - **Pharmacy**: Central class representing the pharmacy entity
 - **PharmacyService**: Main service integrating all user operations with complete healthcare workflow
-- **AuthenticationService**: Handles secure user authentication with password hashing and login attempt limiting
+- **AuthenticationService**: Handles secure user authentication with functional programming approach, password hashing and login attempt limiting
 - **Wallet**: Manages patient wallet functionality for secure in-app payments
 - **CreditCard**: Handles credit card functionality with secure number masking
 - **ConsoleUI**: Provides colorful and interactive console UI elements with emojis and text formatting
+- **FileHandler**: Manages data persistence using generic methods for loading and saving any entity type
 - **SystemTools**: Helper utility class with methods for validation, formatting, security, and data manipulation
 
 ## Object-Oriented Programming Concepts
@@ -201,10 +202,25 @@ This project was designed as an educational tool to demonstrate core OOP princip
 
 ### 6. Modern Java Features
 - **Streams API**: Used for efficient collection processing
-- **Functional Programming**: Lambda expressions for concise code
+- **Functional Programming**: Lambda expressions and function interfaces for cleaner, more concise code
 - **Method References**: For cleaner callback implementation
-- **Benefits**: More readable and maintainable code
-- **Example**: calculateTotalCost() in Prescription uses stream processing
+- **Generics**: Type-safe collections and functional interfaces
+- **Benefits**: More readable, maintainable and DRY code
+- **Examples**: 
+  - Prescription's calculateTotalCost() uses stream processing
+  - FileHandler's generic loadFromFile() and saveToFile() methods use Function interface
+  - AuthenticationService's authenticate() method uses functional programming for finding users
+
+## Code Simplifications
+The codebase has been significantly simplified while maintaining all functionality. Key improvements include:
+
+- **FileHandler Improvements**: Generic methods for loading and saving data with reduced code duplication
+- **Authentication Simplifications**: Functional programming approach for user authentication
+- **UI Standardization**: Consolidated UI methods for consistent user experience
+- **Cleaner Error Handling**: Improved exception handling throughout the system
+- **Improved Documentation**: Detailed explanations of simplification rationale in SIMPLIFICATIONS.md
+
+The simplifications follow key software engineering principles like DRY (Don't Repeat Yourself), Single Responsibility, and the Open/Closed Principle to create a more maintainable and extensible system.
 
 ## Documentation Generation
 The system includes an automated documentation generation feature that creates comprehensive Markdown documentation about the entire system:

@@ -47,6 +47,15 @@ March 26, 2025
 ### 2.1 Introduction
 The EL-TA3BAN Pharmacy Management System is a comprehensive Java-based application that streamlines medical documentation and collaboration through intelligent workflow management. **Our implementation provides a complete healthcare workflow between doctors, pharmacists, and patients** with Egyptian localization of all sample data, including names, medicines, and currency (LE).
 
+#### Test Credentials
+For testing and demonstration purposes, the following credentials are available:
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | admin | admin123 |
+| Patient | amr | alice123 |
+| Doctor | drmohamed | doctor123 |
+| Pharmacist | fatima | pharm123 |
+
 By digitalizing pharmacy processes, the system reduces errors, improves patient care, and enhances operational efficiency. The significance of this project lies in its ability to create a cohesive healthcare ecosystem where information flows seamlessly between stakeholders.
 
 ### 2.2 Project Scope

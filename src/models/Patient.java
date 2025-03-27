@@ -37,7 +37,7 @@ public class Patient extends User {
         this.prescriptions = new ArrayList<>();
         this.consultations = new ArrayList<>();
         this.isActive = true;
-        this.wallet = new Wallet(id, id); // Initialize wallet with same ID as patient and 0 balance
+        this.wallet = new Wallet(this); // Composition - pass this Patient instance to Wallet
     }
 
     // Getters

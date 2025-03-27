@@ -6,21 +6,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Wallet implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
-    private int id;
-    private int patientId;
+public class Wallet {
+    private final Patient owner; // Composition - wallet belongs to one patient
     private double balance;
     private List<Transaction> transactions;
-    private List<CreditCard> savedCards;
+    private List<CreditCard> creditCards;
     
-    public Wallet(int id, int patientId) {
-        this.id = id;
-        this.patientId = patientId;
+    public Wallet(Patient owner) {
+        this.owner = owner;
         this.balance = 0.0;
         this.transactions = new ArrayList<>();
-        this.savedCards = new ArrayList<>();
+        this.creditCards = new ArrayList<>();
     }
     
     public int getId() { return id; }

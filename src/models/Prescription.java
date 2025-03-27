@@ -120,17 +120,6 @@ public class Prescription {
     }
     
     /**
-     * Get patient ID (replaced getCustomerId)
-     * 
-     * @return ID of the patient
-     * @deprecated Use getPatientId() instead
-     */
-    @Deprecated
-    public int getCustomerId() {
-        return patientId;
-    }
-
-    /**
      * 👨‍⚕️ getDoctorId - Identifies the physician who authorized this medication
      * 
      * This method returns the ID of the doctor who created and signed the
@@ -253,25 +242,6 @@ public class Prescription {
         return instructions;
     }
     
-    /**
-     * 📋 getNotes - Legacy method providing medication instructions
-     * 
-     * This method is an alias for getInstructions() maintained for backward
-     * compatibility with older parts of the system. New code should use 
-     * getInstructions() instead.
-     * 
-     * 💡 OOP Concept: Method Deprecation
-     * This demonstrates how to maintain backward compatibility while
-     * encouraging migration to newer, more appropriately named methods.
-     * 
-     * @return String containing detailed instructions for medication usage
-     * @deprecated Use getInstructions() instead for the same functionality
-     */
-    @Deprecated
-    public String getNotes() {
-        return instructions;
-    }
-
     /**
      * 📝✏️ setInstructions - Updates the medication usage guidelines
      * 

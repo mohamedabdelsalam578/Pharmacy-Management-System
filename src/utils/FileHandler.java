@@ -816,30 +816,4 @@ public class FileHandler {
             System.err.println("Error saving prescriptions: " + e.getMessage());
         }
     }
-    
-    /**
-     * Note: This method is deprecated and may be removed in the future.
-     * The system now uses text-based data persistence methods instead of serialization.
-     * 
-     * @param <T> The type of objects (unused in the deprecated implementation)
-     * @param objects The list of objects to save (unused in the deprecated implementation)
-     * @param filePath The file path to save to (unused in the deprecated implementation)
-     */
-    public static <T> void saveToFile(List<T> objects, String filePath) {
-        System.err.println("Warning: saveToFile using serialization is deprecated and will be removed.");
-        System.err.println("Please use the appropriate text-based save method instead.");
-    }
-    
-    /**
-     * Note: This method is deprecated and may be removed in the future.
-     * The system now uses text-based data persistence methods instead of serialization.
-     * 
-     * @param filePath The file path to load from (unused in the deprecated implementation)
-     * @return An empty ArrayList since the method is deprecated
-     */
-    public static Object loadFromFile(String filePath) {
-        System.err.println("Warning: loadFromFile using serialization is deprecated and will be removed.");
-        System.err.println("Please use the appropriate text-based load method instead.");
-        return new ArrayList<>();
-    }
 }

@@ -27,7 +27,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd ${REPL_HOME} && javac -d . src/*.java src/*/*.java && java PharmacyManagementSystem"
+args = "cd ${REPL_HOME} && javac -cp lib/*:. -d . src/*.java src/*/*.java && java -cp lib/*:. PharmacyManagementSystem"
 
 [[workflows.workflow]]
 name = "Pharmacy System Extended"
@@ -39,4 +39,4 @@ task = "shell.exec"
 args = "cd ${REPL_HOME} && javac -d . src/*/*.java src/*.java && java PharmacyManagementSystem --extended"
 
 [deployment]
-run = ["sh", "-c", "cd ${REPL_HOME} && javac -d . src/*.java src/*/*.java && java PharmacyManagementSystem"]
+run = ["sh", "-c", "cd ${REPL_HOME} && javac -cp lib/*:. -d . src/*.java src/*/*.java && java -cp lib/*:. PharmacyManagementSystem"]

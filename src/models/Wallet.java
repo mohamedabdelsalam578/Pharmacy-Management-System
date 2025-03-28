@@ -1,147 +1,316 @@
-
 package models;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class Wallet {
-    private final Patient owner; // Composition - wallet belongs to one patient
-    private double balance;
-    private List<Transaction> transactions;
-    private List<CreditCard> creditCards;
+/**
+ * Represents a patient's wallet in the system
+ * This class is responsible for managing a patient's balance and transactions
+ */
+public class Wallet implements Serializable {
+    private static final long serialVersionUID = 1L;
     
-    public Wallet(Patient owner) {
-        this.owner = owner;
-        this.balance = 0.0;
+    private int id;
+    private Patient patient;
+    private double balance;
+    private List<WalletTransaction> transactions;
+    private List<String> creditCards;
+    
+    /**
+     * Constructor for creating a new wallet
+     * 
+     * @param id The wallet ID
+     * @param patient The patient that owns this wallet
+     * @param balance The initial balance
+     */
+    public Wallet(int id, Patient patient, double balance) {
+        this.id = id;
+        this.patient = patient;
+        this.balance = balance;
         this.transactions = new ArrayList<>();
         this.creditCards = new ArrayList<>();
     }
     
-    public Patient getOwner() { return owner; }
-    public double getBalance() { return balance; }
-    public List<Transaction> getTransactions() { return transactions; }
-    
-    public boolean deposit(double amount, String description) {
-        if (amount <= 0) return false;
-        balance += amount;
-        transactions.add(new Transaction(
-            transactions.size() + 1,
-            amount,
-            "DEPOSIT",
-            description,
-            LocalDateTime.now()
-        ));
-        return true;
+    /**
+     * Constructor for creating a new wallet with zero balance
+     * 
+     * @param patient The patient that owns this wallet
+     */
+    public Wallet(Patient patient) {
+        this(0, patient, 0.0);
     }
     
-    public boolean withdraw(double amount, String description) {
-        if (amount <= 0 || amount > balance) return false;
-        balance -= amount;
-        transactions.add(new Transaction(
-            transactions.size() + 1,
-            amount,
-            "WITHDRAWAL", 
-            description,
-            LocalDateTime.now()
-        ));
-        return true;
+    /**
+     * Get the wallet ID
+     * 
+     * @return The wallet ID
+     */
+    public int getId() {
+        return id;
     }
     
-    public boolean makePayment(double amount, int orderId) {
-        if (amount <= 0 || amount > balance) return false;
-        balance -= amount;
-        transactions.add(new Transaction(
-            transactions.size() + 1,
-            amount,
-            "PAYMENT",
-            "Payment for Order #" + orderId,
-            LocalDateTime.now()
-        ));
-        return true;
+    /**
+     * Set the wallet ID
+     * 
+     * @param id The wallet ID
+     */
+    public void setId(int id) {
+        this.id = id;
     }
     
-    public void displayInfo() {
-        System.out.println("Patient: " + owner.getName());
-        System.out.println("Current Balance: " + String.format("%.2f LE", balance));
-        System.out.println("Total Transactions: " + transactions.size());
+    /**
+     * Get the patient that owns this wallet
+     * 
+     * @return The patient
+     */
+    public Patient getPatient() {
+        return patient;
     }
     
-    public void displayTransactions() {
-        if (transactions.isEmpty()) {
-            System.out.println("No transactions found.");
-            return;
-        }
-        
-        System.out.println("\n🧾 ===== TRANSACTION HISTORY ===== 🧾");
-        System.out.printf("%-5s %-12s %-20s %-10s %-25s\n", 
-                         "ID", "Type", "Description", "Amount", "Date/Time");
-        System.out.println("--------------------------------------------------------------------------------");
-        
-        for (Transaction transaction : transactions) {
-            System.out.printf("%-5d %-12s %-20s %-9.2f LE %-25s\n",
-                transaction.getId(),
-                transaction.getType(),
-                transaction.getDescription(),
-                transaction.getAmount(),
-                transaction.getDateTime().toString().replace("T", " "));
-        }
+    /**
+     * Get the current balance
+     * 
+     * @return The balance
+     */
+    public double getBalance() {
+        return balance;
     }
     
-    public List<CreditCard> getSavedCards() {
+    /**
+     * Set the balance
+     * 
+     * @param balance The new balance
+     */
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+    
+    /**
+     * Get all transactions for this wallet
+     * 
+     * @return The list of transactions
+     */
+    public List<WalletTransaction> getTransactions() {
+        return transactions;
+    }
+    
+    /**
+     * Set the transactions for this wallet
+     * 
+     * @param transactions The list of transactions
+     */
+    public void setTransactions(List<WalletTransaction> transactions) {
+        this.transactions = transactions;
+    }
+    
+    /**
+     * Add a transaction to this wallet
+     * 
+     * @param transaction The transaction to add
+     */
+    public void addTransaction(WalletTransaction transaction) {
+        this.transactions.add(transaction);
+    }
+    
+    /**
+     * Get all credit cards associated with this wallet
+     * 
+     * @return The list of credit cards
+     */
+    public List<String> getCreditCards() {
         return creditCards;
     }
     
-    public boolean addCard(String cardNumber, String cardHolderName, String expiryDate, String cardType) {
-        String lastFourDigits = cardNumber.substring(cardNumber.length() - 4);
-        
-        for (CreditCard card : creditCards) {
-            if (card.getLastFourDigits().equals(lastFourDigits)) {
-                return false;
-            }
+    /**
+     * Add a credit card to this wallet
+     * 
+     * @param cardNumber The credit card number to add
+     * @return true if the card was added, false if it already exists
+     */
+    public boolean addCreditCard(String cardNumber) {
+        // Validate the card number format (simple validation)
+        if (!isValidCreditCardFormat(cardNumber)) {
+            return false;
         }
         
-        creditCards.add(new CreditCard(cardNumber, cardHolderName, expiryDate, cardType));
+        // Check if card already exists
+        if (creditCards.contains(cardNumber)) {
+            return false;
+        }
+        
+        // Add the card
+        creditCards.add(cardNumber);
         return true;
     }
     
-    public boolean removeCard(String lastFourDigits) {
-        return creditCards.removeIf(card -> card.getLastFourDigits().equals(lastFourDigits));
+    /**
+     * Remove a credit card from this wallet
+     * 
+     * @param cardNumber The credit card number to remove
+     * @return true if the card was removed, false if it wasn't found
+     */
+    public boolean removeCreditCard(String cardNumber) {
+        return creditCards.remove(cardNumber);
     }
     
-    public void displaySavedCards() {
-        if (creditCards.isEmpty()) {
-            System.out.println("No saved cards found.");
-            return;
+    /**
+     * Deposit money into the wallet
+     * 
+     * @param amount The amount to deposit
+     * @param description The description for this deposit
+     * @return The created transaction
+     */
+    public WalletTransaction deposit(double amount, String description) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be positive");
         }
         
-        System.out.println("\n💳 ===== SAVED CARDS ===== 💳");
-        for (int i = 0; i < creditCards.size(); i++) {
-            CreditCard card = creditCards.get(i);
-            System.out.println("\nCard #" + (i + 1));
-            card.displayInfo();
-        }
+        // Update balance
+        balance += amount;
+        
+        // Create and return the transaction
+        WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.DEPOSIT, description);
+        transactions.add(transaction);
+        return transaction;
     }
     
-    public static class Transaction {
-        private int id;
-        private double amount;
-        private String type;
-        private String description;
-        private LocalDateTime dateTime;
-        
-        public Transaction(int id, double amount, String type, String description, LocalDateTime dateTime) {
-            this.id = id;
-            this.amount = amount;
-            this.type = type;
-            this.description = description;
-            this.dateTime = dateTime;
+    /**
+     * Withdraw money from the wallet
+     * 
+     * @param amount The amount to withdraw
+     * @param description The description for this withdrawal
+     * @return The created transaction
+     * @throws IllegalArgumentException If the amount is negative or if there are insufficient funds
+     */
+    public WalletTransaction withdraw(double amount, String description) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
         
-        public int getId() { return id; }
-        public double getAmount() { return amount; }
-        public String getType() { return type; }
-        public String getDescription() { return description; }
-        public LocalDateTime getDateTime() { return dateTime; }
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+        
+        // Update balance
+        balance -= amount;
+        
+        // Create and return the transaction
+        WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.WITHDRAWAL, description);
+        transactions.add(transaction);
+        return transaction;
+    }
+    
+    /**
+     * Make a payment from the wallet
+     * 
+     * @param amount The amount to pay
+     * @param description The description for this payment
+     * @return The created transaction
+     * @throws IllegalArgumentException If the amount is negative or if there are insufficient funds
+     */
+    public WalletTransaction makePayment(double amount, String description) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Payment amount must be positive");
+        }
+        
+        if (amount > balance) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+        
+        // Update balance
+        balance -= amount;
+        
+        // Create and return the transaction
+        WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.PAYMENT, description);
+        transactions.add(transaction);
+        return transaction;
+    }
+    
+    /**
+     * Process a refund to the wallet
+     * 
+     * @param amount The amount to refund
+     * @param description The description for this refund
+     * @return The created transaction
+     */
+    public WalletTransaction processRefund(double amount, String description) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Refund amount must be positive");
+        }
+        
+        // Update balance
+        balance += amount;
+        
+        // Create and return the transaction
+        WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.REFUND, description);
+        transactions.add(transaction);
+        return transaction;
+    }
+    
+    /**
+     * Check if the wallet has sufficient funds for a payment
+     * 
+     * @param amount The payment amount
+     * @return true if the wallet has sufficient funds, false otherwise
+     */
+    public boolean hasSufficientFunds(double amount) {
+        return balance >= amount;
+    }
+    
+    /**
+     * Get the transaction history for this wallet
+     * 
+     * @param limit The maximum number of transactions to return (0 for all)
+     * @return The list of transactions, sorted by date (most recent first)
+     */
+    public List<WalletTransaction> getTransactionHistory(int limit) {
+        // Sort transactions by date (most recent first)
+        transactions.sort((t1, t2) -> t2.getTimestamp().compareTo(t1.getTimestamp()));
+        
+        // Return all transactions if limit is 0 or negative
+        if (limit <= 0 || limit >= transactions.size()) {
+            return new ArrayList<>(transactions);
+        }
+        
+        // Return only the most recent transactions
+        return new ArrayList<>(transactions.subList(0, limit));
+    }
+    
+    /**
+     * Get a formatted string representation of the wallet balance
+     * 
+     * @return The formatted balance
+     */
+    public String getFormattedBalance() {
+        return String.format("%.2f LE", balance);
+    }
+    
+    /**
+     * Validate a credit card number format
+     * This is a simple validation that checks if the card number has 16 digits
+     * In a real application, this would include more sophisticated validation
+     * 
+     * @param cardNumber The credit card number to validate
+     * @return true if the format is valid, false otherwise
+     */
+    private boolean isValidCreditCardFormat(String cardNumber) {
+        // Remove spaces and dashes
+        String cleanedNumber = cardNumber.replaceAll("[\\s-]", "");
+        
+        // Check if the number contains only digits and has a length of 16
+        return cleanedNumber.matches("\\d{16}");
+    }
+    
+    /**
+     * Get a formatted string representation of the wallet
+     * 
+     * @return The formatted wallet
+     */
+    @Override
+    public String toString() {
+        return String.format("Wallet [ID: %d, Patient: %s, Balance: %s, Cards: %d, Transactions: %d]", 
+                id, patient.getUsername(), getFormattedBalance(), creditCards.size(), transactions.size());
     }
 }

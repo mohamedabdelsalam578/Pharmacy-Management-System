@@ -1,129 +1,223 @@
-
 package models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Patient - Represents a pharmacy patient with orders and prescriptions
- * 
- * This class extends the User class and adds patient-specific attributes and behaviors,
- * demonstrating inheritance and specialized functionality.
- * 
- * OOP Concepts Demonstrated:
- * - Inheritance: Patient inherits from User
- * - Encapsulation: Private fields with public getters/setters
- * - Composition: Patient owns Orders, Prescriptions, and a Wallet
- * 
- * Class Responsibilities:
- * - Manages patient orders and prescriptions
- * - Handles patient consultations
- * - Processes payments through wallet
+ * Represents a patient in the pharmacy system
+ * Extends the User class with patient-specific properties
  */
 public class Patient extends User {
+    private static final long serialVersionUID = 1L;
+    
+    private String fullName;
     private String address;
+    private String phoneNumber;
+    private String email;
+    private String gender;
+    private int age;
+    private Wallet wallet;
     private List<Order> orders;
-    private List<Prescription> prescriptions;
-    private List<Consultation> consultations;
-    private boolean isActive;
-    private Wallet wallet; // Added wallet for payment functionality
-
-    public Patient(int id, String name, String username, String password, 
-                  String email, String phoneNumber, String address) {
-        super(id, name, username, password, email, phoneNumber);
+    
+    /**
+     * Constructor for creating a new Patient
+     * 
+     * @param id The unique identifier for this patient
+     * @param username The username for this patient
+     * @param password The password for this patient
+     * @param fullName The full name of this patient
+     * @param address The address of this patient
+     * @param phoneNumber The phone number of this patient
+     * @param email The email address of this patient
+     * @param gender The gender of this patient
+     * @param age The age of this patient
+     */
+    public Patient(int id, String username, String password, String fullName, String address, 
+                   String phoneNumber, String email, String gender, int age) {
+        super(id, username, password, "PATIENT");
+        this.fullName = fullName;
         this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.gender = gender;
+        this.age = age;
         this.orders = new ArrayList<>();
-        this.prescriptions = new ArrayList<>();
-        this.consultations = new ArrayList<>();
-        this.isActive = true;
-        this.wallet = new Wallet(this); // Composition - pass this Patient instance to Wallet
-    }
-
-    // Getters
-    public String getAddress() { return address; }
-    public List<Order> getOrders() { return orders; }
-    public List<Prescription> getPrescriptions() { return prescriptions; }
-    public List<Consultation> getConsultations() { return consultations; }
-    public boolean isActive() { return isActive; }
-    public Wallet getWallet() { return wallet; } // Add getter for wallet
-
-    // Setters
-    public void setAddress(String address) { this.address = address; }
-    public void setActive(boolean active) { this.isActive = active; }
-    public void setWallet(Wallet wallet) { this.wallet = wallet; } // Add setter for wallet
-
-    // Business methods
-    public void addOrder(Order order) { orders.add(order); }
-    public void addPrescription(Prescription prescription) { prescriptions.add(prescription); }
-    public void addConsultation(Consultation consultation) { consultations.add(consultation); }
-    public void removeOrder(Order order) { orders.remove(order); }
-    public void removePrescription(Prescription prescription) { prescriptions.remove(prescription); }
-    public void removeConsultation(Consultation consultation) { consultations.remove(consultation); }
-    
-    /**
-     * Find a prescription by its ID
-     * 
-     * @param prescriptionId The ID of the prescription to find
-     * @return The prescription with the given ID, or null if not found
-     */
-    public Prescription findPrescriptionById(int prescriptionId) {
-        return prescriptions.stream()
-                .filter(p -> p.getId() == prescriptionId)
-                .findFirst()
-                .orElse(null);
     }
     
     /**
-     * Place an order using a prescription
+     * Constructor for creating a new Patient with minimal information
      * 
-     * @param prescription The prescription to use for the order
-     * @param orderId The ID to assign to the new order
-     * @return The created order, or null if the prescription is not valid
+     * @param id The unique identifier for this patient
+     * @param username The username for this patient
+     * @param password The password for this patient
+     * @param fullName The full name of this patient
      */
-    public Order placeOrderWithPrescription(Prescription prescription, int orderId) {
-        // Verify the prescription is valid, not filled, and not expired
-        if (prescription == null || prescription.getStatus().equals("Filled") || prescription.isExpired()) {
-            return null;
-        }
-        
-        // Create a new order for the prescription
-        Order order = new Order(orderId, getId());
-        
-        // Add medicines from the prescription to the order
-        for (Map.Entry<Medicine, Integer> entry : prescription.getMedicines().entrySet()) {
-            Medicine medicine = entry.getKey();
-            int quantity = entry.getValue();
-            order.addMedicine(medicine, quantity);
-        }
-        
-        // Update prescription status
-        prescription.setStatus("Filled");
-        
-        // Add the order to the patient's orders
-        addOrder(order);
-        
-        // Print receipt for the prescription order
-        System.out.println("Prescription order placed successfully. Order ID: " + order.getId());
-        order.printReceipt(getName());
-        
-        return order;
+    public Patient(int id, String username, String password, String fullName) {
+        this(id, username, password, fullName, "", "", "", "", 0);
     }
-
+    
+    /**
+     * Get the full name of this patient
+     * 
+     * @return The full name
+     */
+    public String getFullName() {
+        return fullName;
+    }
+    
+    /**
+     * Set the full name of this patient
+     * 
+     * @param fullName The full name
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    
+    /**
+     * Get the address of this patient
+     * 
+     * @return The address
+     */
+    public String getAddress() {
+        return address;
+    }
+    
+    /**
+     * Set the address of this patient
+     * 
+     * @param address The address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    /**
+     * Get the phone number of this patient
+     * 
+     * @return The phone number
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    
+    /**
+     * Set the phone number of this patient
+     * 
+     * @param phoneNumber The phone number
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    
+    /**
+     * Get the email address of this patient
+     * 
+     * @return The email address
+     */
+    public String getEmail() {
+        return email;
+    }
+    
+    /**
+     * Set the email address of this patient
+     * 
+     * @param email The email address
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    /**
+     * Get the gender of this patient
+     * 
+     * @return The gender
+     */
+    public String getGender() {
+        return gender;
+    }
+    
+    /**
+     * Set the gender of this patient
+     * 
+     * @param gender The gender
+     */
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    
+    /**
+     * Get the age of this patient
+     * 
+     * @return The age
+     */
+    public int getAge() {
+        return age;
+    }
+    
+    /**
+     * Set the age of this patient
+     * 
+     * @param age The age
+     */
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    /**
+     * Get the wallet of this patient
+     * 
+     * @return The wallet
+     */
+    public Wallet getWallet() {
+        return wallet;
+    }
+    
+    /**
+     * Set the wallet of this patient
+     * 
+     * @param wallet The wallet
+     */
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+    
+    /**
+     * Get all orders for this patient
+     * 
+     * @return The list of orders
+     */
+    public List<Order> getOrders() {
+        return orders;
+    }
+    
+    /**
+     * Add an order to this patient
+     * 
+     * @param order The order to add
+     */
+    public void addOrder(Order order) {
+        this.orders.add(order);
+    }
+    
+    /**
+     * Remove an order from this patient
+     * 
+     * @param order The order to remove
+     * @return true if the order was removed, false if it wasn't found
+     */
+    public boolean removeOrder(Order order) {
+        return this.orders.remove(order);
+    }
+    
+    /**
+     * Get a formatted string representation of this patient
+     * 
+     * @return The formatted string
+     */
     @Override
-    public void displayInfo() {
-        System.out.println("\n👤 ===== PATIENT INFORMATION ===== 👤");
-        System.out.println("ID: " + getId());
-        System.out.println("Name: " + getName());
-        System.out.println("Username: " + getUsername());
-        System.out.println("Email: " + getEmail());
-        System.out.println("Phone Number: " + getPhoneNumber());
-        System.out.println("Address: " + address);
-        System.out.println("Number of Orders: " + orders.size());
-        System.out.println("Number of Prescriptions: " + prescriptions.size());
-        System.out.println("Number of Consultations: " + consultations.size());
-        System.out.println("Status: " + (isActive ? "Active" : "Inactive"));
-        System.out.println("Wallet Balance: " + String.format("%.2f LE", wallet.getBalance()));
-        System.out.println("Total Transactions: " + wallet.getTransactions().size());
+    public String toString() {
+        return String.format("Patient [ID: %d, Username: %s, Full Name: %s, Phone: %s, Email: %s]", 
+                getId(), getUsername(), fullName, phoneNumber, email);
     }
 }

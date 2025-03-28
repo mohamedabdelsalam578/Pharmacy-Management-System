@@ -112,15 +112,59 @@ public class PharmacyService {
     }
     
     /**
-     * Save all data to files
+     * Save all data to files and database
      */
     public void saveDataToFiles() {
+        // Save data to files
         FileHandler.saveAdmins(admins);
         FileHandler.savePatients(patients);
         FileHandler.saveDoctors(doctors);
         FileHandler.saveMedicines(medicines);
         FileHandler.saveOrders(orders);
-        System.out.println("All data saved to files.");
+        
+        // Save wallet data to database if available
+        saveWalletsToDatabase();
+        
+        System.out.println("All data saved to persistent storage.");
+    }
+    
+    /**
+     * Save all wallet data to database
+     * This only has an effect if database connection is available
+     */
+    private void saveWalletsToDatabase() {
+        try {
+            // Initialize WalletService for database operations
+            WalletService walletService = new WalletService();
+            
+            // Only proceed if database is available
+            if (!walletService.isDatabaseAvailable()) {
+                return;
+            }
+            
+            int savedCount = 0;
+            
+            // Save each patient's wallet to database
+            for (Patient patient : patients) {
+                Wallet wallet = patient.getWallet();
+                if (wallet != null) {
+                    boolean saved = walletService.saveWallet(wallet);
+                    if (saved) {
+                        // Also save any credit cards
+                        walletService.saveCreditCards(wallet);
+                        savedCount++;
+                    }
+                }
+            }
+            
+            if (savedCount > 0) {
+                System.out.println("Saved " + savedCount + " wallets to database.");
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Could not save wallet data to database: " + e.getMessage());
+            // Log the exception but continue execution
+            e.printStackTrace();
+        }
     }
 
     /**

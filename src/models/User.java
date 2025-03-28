@@ -1,85 +1,188 @@
 package models;
 
+import java.io.Serializable;
+
 /**
- * 👤 User - The foundation of our system's class hierarchy 👤
- * 
- * This abstract class demonstrates the OOP concept of inheritance by serving
- * as the parent class for all user types in our pharmacy system.
- * 
- * 🔑 OOP Concepts Demonstrated:
- * - Abstraction: User class cannot be instantiated directly (it's abstract!)
- * - Encapsulation: Private fields with public getters/setters protect our data
- * - Inheritance: Admin, Patient, Doctor, and Pharmacist all inherit from User
- * - Polymorphism: The displayInfo() method behaves differently for each user type
- * 
- * 📚 Class Responsibilities:
- * - Provides common attributes for all user types (id, name, credentials, etc.)
- * - Enforces a consistent interface across different user roles
- * - Centralizes authentication-related data for the whole system
- * 
- * This is a great example of how we apply the "is-a" relationship in OOP.
- * For example, a Doctor "is-a" User with additional doctor-specific properties.
+ * Base class for all users in the system
+ * Provides common properties and methods for all user types
  */
-public abstract class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private int id;
-    private String name;
     private String username;
     private String password;
-    private String email;
-    private String phoneNumber;
-
+    private String role;
+    private boolean active;
+    private int loginAttempts;
+    private boolean locked;
+    
     /**
-     * Constructor to initialize a User
+     * Constructor for creating a new user
      * 
-     * @param id User's unique identifier
-     * @param name User's full name
-     * @param username User's username for login
-     * @param password User's password for login
-     * @param email User's email address
-     * @param phoneNumber User's phone number
+     * @param id The unique identifier for this user
+     * @param username The username for this user
+     * @param password The password for this user
+     * @param role The role of this user (ADMIN, PATIENT, DOCTOR, PHARMACIST)
      */
-    public User(int id, String name, String username, String password, String email, String phoneNumber) {
+    public User(int id, String username, String password, String role) {
         this.id = id;
-        this.name = name;
         this.username = username;
         this.password = password;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.active = true;
+        this.loginAttempts = 0;
+        this.locked = false;
     }
-
-    // Getters
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
-    public String getEmail() { return email; }
-    public String getPhoneNumber() { return phoneNumber; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-    public void setUsername(String username) { this.username = username; }
-    public void setPassword(String password) { this.password = password; }
-    public void setEmail(String email) { this.email = email; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
+    
     /**
-     * 🔄 Abstract method to display information about a user (Polymorphism in action!)
+     * Get the ID of this user
      * 
-     * This is a perfect example of polymorphism - one of the four pillars of OOP.
-     * Each subclass (Admin, Patient, Doctor, Pharmacist) will override this method
-     * to display role-specific information, but they can all be called through a
-     * common User interface.
-     * 
-     * When we call displayInfo() on different User objects, the program automatically
-     * knows which version to call based on the actual object type at runtime. That's
-     * dynamic polymorphism!
-     * 
-     * For example:
-     * - Admin will display administrative privileges and system access level
-     * - Patient will display medical history and current prescriptions
-     * - Doctor will display specialization and patient count
-     * - Pharmacist will display their pharmacy branch and qualification
+     * @return The ID
      */
-    public abstract void displayInfo();
+    public int getId() {
+        return id;
+    }
+    
+    /**
+     * Set the ID of this user
+     * 
+     * @param id The ID
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    /**
+     * Get the username of this user
+     * 
+     * @return The username
+     */
+    public String getUsername() {
+        return username;
+    }
+    
+    /**
+     * Set the username of this user
+     * 
+     * @param username The username
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    /**
+     * Get the password of this user
+     * 
+     * @return The password
+     */
+    public String getPassword() {
+        return password;
+    }
+    
+    /**
+     * Set the password of this user
+     * 
+     * @param password The password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    /**
+     * Get the role of this user
+     * 
+     * @return The role
+     */
+    public String getRole() {
+        return role;
+    }
+    
+    /**
+     * Set the role of this user
+     * 
+     * @param role The role
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
+    /**
+     * Check if this user is active
+     * 
+     * @return true if active, false otherwise
+     */
+    public boolean isActive() {
+        return active;
+    }
+    
+    /**
+     * Set the active state of this user
+     * 
+     * @param active The active state
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    /**
+     * Get the number of login attempts for this user
+     * 
+     * @return The number of login attempts
+     */
+    public int getLoginAttempts() {
+        return loginAttempts;
+    }
+    
+    /**
+     * Set the number of login attempts for this user
+     * 
+     * @param loginAttempts The number of login attempts
+     */
+    public void setLoginAttempts(int loginAttempts) {
+        this.loginAttempts = loginAttempts;
+    }
+    
+    /**
+     * Increment the number of login attempts for this user
+     */
+    public void incrementLoginAttempts() {
+        this.loginAttempts++;
+    }
+    
+    /**
+     * Reset the number of login attempts for this user
+     */
+    public void resetLoginAttempts() {
+        this.loginAttempts = 0;
+    }
+    
+    /**
+     * Check if this user is locked
+     * 
+     * @return true if locked, false otherwise
+     */
+    public boolean isLocked() {
+        return locked;
+    }
+    
+    /**
+     * Set the locked state of this user
+     * 
+     * @param locked The locked state
+     */
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+    
+    /**
+     * Get a formatted string representation of this user
+     * 
+     * @return The formatted string
+     */
+    @Override
+    public String toString() {
+        return String.format("User [ID: %d, Username: %s, Role: %s, Active: %s, Locked: %s]", 
+                id, username, role, active, locked);
+    }
 }

@@ -171,6 +171,32 @@ public class DataInitializer {
     }
     
     /**
+     * Initialize the basic pharmacy management system with only Admin and Patient functionality
+     * 
+     * @param pharmacyService The pharmacy service to initialize
+     */
+    public static void initializeBasicSystem(PharmacyService pharmacyService) {
+        System.out.println("===== BASIC PHARMACY MANAGEMENT SYSTEM INITIALIZATION =====");
+        System.out.println("Initializing with Admin and Patient functionality only...");
+        
+        // Initialize test data for the basic system
+        pharmacyService.initialize();
+        
+        System.out.println("Basic pharmacy system initialized with test data.");
+        
+        System.out.println("\n===== RUNNING BASIC TEST SCENARIOS =====");
+        
+        // Test Admin functionalities
+        testAdminFunctionalities(pharmacyService);
+        
+        // Test Patient functionalities
+        testPatientFunctionalities(pharmacyService);
+        
+        System.out.println("\n===== BASIC TEST SCENARIOS COMPLETED =====");
+        System.out.println("The basic system is now ready for interactive use.");
+    }
+    
+    /**
      * Initialize and test the extended pharmacy management system with healthcare functionality
      * 
      * @param pharmacyService The updated pharmacy service to initialize

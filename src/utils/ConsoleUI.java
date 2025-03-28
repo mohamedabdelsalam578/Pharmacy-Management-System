@@ -193,4 +193,14 @@ public class ConsoleUI {
                System.console().readLine() : 
                new java.util.Scanner(System.in).nextLine();
     }
+    
+    /**
+     * Print text in specified color
+     * 
+     * @param text Text to print
+     * @param color Color to use
+     */
+    public static void printColoredText(String text, String color) {
+        System.out.println(color + text + RESET);
+    }
 }

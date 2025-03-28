@@ -43,6 +43,16 @@ public class WalletService {
     }
     
     /**
+     * Check if database connection is available
+     * 
+     * @return true if database is available, false otherwise
+     */
+    public boolean isDatabaseAvailable() {
+        // This version of the application uses file storage, not a database
+        return false;
+    }
+    
+    /**
      * Get a patient's wallet
      * Creates a new wallet if one doesn't exist
      * 

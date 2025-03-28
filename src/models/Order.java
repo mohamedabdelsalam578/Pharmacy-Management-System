@@ -136,6 +136,25 @@ public class Order implements Serializable {
     }
     
     /**
+     * Constructor for creating a new order with a specific date
+     * 
+     * @param id The order ID number
+     * @param patientId The ID of the patient placing the order
+     * @param orderDate The order date
+     */
+    public Order(int id, int patientId, Date orderDate) {
+        this.id = id;
+        this.patientId = patientId;
+        this.orderDate = orderDate;
+        this.items = new ArrayList<>();
+        this.status = Status.PENDING;
+        this.totalAmount = 0.0;
+        this.paymentMethod = PaymentMethod.NOT_PAID;
+        this.deliveryMethod = DeliveryMethod.PICKUP;
+        this.isPaid = false;
+    }
+    
+    /**
      * Calculate the total amount for this order
      * 
      * @return The total amount

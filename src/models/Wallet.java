@@ -197,6 +197,15 @@ public class Wallet implements Serializable {
     }
     
     /**
+     * Constructor for creating a new wallet from a Patient object
+     * 
+     * @param patient The patient who owns this wallet
+     */
+    public Wallet(Patient patient) {
+        this(patient.getId(), patient.getUsername());
+    }
+    
+    /**
      * Constructor for creating a new wallet with an initial balance
      * 
      * @param patientId The ID of the patient who owns this wallet
@@ -293,8 +302,21 @@ public class Wallet implements Serializable {
      * @throws IllegalArgumentException If the amount is negative
      */
     public boolean withdraw(double amount, String description) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Withdrawal amount must be positive");
+        if (amount < 0) {
+            throw new IllegalArgumentException("Withdrawal amount cannot be negative");
+        }
+        
+        // If amount is zero, just record the transaction but don't modify balance
+        if (amount == 0) {
+            Transaction transaction = new Transaction(
+                    patientId, 
+                    Transaction.Type.WITHDRAWAL, 
+                    amount, 
+                    description + " (zero amount)", 
+                    balance);
+            
+            transactions.add(transaction);
+            return true;
         }
         
         if (balance < amount) {
@@ -324,6 +346,29 @@ public class Wallet implements Serializable {
      */
     public boolean makePayment(double amount, String description) {
         return withdraw(amount, "Payment: " + description);
+    }
+    
+    /**
+     * Make a payment from the wallet for an order
+     * 
+     * @param amount The amount to pay
+     * @param orderId The ID of the order this payment is for
+     * @return true if successful, false if insufficient funds
+     */
+    public boolean makePayment(double amount, int orderId) {
+        return makePayment(amount, "Order #" + orderId);
+    }
+    
+    /**
+     * Make a payment from the wallet for an order with custom description
+     * 
+     * @param amount The amount to pay
+     * @param orderId The ID of the order this payment is for
+     * @param description Custom description for this payment
+     * @return true if successful, false if insufficient funds
+     */
+    public boolean makePayment(double amount, int orderId, String description) {
+        return withdraw(amount, description);
     }
     
     /**

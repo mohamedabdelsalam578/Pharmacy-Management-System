@@ -141,7 +141,7 @@ The EL-TA3BAN Pharmacy System features a comprehensive wallet-based payment syst
   - Link credit cards for payment
 
 ## Data Persistence
-All data is stored in text files in the `/data` directory:
+All data is stored in text files and serialized objects in the `/data` directory:
 - admins.txt: Admin user data
 - patients.txt: Patient user data
 - doctors.txt: Doctor user data
@@ -152,7 +152,7 @@ All data is stored in text files in the `/data` directory:
 - medical_reports.txt: Medical report data
 - consultations.txt: Doctor-patient consultation data
 - messages.txt: Communication messages data
-- wallet_transactions.txt: Patient wallet transaction data
+- data/wallets/: Directory containing wallet serialized objects
 
 ## Main Classes
 - **PharmacyManagementSystem**: Entry point to the application that automatically runs in extended mode
@@ -166,7 +166,7 @@ All data is stored in text files in the `/data` directory:
 - **PharmacyService**: Main service integrating all user operations with complete healthcare workflow
 - **AuthenticationService**: Handles secure user authentication with functional programming approach, password hashing and login attempt limiting
 - **Wallet**: Manages patient wallet functionality for secure in-app payments
-- **CreditCard**: Handles credit card functionality with secure number masking
+- **Wallet.Card**: Inner class that handles credit card functionality with secure number masking
 - **ConsoleUI**: Provides colorful and interactive console UI elements with emojis and text formatting
 - **FileHandler**: Manages data persistence using generic methods for loading and saving any entity type
 - **SystemTools**: Helper utility class with methods for validation, formatting, security, and data manipulation

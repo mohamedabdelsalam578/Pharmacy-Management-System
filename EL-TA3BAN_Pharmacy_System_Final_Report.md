@@ -135,7 +135,7 @@ The above class diagram illustrates the complete structure of our pharmacy manag
 - **✓ Message**: Individual communications within consultations
 - **✓ MedicalReport**: Patient health documentation
 - **✓ Wallet**: Patient's payment system with balance and transaction history
-- **✓ Transaction**: Record of financial exchanges in the system
+- **✓ Transaction**: Wallet inner class for financial exchanges in the system
 
 #### Key Class Relationships
 

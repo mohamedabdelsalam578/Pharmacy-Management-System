@@ -22,7 +22,7 @@
 5. [Main Application](#main-application)
 6. [Payment System](#payment-system)
    - [Wallet](#1-wallet-class-functions)
-   - [CreditCard](#2-creditcard-class-functions)
+   - [Wallet.Card](#2-walletcard-class-functions)
    - [Transaction](#3-transaction-class-functions)
 7. [Prescription Workflow](#prescription-workflow)
    - [Workflow Stages](#prescription-workflow-stages)
@@ -59,7 +59,7 @@ The system now runs in extended mode by default, providing access to all feature
 | `Message` | Communication between doctors and patients | `displayInfo()`, `getSender()`, `getContent()`, `getTimestamp()` |
 | `Pharmacy` | Represents physical pharmacy location | `addPharmacist()`, `addMedicine()`, `processPrescription()`, `updateInventory()`, `findMedicineById()`, `getCategorizedMedicines()` |
 | `Wallet` | Patient's digital wallet for payments | `getBalance()`, `deposit()`, `withdraw()`, `getTransactionHistory()`, `addCreditCard()`, `removeCreditCard()` |
-| `CreditCard` | Credit card information for payments | `getCardNumber()`, `getMaskedCardNumber()`, `getCardHolderName()`, `getExpiryDate()`, `isValid()` |
+| `Wallet.Card` | Inner class for credit card information | `getCardNumber()`, `getMaskedCardNumber()`, `getCardHolderName()`, `getExpiryDate()`, `isValid()` |
 | `Transaction` | Records of wallet financial operations | `getAmount()`, `getTimestamp()`, `getType()`, `getDescription()`, `getBalance()` |
 
 ## Service Classes
@@ -325,18 +325,18 @@ The Pharmacy Management System includes a comprehensive internal payment system 
 | `removeCard(String lastFourDigits)` | Removes a card from wallet | Last four digits of card | `boolean` |
 | `displaySavedCards()` | Displays all saved cards | - | `void` |
 
-### 2. CreditCard Class Functions
+### 2. Wallet.Card Class Functions
 
 | Function | Description | Parameters | Return Type |
 |----------|-------------|------------|-------------|
-| `CreditCard(String cardNumber, String cardHolderName, String expiryDate, String cardType)` | Constructor initializing card | Card details | - |
-| `getCardNumber()` | Gets masked card number | - | `String` |
+| `Card(String cardNumber, String cardHolderName, String expiryDate)` | Constructor initializing card | Card details | - |
+| `getCardNumber()` | Gets card number | - | `String` |
+| `getMaskedCardNumber()` | Gets masked card number for security | - | `String` |
 | `getCardHolderName()` | Gets card holder name | - | `String` |
 | `getExpiryDate()` | Gets card expiry date | - | `String` |
-| `getCardType()` | Gets type of card (Visa, Mastercard, etc.) | - | `String` |
 | `getLastFourDigits()` | Gets last 4 digits of card number | - | `String` |
-| `maskCardNumber(String cardNumber)` | Masks card number for security | Full card number | `String` |
-| `displayInfo()` | Displays formatted card information | - | `void` |
+| `isValid()` | Validates the card details | - | `boolean` |
+| `toString()` | Returns string representation of card | - | `String` |
 
 ### 3. Transaction Class Functions
 
@@ -401,6 +401,6 @@ The Pharmacy Management System includes a complete prescription workflow from do
                           │
                           ▼
                     ┌───────────┐
-                    │CreditCard │
+                    │Wallet.Card│
                     └───────────┘
 ```

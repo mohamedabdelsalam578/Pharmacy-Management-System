@@ -1,2 +1,7 @@
-1|Amr Khaled|alice|alice123|amr@gmail.com|01112345679|22 Tahrir St, Cairo|0.00
+1|Amr Khaled|alice|alice123|amr@gmail.com|01087654321|45 Salah Salem St, Cairo|0.00
 2|Laila Mostafa|laila_patient|password|laila@gmail.com|01012345670|15 Pyramids St, Giza|0.00
+1|Amr Hassan|amr_patient|amr123|amr@gmail.com|01123456789|123 El Geish St, Cairo|500.00|8d9c6e5d-c558-4ad8-9eb2-4c9b7e5e927a:500.00:DEPOSIT:Initial test deposit:2025-03-28T22:13:59
+1|Amr Hassan|amr_patient|amr123|amr@gmail.com|01123456789|123 El Geish St, Cairo|500.00|a99f4111-dd64-4a5f-b901-db2d9073cbcc:500.00:DEPOSIT:Initial test deposit:2025-03-28T22:13:59
+1|Amr Hassan|amr_patient|amr123|amr@gmail.com|01123456789|123 El Geish St, Cairo|500.00|caaa36e6-1a66-4503-9d29-4658ad07cad3:500.00:DEPOSIT:Initial test deposit:2025-03-28T22:13:59
+1|Amr Hassan|amr_patient|amr123|amr@gmail.com|01123456789|123 El Geish St, Cairo|500.00|d0bc83c8-df62-46b6-a3ac-e6318d565a73:500.00:DEPOSIT:Initial test deposit:2025-03-28T22:13:59
+1|Amr Hassan|amr_patient|amr123|amr@gmail.com|01123456789|123 El Geish St, Cairo|500.00|dc91aa3b-e6f8-45c0-81ab-57585df8a89b:500.00:DEPOSIT:Initial test deposit:2025-03-28T22:13:59

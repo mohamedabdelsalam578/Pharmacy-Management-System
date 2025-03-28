@@ -249,7 +249,8 @@ public class Order implements Serializable {
             this.isPaid = true;
             this.paymentMethod = PaymentMethod.FREE;
             this.paymentDate = new Date();
-            this.paymentReference = "Free Order #" + id;
+            // Use UUID for unique reference for consistency
+            this.paymentReference = "Free Order #" + id + "-" + UUID.randomUUID().toString();
             
             if (this.status == Status.PAYMENT_PENDING) {
                 this.status = Status.PROCESSING;
@@ -263,7 +264,8 @@ public class Order implements Serializable {
             this.isPaid = true;
             this.paymentMethod = PaymentMethod.WALLET;
             this.paymentDate = new Date();
-            this.paymentReference = "Wallet Transaction: " + new Date().getTime();
+            // Use UUID for unique reference instead of timestamp for better compatibility
+            this.paymentReference = "Wallet Transaction: " + UUID.randomUUID().toString();
             
             if (this.status == Status.PAYMENT_PENDING) {
                 this.status = Status.PROCESSING;
@@ -316,7 +318,8 @@ public class Order implements Serializable {
             this.isPaid = true;
             this.paymentMethod = PaymentMethod.CREDIT_CARD;
             this.paymentDate = new Date();
-            this.paymentReference = "Card Transaction: " + cardNumber.substring(cardNumber.length() - 4);
+            // Create a reference with the UUID and the last 4 digits of the card
+            this.paymentReference = "Card Transaction: " + UUID.randomUUID().toString() + "-" + cardNumber.substring(cardNumber.length() - 4);
             
             if (this.status == Status.PAYMENT_PENDING) {
                 this.status = Status.PROCESSING;

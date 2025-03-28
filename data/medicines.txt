@@ -1,5 +1,30 @@
-1|Paramol|Pain reliever|EIPICO|20.50|100|Pain Relief|false
-2|Megamox|Antibiotic|Pharco|35.75|50|Antibiotics|true
-3|Lopresor|Blood pressure medication|Novartis Egypt|65.25|75|Blood Pressure|true
-4|Brufen|Anti-inflammatory|Kahira Pharmaceuticals|18.50|150|Pain Relief|false
-5|Claritine|Antihistamine|Eva Pharma|32.00|80|Allergy|false
+1|Paramol|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Megamox|35.75|50|Antibiotic|As directed|Antibiotics|true
+3|Lopresor|65.25|75|Blood pressure medication|As directed|Blood Pressure|true
+4|Brufen|18.50|150|Anti-inflammatory|As directed|Pain Relief|false
+5|Claritine|32.00|80|Antihistamine|As directed|Allergy|false
+1|Aspirin|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Paracetamol|15.75|150|Fever reducer|As directed|Fever Relief|false
+3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
+4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
+5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false
+1|Aspirin|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Paracetamol|15.75|150|Fever reducer|As directed|Fever Relief|false
+3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
+4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
+5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false
+1|Aspirin|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Paracetamol|15.75|150|Fever reducer|As directed|Fever Relief|false
+3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
+4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
+5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false
+1|Aspirin|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Paracetamol|15.75|150|Fever reducer|As directed|Fever Relief|false
+3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
+4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
+5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false
+1|Aspirin|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Paracetamol|15.75|150|Fever reducer|As directed|Fever Relief|false
+3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
+4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
+5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false

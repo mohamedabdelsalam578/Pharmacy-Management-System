@@ -1,2 +1,7 @@
 1|Dr. Ahmed Mahmoud|dr_ahmed|password|ahmed@elta3ban.com|01212345678|EGP12345|Cardiology
 2|Dr. Nour El-Din|dr_nour|password|nour@elta3ban.com|01512345678|EGP67890|Neurology
+1|Dr. Mohamed Saleh|dr_mohamed|dr123|dr.mohamed@hospital.com|01234567890|General Medicine|Medical License 12345
+1|Dr. Mohamed Saleh|dr_mohamed|dr123|dr.mohamed@hospital.com|01234567890|Medical License 12345|General Medicine
+1|Dr. Mohamed Saleh|dr_mohamed|dr123|dr.mohamed@hospital.com|01234567890|General Medicine|Medical License 12345
+1|Dr. Mohamed Saleh|dr_mohamed|dr123|dr.mohamed@hospital.com|01234567890|Medical License 12345|General Medicine
+1|Dr. Mohamed Saleh|dr_mohamed|dr123|dr.mohamed@hospital.com|01234567890|General Medicine|Medical License 12345

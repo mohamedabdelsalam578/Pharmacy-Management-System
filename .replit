@@ -15,6 +15,10 @@ author = "agent"
 task = "workflow.run"
 args = "Pharmacy System"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Pharmacy Test"
+
 [[workflows.workflow]]
 name = "Pharmacy System"
 author = "agent"
@@ -37,6 +41,20 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd ${REPL_HOME} && javac -d . src/*/*.java src/*.java && java PharmacyManagementSystem --extended"
+
+[[workflows.workflow]]
+name = "Pharmacy Test"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd ${REPL_HOME} && ./format-check.sh"
 
 [deployment]
 run = ["sh", "-c", "cd ${REPL_HOME} && javac -cp lib/*:. -d . src/*.java src/*/*.java && java -cp lib/*:. PharmacyManagementSystem"]

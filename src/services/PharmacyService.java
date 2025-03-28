@@ -329,25 +329,15 @@ public class PharmacyService {
      * @return The integer entered by the user
      */
     private int getIntInput() {
-        while (true) {
-            try {
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
-                System.out.print("Enter your choice: ");
-            }
-        }
+        return ConsoleUI.readIntInput("", 0, Integer.MAX_VALUE);
     }
 
     /**
      * Login as admin and display admin menu
      */
     private void loginAsAdmin() {
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        String username = ConsoleUI.readStringInput("Enter username: ");
+        String password = ConsoleUI.readStringInput("Enter password: ");
         
         Admin admin = authenticateAdmin(username, password);
         
@@ -607,11 +597,8 @@ public class PharmacyService {
      */
     private void loginAsDoctor() {
         System.out.println("\n👨‍⚕️ ===== DOCTOR LOGIN ===== 👨‍⚕️");
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        String username = ConsoleUI.readStringInput("Enter username: ");
+        String password = ConsoleUI.readStringInput("Enter password: ");
         
         Doctor doctor = authenticateDoctor(username, password);
         
@@ -635,11 +622,8 @@ public class PharmacyService {
      */
     private void loginAsPharmacist() {
         System.out.println("\n👩‍⚕️ ===== PHARMACIST LOGIN ===== 👩‍⚕️");
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        String username = ConsoleUI.readStringInput("Enter username: ");
+        String password = ConsoleUI.readStringInput("Enter password: ");
         
         Pharmacist pharmacist = authenticatePharmacist(username, password);
         
@@ -662,11 +646,8 @@ public class PharmacyService {
      * Login as patient and display patient menu
      */
     private void loginAsPatient() {
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();
-        
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        String username = ConsoleUI.readStringInput("Enter username: ");
+        String password = ConsoleUI.readStringInput("Enter password: ");
         
         Patient patient = authenticatePatient(username, password);
         
@@ -848,11 +829,9 @@ public class PharmacyService {
         }
         
         // Option to send a new message
-        System.out.print("\nSend a message? (y/n): ");
-        String choice = scanner.nextLine().trim().toLowerCase();
+        String choice = ConsoleUI.readStringInput("\nSend a message? (y/n): ").trim().toLowerCase();
         if (choice.equals("y") || choice.equals("yes")) {
-            System.out.print("Enter your message: ");
-            String messageContent = scanner.nextLine().trim();
+            String messageContent = ConsoleUI.readStringInput("Enter your message: ").trim();
             
             if (!messageContent.isEmpty()) {
                 int messageId = consultation.getMessages().size() + 1;
@@ -908,11 +887,9 @@ public class PharmacyService {
         System.out.println("Consultation request sent successfully to Dr. " + doctor.getName() + ".");
         
         // Option to send an initial message
-        System.out.print("Send an initial message? (y/n): ");
-        String choice = scanner.nextLine().trim().toLowerCase();
+        String choice = ConsoleUI.readStringInput("Send an initial message? (y/n): ").trim().toLowerCase();
         if (choice.equals("y") || choice.equals("yes")) {
-            System.out.print("Enter your message: ");
-            String messageContent = scanner.nextLine().trim();
+            String messageContent = ConsoleUI.readStringInput("Enter your message: ").trim();
             
             if (!messageContent.isEmpty()) {
                 Message message = new Message(1, patient.getId(), doctor.getId(), messageContent);
@@ -974,8 +951,7 @@ public class PharmacyService {
         }
         
         System.out.println("Sending message to Dr. " + doctor.getName());
-        System.out.print("Enter your message: ");
-        String messageContent = scanner.nextLine().trim();
+        String messageContent = ConsoleUI.readStringInput("Enter your message: ").trim();
         
         if (messageContent.isEmpty()) {
             System.out.println("Message cannot be empty.");
@@ -1046,8 +1022,7 @@ public class PharmacyService {
             return;
         }
         
-        System.out.print("Enter deposit description (optional): ");
-        String description = scanner.nextLine();
+        String description = ConsoleUI.readStringInput("Enter deposit description (optional): ");
         if (description.isEmpty()) {
             description = "Manual deposit";
         }
@@ -1069,19 +1044,7 @@ public class PharmacyService {
      * @return Valid double input
      */
     private double getDoubleInput() {
-        double input = 0;
-        boolean validInput = false;
-        
-        while (!validInput) {
-            try {
-                input = Double.parseDouble(scanner.nextLine());
-                validInput = true;
-            } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Please enter a valid number: ");
-            }
-        }
-        
-        return input;
+        return ConsoleUI.readDoubleInput("", 0, Double.MAX_VALUE);
     }
 
     /**
@@ -1213,8 +1176,7 @@ public class PharmacyService {
             order.displayInfo();
             
             // Ask user if they want to pay now
-            System.out.print("\nDo you want to pay for this order now? (y/n): ");
-            String payNow = scanner.nextLine().trim().toLowerCase();
+            String payNow = ConsoleUI.readStringInput("\nDo you want to pay for this order now? (y/n): ").trim().toLowerCase();
             
             if (payNow.equals("y") || payNow.equals("yes")) {
                 processOrderPayment(patient, order);
@@ -1259,8 +1221,7 @@ public class PharmacyService {
                 paymentSuccess = order.processPaymentFromWallet(patient);
                 break;
             case 2:
-                System.out.print("Enter Credit Card Number: ");
-                String cardNumber = scanner.nextLine().trim();
+                String cardNumber = ConsoleUI.readStringInput("Enter Credit Card Number: ").trim();
                 
                 // Simple validation for card number
                 if (cardNumber.length() < 12 || !cardNumber.matches("\\d+")) {
@@ -1328,20 +1289,16 @@ public class PharmacyService {
         
         System.out.println("\nEnter new details (leave blank to keep current value):");
         
-        System.out.print("Name [" + patient.getName() + "]: ");
-        String name = scanner.nextLine();
+        String name = ConsoleUI.readStringInput("Name [" + patient.getName() + "]: ");
         name = name.isEmpty() ? patient.getName() : name;
         
-        System.out.print("Email [" + patient.getEmail() + "]: ");
-        String email = scanner.nextLine();
+        String email = ConsoleUI.readStringInput("Email [" + patient.getEmail() + "]: ");
         email = email.isEmpty() ? patient.getEmail() : email;
         
-        System.out.print("Phone Number [" + patient.getPhoneNumber() + "]: ");
-        String phoneNumber = scanner.nextLine();
+        String phoneNumber = ConsoleUI.readStringInput("Phone Number [" + patient.getPhoneNumber() + "]: ");
         phoneNumber = phoneNumber.isEmpty() ? patient.getPhoneNumber() : phoneNumber;
         
-        System.out.print("Address [" + patient.getAddress() + "]: ");
-        String address = scanner.nextLine();
+        String address = ConsoleUI.readStringInput("Address [" + patient.getAddress() + "]: ");
         address = address.isEmpty() ? patient.getAddress() : address;
         
         if (patientService.updateAccount(patient.getId(), name, email, phoneNumber, address)) {
@@ -1361,11 +1318,8 @@ public class PharmacyService {
         // Generate a new patient ID
         int nextPatientId = patients.stream().mapToInt(Patient::getId).max().orElse(0) + 1;
         
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
-        
-        System.out.print("Enter Username: ");
-        String username = scanner.nextLine();
+        String name = ConsoleUI.readStringInput("Enter Name: ");
+        String username = ConsoleUI.readStringInput("Enter Username: ");
         
         // Check if username already exists
         if (patients.stream().anyMatch(p -> p.getUsername().equals(username))) {
@@ -1373,17 +1327,10 @@ public class PharmacyService {
             return;
         }
         
-        System.out.print("Enter Password: ");
-        String password = scanner.nextLine();
-        
-        System.out.print("Enter Email: ");
-        String email = scanner.nextLine();
-        
-        System.out.print("Enter Phone Number: ");
-        String phoneNumber = scanner.nextLine();
-        
-        System.out.print("Enter Address: ");
-        String address = scanner.nextLine();
+        String password = ConsoleUI.readStringInput("Enter Password: ");
+        String email = ConsoleUI.readStringInput("Enter Email: ");
+        String phoneNumber = ConsoleUI.readStringInput("Enter Phone Number: ");
+        String address = ConsoleUI.readStringInput("Enter Address: ");
         
         Patient newPatient = new Patient(nextPatientId, name, username, password, email, phoneNumber, address);
         

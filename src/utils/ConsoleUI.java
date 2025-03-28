@@ -187,11 +187,14 @@ public class ConsoleUI {
         return String.format("%-" + width + "s", s);
     }
 
+    // Static scanner to be used for all input operations
+    private static final java.util.Scanner INPUT_SCANNER = new java.util.Scanner(System.in);
+    
     public static String promptInput(String prompt, String color) {
         System.out.print(color + prompt + RESET);
         return System.console() != null ? 
                System.console().readLine() : 
-               new java.util.Scanner(System.in).nextLine();
+               INPUT_SCANNER.nextLine();
     }
     
     /**
@@ -219,7 +222,7 @@ public class ConsoleUI {
         while (!valid) {
             try {
                 System.out.print(prompt);
-                input = Integer.parseInt(new java.util.Scanner(System.in).nextLine().trim());
+                input = Integer.parseInt(INPUT_SCANNER.nextLine().trim());
                 
                 if (input >= min && input <= max) {
                     valid = true;
@@ -249,7 +252,7 @@ public class ConsoleUI {
         while (!valid) {
             try {
                 System.out.print(prompt);
-                input = Double.parseDouble(new java.util.Scanner(System.in).nextLine().trim());
+                input = Double.parseDouble(INPUT_SCANNER.nextLine().trim());
                 
                 if (input >= min && input <= max) {
                     valid = true;
@@ -272,7 +275,7 @@ public class ConsoleUI {
      */
     public static String readStringInput(String prompt) {
         System.out.print(prompt);
-        return new java.util.Scanner(System.in).nextLine().trim();
+        return INPUT_SCANNER.nextLine().trim();
     }
     
     /**
@@ -280,6 +283,6 @@ public class ConsoleUI {
      */
     public static void pressEnterToContinue() {
         System.out.print(YELLOW + "Press Enter to continue..." + RESET);
-        new java.util.Scanner(System.in).nextLine();
+        INPUT_SCANNER.nextLine();
     }
 }

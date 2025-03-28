@@ -99,21 +99,11 @@ public class ConsoleUI {
         System.out.println(color + icon + " " + message + RESET);
     }
     
-    public static void printSuccess(String message) {
-        printStatusMessage(message, "✓", GREEN);
-    }
-
-    public static void printError(String message) {
-        printStatusMessage(message, "✗", RED);
-    }
-
-    public static void printInfo(String message) {
-        printStatusMessage(message, "ℹ", BLUE);
-    }
-
-    public static void printWarning(String message) {
-        printStatusMessage(message, "⚠", YELLOW);
-    }
+    // Status message methods using a common private method
+    public static void printSuccess(String message) { printStatusMessage(message, "✓", GREEN); }
+    public static void printError(String message) { printStatusMessage(message, "✗", RED); }
+    public static void printInfo(String message) { printStatusMessage(message, "ℹ", BLUE); }
+    public static void printWarning(String message) { printStatusMessage(message, "⚠", YELLOW); }
 
     public static void printLine(int width, String color) {
         System.out.println(color + "─".repeat(width) + RESET);
@@ -126,23 +116,16 @@ public class ConsoleUI {
     }
 
     public static void typeText(String message, int delayMs, String color) {
-        for (char c : message.toCharArray()) {
-            System.out.print(color + c + RESET);
-            try {
-                Thread.sleep(delayMs);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        message.chars().forEach(c -> {
+            System.out.print(color + (char)c + RESET);
+            try { Thread.sleep(delayMs); } 
+            catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        });
         System.out.println();
     }
 
     /**
      * Print a table row (used for both header and data rows)
-     * 
-     * @param data String array of data to print
-     * @param widths Array of column widths
-     * @param color Color to use
      */
     private static void printTableRowGeneric(String[] data, int[] widths, String color) {
         System.out.print(color);
@@ -154,10 +137,6 @@ public class ConsoleUI {
     
     /**
      * Print a table header with column names
-     * 
-     * @param columns String array of column names
-     * @param widths Array of column widths
-     * @param color Color to use
      */
     public static void printTableHeader(String[] columns, int[] widths, String color) {
         // Print the header row
@@ -165,11 +144,9 @@ public class ConsoleUI {
         
         // Print the separator line
         System.out.print(color + "├");
-        for (int width : widths) {
-            System.out.print("─".repeat(width + 2) + "┼");
-        }
-        System.out.print("\b" + "┤" + RESET);
-        System.out.println();
+        java.util.stream.IntStream.range(0, widths.length)
+            .forEach(i -> System.out.print("─".repeat(widths[i] + 2) + (i < widths.length - 1 ? "┼" : "")));
+        System.out.println("┤" + RESET);
     }
 
     /**

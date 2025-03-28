@@ -9,13 +9,13 @@ import java.time.LocalDate;
 
 
 /**
- * 🛒 Order - Represents a patient purchase of medicines 🛒
+ * Order - Represents a patient purchase of medicines
  * 
  * This class manages the details of a patient's medicine order,
  * including what medicines were ordered, quantities, prices,
  * and the order's fulfillment status.
  * 
- * 📚 Class Responsibilities:
+ * Class Responsibilities:
  * - Track medicines in an order and their quantities
  * - Calculate total order amount
  * - Manage order status (Pending, Completed, Cancelled)
@@ -48,13 +48,13 @@ public class Order {
     }
 
     /**
-     * 🏗️ Constructor - Creates a new basic order with default values
+     * Constructor - Creates a new basic order with default values
      * 
      * This constructor initializes an order with the minimum required fields
      * (id and patientId) and sets all other fields to sensible default values.
      * It's the primary constructor used for creating new orders in the system.
      * 
-     * 💡 Default Initializations:
+     * Default Initializations:
      * - Empty medicines map (no items added yet)
      * - Total amount set to 0.0 LE
      * - Order date set to current time
@@ -141,14 +141,14 @@ public class Order {
     public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
     
     /**
-     * 💲 isPaid - Checks if this order has been paid for
+     * isPaid - Checks if this order has been paid for
      * 
      * This method determines if the order has been successfully paid for
      * by checking the payment status. This is used throughout the system
      * to determine if medicines can be dispensed, if additional payment
      * is needed, or if refunds should be processed.
      * 
-     * 💡 Implementation Note:
+     * Implementation Note:
      * - Uses string comparison with constant "PAID" status
      * - Returns boolean for easy conditional logic
      * - Serves as a convenient abstraction over the status string
@@ -163,13 +163,13 @@ public class Order {
     }
     
     /**
-     * 💰 setPaid - Updates the payment status of this order
+     * setPaid - Updates the payment status of this order
      * 
      * This method is primarily used when processing payments through
      * external systems or cash payments at the pharmacy counter.
      * It updates both the payment status and the order status accordingly.
      * 
-     * 💡 Side Effects:
+     * Side Effects:
      * - Changes payment status to "PAID" or "PENDING"
      * - When marking as paid, also updates order status to "Confirmed"
      * - When marking as unpaid, keeps current order status unchanged
@@ -188,13 +188,13 @@ public class Order {
 
 
     /**
-     * ➕ addMedicine - Adds a medicine to this order
+     * addMedicine - Adds a medicine to this order
      * 
      * This method attempts to add a specific quantity of medicine to the order.
      * It first checks if there is sufficient stock available in the pharmacy
      * before adding it, ensuring we don't promise medicines we can't deliver.
      * 
-     * 💡 Inventory Management:
+     * Inventory Management:
      * - Validates against pharmacy stock levels
      * - Returns status indicating success or failure
      * - Automatically recalculates the total order amount
@@ -216,13 +216,13 @@ public class Order {
     }
 
     /**
-     * ➖ removeMedicine - Removes a medicine from this order
+     * removeMedicine - Removes a medicine from this order
      * 
      * This method allows removing a medicine completely from the order,
      * regardless of its quantity. After removal, the total order amount
      * is automatically recalculated.
      * 
-     * 💡 Implementation Notes:
+     * Implementation Notes:
      * - Uses Map.containsKey() to verify medicine exists in order
      * - Provides safe operation (no effect if medicine not in order)
      * - Maintains order total consistency by recalculating after removal
@@ -250,20 +250,20 @@ public class Order {
     }
     
     /**
-     * 💹 calculateTotal - Computes total cost with Egyptian VAT
+     * calculateTotal - Computes total cost with Egyptian VAT
      * 
      * This method calculates the final amount to be paid by the patient,
      * including the standard Egyptian Value Added Tax (VAT) rate of 14%.
      * This is the amount that will be charged to the patient's wallet or
      * credit card during payment processing.
      * 
-     * 💡 Financial Calculation:
+     * Financial Calculation:
      * - Applies current Egyptian tax rate (14%) to the subtotal
      * - Returns the complete amount including tax
      * - Used for all payment processing and receipt generation
      * 
      * Egyptian tax laws require pharmacies to collect VAT on medication
-     * sales, with the current standard rate being 14% as of 2023.
+     * sales, with the current standard rate being 14% as of 2025.
      * 
      * @return The final amount to be paid in Egyptian Pounds (LE), including tax
      */
@@ -285,14 +285,14 @@ public class Order {
     }
     
     /**
-     * 📦 getOrderItems - Provides a structured list of order contents
+     * getOrderItems - Provides a structured list of order contents
      * 
      * This method converts the internal medicines map into a list of OrderItem
      * objects, which provide a more convenient way to access medicine and
      * quantity information together. This is particularly useful for UI
      * display, receipt generation, and order processing.
      * 
-     * 💡 Data Structure Transformation:
+     * Data Structure Transformation:
      * - Converts from Map<Medicine, Integer> to List<OrderItem>
      * - Creates new OrderItem objects for each medicine/quantity pair
      * - Provides a more object-oriented view of order contents

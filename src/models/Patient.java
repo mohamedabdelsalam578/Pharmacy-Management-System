@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 👨‍👩‍👧 Patient - Represents a pharmacy patient with orders and prescriptions 👨‍👩‍👧
+ * Patient - Represents a pharmacy patient with orders and prescriptions
  * 
  * This class extends the User class and adds patient-specific attributes and behaviors,
  * demonstrating inheritance and specialized functionality.
  * 
- * 🔑 OOP Concepts Demonstrated:
+ * OOP Concepts Demonstrated:
  * - Inheritance: Patient inherits from User
  * - Encapsulation: Private fields with public getters/setters
  * - Composition: Patient owns Orders, Prescriptions, and a Wallet
  * 
- * 📚 Class Responsibilities:
+ * Class Responsibilities:
  * - Manages patient orders and prescriptions
  * - Handles patient consultations
  * - Processes payments through wallet

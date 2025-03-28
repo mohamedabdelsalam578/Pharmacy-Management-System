@@ -1,24 +1,24 @@
 package utils;
 
 /**
- * 💻 ConsoleUI - Enhanced visual interface for the console environment 💻
+ * ConsoleUI - Enhanced visual interface for the console environment
  * 
  * This utility class transforms the basic console into a rich, colorful, and
  * interactive interface for the EL-TA3BAN Pharmacy System. It implements ANSI
  * escape sequences to provide colors, animations, and styled text elements.
  * 
- * 🔑 OOP Concepts Demonstrated:
+ * OOP Concepts Demonstrated:
  * - Utility Class Pattern: A stateless class with only static methods
  * - Encapsulation: Groups related UI functionality together
  * - Abstraction: Hides the complexity of console formatting behind simple methods
  * 
- * 📚 Class Responsibilities:
+ * Class Responsibilities:
  * - Create visually appealing UI elements (headers, menus, tables)
  * - Display interactive animations (progress bars, spinners)
  * - Handle user input with formatted prompts
  * - Implement text effects like typing animations
  * 
- * 🌐 Role in System:
+ * Role in System:
  * This class enhances the user experience throughout the entire application,
  * making the console interface more intuitive and visually engaging. It creates
  * a professional appearance for the pharmacy system with minimal resource usage.

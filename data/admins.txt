@@ -5,3 +5,4 @@
 1|Ahmed Nader|admin|admin123|ahmed@pharmacy.com|01012345678|ADMIN|Management
 1|Ahmed Nader|admin|admin123|ahmed@pharmacy.com|01012345678|ADMIN|Management
 1|Ahmed Nader|admin|admin123|ahmed@pharmacy.com|01012345678|ADMIN|Management
+1|Ahmed Nader|admin|admin123|ahmed@pharmacy.com|01012345678|ADMIN|Management

@@ -28,3 +28,8 @@
 3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
 4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
 5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false
+1|Aspirin|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Paracetamol|15.75|150|Fever reducer|As directed|Fever Relief|false
+3|Amoxicillin|45.00|80|Antibiotic|As directed|Antibiotics|true
+4|Lisinopril|35.25|60|Blood pressure medication|As directed|Blood Pressure|true
+5|Omeprazole|25.00|70|Acid reflux medication|As directed|Stomach|false

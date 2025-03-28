@@ -123,21 +123,38 @@ public class DoctorService {
     private void createPrescription(Doctor doctor) {
         System.out.println("\n📝 ===== CREATE PRESCRIPTION ===== 📝");
         
-        // Show available patients
+        // Show available patients (avoiding duplicates)
         System.out.println("\nAvailable Patients:");
-        for (int i = 0; i < patients.size(); i++) {
-            System.out.println((i + 1) + ". " + patients.get(i).getName() + " (ID: " + patients.get(i).getId() + ")");
+        List<Patient> uniquePatients = new ArrayList<>();
+        for (Patient patient : patients) {
+            // Check if patient is already in the uniquePatients list by ID
+            boolean isDuplicate = false;
+            for (Patient uniquePatient : uniquePatients) {
+                if (uniquePatient.getId() == patient.getId()) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            
+            if (!isDuplicate) {
+                uniquePatients.add(patient);
+            }
+        }
+        
+        // Display the unique patients list
+        for (int i = 0; i < uniquePatients.size(); i++) {
+            System.out.println((i + 1) + ". " + uniquePatients.get(i).getName() + " (ID: " + uniquePatients.get(i).getId() + ")");
         }
         
         System.out.print("Select patient number: ");
         int patientIndex = getIntInput() - 1;
         
-        if (patientIndex < 0 || patientIndex >= patients.size()) {
+        if (patientIndex < 0 || patientIndex >= uniquePatients.size()) {
             System.out.println("Invalid patient selection.");
             return;
         }
         
-        Patient patient = patients.get(patientIndex);
+        Patient patient = uniquePatients.get(patientIndex);
         
         // Create prescription
         int prescriptionId = prescriptions.size() + 1;
@@ -441,21 +458,38 @@ public class DoctorService {
     private void startNewConsultation(Doctor doctor) {
         System.out.println("\n➕ ===== START NEW CONSULTATION ===== ➕");
         
-        // Show available patients
+        // Show available patients (avoiding duplicates)
         System.out.println("\nSelect a patient:");
-        for (int i = 0; i < patients.size(); i++) {
-            System.out.println((i + 1) + ". " + patients.get(i).getName());
+        List<Patient> uniquePatients = new ArrayList<>();
+        for (Patient patient : patients) {
+            // Check if patient is already in the uniquePatients list by ID
+            boolean isDuplicate = false;
+            for (Patient uniquePatient : uniquePatients) {
+                if (uniquePatient.getId() == patient.getId()) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            
+            if (!isDuplicate) {
+                uniquePatients.add(patient);
+            }
+        }
+        
+        // Display the unique patients list
+        for (int i = 0; i < uniquePatients.size(); i++) {
+            System.out.println((i + 1) + ". " + uniquePatients.get(i).getName());
         }
         
         System.out.print("Enter patient number: ");
         int patientIndex = getIntInput() - 1;
         
-        if (patientIndex < 0 || patientIndex >= patients.size()) {
+        if (patientIndex < 0 || patientIndex >= uniquePatients.size()) {
             System.out.println("Invalid patient selection.");
             return;
         }
         
-        Patient patient = patients.get(patientIndex);
+        Patient patient = uniquePatients.get(patientIndex);
         
         // Create a new consultation
         System.out.print("Enter initial notes for the consultation: ");

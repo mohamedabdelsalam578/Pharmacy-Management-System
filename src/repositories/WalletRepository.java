@@ -12,7 +12,8 @@ import java.util.List;
 
 import models.Patient;
 import models.Wallet;
-import models.WalletTransaction;
+import models.Transaction;
+import models.TransactionType;
 import utils.DatabaseUtil;
 
 /**
@@ -141,7 +142,7 @@ public class WalletRepository {
      * @return The created wallet transaction
      * @throws SQLException If an error occurs while adding the transaction
      */
-    public WalletTransaction addTransaction(Wallet wallet, double amount, String type, String description) throws SQLException {
+    public Transaction addTransaction(Wallet wallet, double amount, TransactionType type, String description) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -153,7 +154,7 @@ public class WalletRepository {
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, wallet.getId());
             stmt.setDouble(2, amount);
-            stmt.setString(3, type);
+            stmt.setString(3, type.toString());
             stmt.setString(4, description);
             
             rs = stmt.executeQuery();
@@ -161,7 +162,7 @@ public class WalletRepository {
             if (rs.next()) {
                 int transactionId = rs.getInt("id");
                 Timestamp timestamp = rs.getTimestamp("timestamp");
-                WalletTransaction transaction = new WalletTransaction(transactionId, wallet, amount, type, description, new Date(timestamp.getTime()));
+                Transaction transaction = new Transaction(transactionId, wallet, amount, type, description, new Date(timestamp.getTime()));
                 return transaction;
             }
             
@@ -175,11 +176,11 @@ public class WalletRepository {
      * Get all transactions for a wallet
      * 
      * @param wallet The wallet to get transactions for
-     * @return A list of wallet transactions
+     * @return A list of transactions
      * @throws SQLException If an error occurs while retrieving the transactions
      */
-    public List<WalletTransaction> getTransactionsByWallet(Wallet wallet) throws SQLException {
-        List<WalletTransaction> transactions = new ArrayList<>();
+    public List<Transaction> getTransactionsByWallet(Wallet wallet) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -195,11 +196,12 @@ public class WalletRepository {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 double amount = rs.getDouble("amount");
-                String type = rs.getString("transaction_type");
+                String typeStr = rs.getString("transaction_type");
+                TransactionType type = TransactionType.valueOf(typeStr);
                 String description = rs.getString("description");
                 Timestamp timestamp = rs.getTimestamp("timestamp");
                 
-                WalletTransaction transaction = new WalletTransaction(id, wallet, amount, type, description, new Date(timestamp.getTime()));
+                Transaction transaction = new Transaction(id, wallet, amount, type, description, new Date(timestamp.getTime()));
                 transactions.add(transaction);
             }
             

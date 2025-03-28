@@ -14,7 +14,8 @@ import java.util.Map;
 
 import models.Patient;
 import models.Wallet;
-import models.WalletTransaction;
+import models.Wallet.Transaction;
+import models.Wallet.TransactionType;
 import repositories.WalletRepository;
 import utils.ConsoleUI;
 import utils.DatabaseUtil;
@@ -71,7 +72,7 @@ public class WalletService {
                         walletMap.put(patient.getId(), wallet);
                         
                         // Load transactions
-                        List<WalletTransaction> transactions = repository.getTransactionsByWallet(wallet);
+                        List<Transaction> transactions = repository.getTransactionsByWallet(wallet);
                         wallet.setTransactions(transactions);
                         
                         return wallet;
@@ -166,7 +167,7 @@ public class WalletService {
     public boolean deposit(Wallet wallet, double amount, String description) {
         try {
             // Create transaction in wallet object
-            WalletTransaction transaction = wallet.deposit(amount, description);
+            Transaction transaction = wallet.deposit(amount, description);
             
             // Save to database if available
             if (DatabaseUtil.isDatabaseAvailable()) {
@@ -174,7 +175,7 @@ public class WalletService {
                 repository.updateWallet(wallet);
                 
                 // Add transaction
-                repository.addTransaction(wallet, amount, WalletTransaction.DEPOSIT, description);
+                repository.addTransaction(wallet, amount, TransactionType.DEPOSIT, description);
             }
             
             // Save to file as backup
@@ -203,7 +204,7 @@ public class WalletService {
             }
             
             // Create transaction in wallet object
-            WalletTransaction transaction = wallet.withdraw(amount, description);
+            Transaction transaction = wallet.withdraw(amount, description);
             
             // Save to database if available
             if (DatabaseUtil.isDatabaseAvailable()) {
@@ -211,7 +212,7 @@ public class WalletService {
                 repository.updateWallet(wallet);
                 
                 // Add transaction
-                repository.addTransaction(wallet, amount, WalletTransaction.WITHDRAWAL, description);
+                repository.addTransaction(wallet, amount, TransactionType.WITHDRAWAL, description);
             }
             
             // Save to file as backup
@@ -240,7 +241,7 @@ public class WalletService {
             }
             
             // Create transaction in wallet object
-            WalletTransaction transaction = wallet.makePayment(amount, description);
+            Transaction transaction = wallet.makePayment(amount, description);
             
             // Save to database if available
             if (DatabaseUtil.isDatabaseAvailable()) {
@@ -248,7 +249,7 @@ public class WalletService {
                 repository.updateWallet(wallet);
                 
                 // Add transaction
-                repository.addTransaction(wallet, amount, WalletTransaction.PAYMENT, description);
+                repository.addTransaction(wallet, amount, TransactionType.PAYMENT, description);
             }
             
             // Save to file as backup
@@ -289,11 +290,11 @@ public class WalletService {
      * @param limit The maximum number of transactions to return (0 for all)
      * @return The list of transactions, sorted by date (most recent first)
      */
-    public List<WalletTransaction> getTransactionHistory(Wallet wallet, int limit) {
+    public List<Transaction> getTransactionHistory(Wallet wallet, int limit) {
         try {
             // Try to get from database if available
             if (DatabaseUtil.isDatabaseAvailable()) {
-                List<WalletTransaction> transactions = repository.getTransactionsByWallet(wallet);
+                List<Transaction> transactions = repository.getTransactionsByWallet(wallet);
                 wallet.setTransactions(transactions);
             }
             
@@ -317,7 +318,7 @@ public class WalletService {
     public boolean processRefund(Wallet wallet, double amount, String description) {
         try {
             // Create transaction in wallet object
-            WalletTransaction transaction = wallet.processRefund(amount, description);
+            Transaction transaction = wallet.processRefund(amount, description);
             
             // Save to database if available
             if (DatabaseUtil.isDatabaseAvailable()) {
@@ -325,7 +326,7 @@ public class WalletService {
                 repository.updateWallet(wallet);
                 
                 // Add transaction
-                repository.addTransaction(wallet, amount, WalletTransaction.REFUND, description);
+                repository.addTransaction(wallet, amount, TransactionType.REFUND, description);
             }
             
             // Save to file as backup
@@ -467,23 +468,23 @@ public class WalletService {
         System.out.println("Current balance: " + wallet.getFormattedBalance());
         System.out.println("--------------------");
         
-        List<WalletTransaction> transactions = getTransactionHistory(wallet, 20);
+        List<Transaction> transactions = getTransactionHistory(wallet, 20);
         
         if (transactions.isEmpty()) {
             System.out.println("No transactions found.");
         } else {
             for (int i = 0; i < transactions.size(); i++) {
-                WalletTransaction transaction = transactions.get(i);
+                Transaction transaction = transactions.get(i);
                 String amountStr = String.format("%.2f LE", transaction.getAmount());
                 String sign = transaction.getAmountSign();
-                String type = transaction.getType();
+                TransactionType type = transaction.getType();
                 String description = transaction.getDescription();
                 String timestamp = transaction.getFormattedTimestamp();
                 
                 String color = ConsoleUI.RESET;
-                if (type.equals(WalletTransaction.DEPOSIT) || type.equals(WalletTransaction.REFUND)) {
+                if (type == TransactionType.DEPOSIT || type == TransactionType.REFUND) {
                     color = ConsoleUI.GREEN;
-                } else if (type.equals(WalletTransaction.WITHDRAWAL) || type.equals(WalletTransaction.PAYMENT)) {
+                } else if (type == TransactionType.WITHDRAWAL || type == TransactionType.PAYMENT) {
                     color = ConsoleUI.RED;
                 }
                 

@@ -6,12 +6,185 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 /**
  * Represents a wallet in the pharmacy system
  */
 public class Wallet implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * Represents a transaction type in the wallet
+     */
+    public enum TransactionType {
+        DEPOSIT("Deposit"),
+        WITHDRAWAL("Withdrawal"),
+        PAYMENT("Payment"),
+        REFUND("Refund");
+        
+        private final String displayName;
+        
+        TransactionType(String displayName) {
+            this.displayName = displayName;
+        }
+        
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+    
+    /**
+     * Represents a transaction in the wallet
+     */
+    public static class Transaction implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private String id;
+        private int patientId;
+        private TransactionType type;
+        private double amount;
+        private String description;
+        private double balanceAfter;
+        private Date timestamp;
+        
+        /**
+         * Constructor for creating a new transaction
+         * 
+         * @param patientId The ID of the patient
+         * @param type The type of this transaction
+         * @param amount The amount of this transaction
+         * @param description The description of this transaction
+         * @param balanceAfter The balance after this transaction
+         */
+        public Transaction(int patientId, TransactionType type, double amount, 
+                          String description, double balanceAfter) {
+            this.id = UUID.randomUUID().toString();
+            this.patientId = patientId;
+            this.type = type;
+            this.amount = amount;
+            this.description = description;
+            this.balanceAfter = balanceAfter;
+            this.timestamp = new Date();
+        }
+        
+        /**
+         * Get the ID of this transaction
+         * 
+         * @return The ID
+         */
+        public String getId() {
+            return id;
+        }
+        
+        /**
+         * Get the patient ID of this transaction
+         * 
+         * @return The patient ID
+         */
+        public int getPatientId() {
+            return patientId;
+        }
+        
+        /**
+         * Get the type of this transaction
+         * 
+         * @return The type
+         */
+        public TransactionType getType() {
+            return type;
+        }
+        
+        /**
+         * Get the amount of this transaction
+         * 
+         * @return The amount
+         */
+        public double getAmount() {
+            return amount;
+        }
+        
+        /**
+         * Get the description of this transaction
+         * 
+         * @return The description
+         */
+        public String getDescription() {
+            return description;
+        }
+        
+        /**
+         * Get the balance after this transaction
+         * 
+         * @return The balance after
+         */
+        public double getBalanceAfter() {
+            return balanceAfter;
+        }
+        
+        /**
+         * Get the timestamp of this transaction
+         * 
+         * @return The timestamp
+         */
+        public Date getTimestamp() {
+            return timestamp;
+        }
+        
+        /**
+         * Get a formatted string representation of the timestamp
+         * 
+         * @return The formatted timestamp
+         */
+        public String getFormattedTimestamp() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return sdf.format(timestamp);
+        }
+        
+        /**
+         * Get a formatted string representation of the amount
+         * 
+         * @return The formatted amount
+         */
+        public String getFormattedAmount() {
+            return String.format("%.2f LE", amount);
+        }
+        
+        /**
+         * Get a formatted string representation of the balance after
+         * 
+         * @return The formatted balance after
+         */
+        public String getFormattedBalanceAfter() {
+            return String.format("%.2f LE", balanceAfter);
+        }
+        
+        /**
+         * Get a formatted description of this transaction
+         * 
+         * @return The formatted description
+         */
+        public String getFormattedDescription() {
+            return String.format("%s - %s %s - %s", 
+                    getFormattedTimestamp(), 
+                    type.getDisplayName(), 
+                    getFormattedAmount(), 
+                    description);
+        }
+        
+        /**
+         * Get a formatted string representation of this transaction
+         * 
+         * @return The formatted string
+         */
+        @Override
+        public String toString() {
+            return String.format("Transaction [%s, Type: %s, Amount: %s, Description: %s, Balance After: %s]", 
+                    getFormattedTimestamp(), type.getDisplayName(), 
+                    getFormattedAmount(), description, getFormattedBalanceAfter());
+        }
+    }
     
     /**
      * Represents a payment card in the wallet
@@ -144,7 +317,7 @@ public class Wallet implements Serializable {
     private String patientUsername;
     private double balance;
     private Map<String, Card> cards;
-    private List<WalletTransaction> transactions;
+    private List<Transaction> transactions;
     
     /**
      * Constructor for creating a new wallet
@@ -172,9 +345,9 @@ public class Wallet implements Serializable {
             this.balance = initialBalance;
             
             // Record the initial deposit
-            WalletTransaction initialDeposit = new WalletTransaction(
+            Transaction initialDeposit = new Transaction(
                     this.patientId, 
-                    WalletTransaction.Type.DEPOSIT, 
+                    TransactionType.DEPOSIT, 
                     initialBalance, 
                     "Initial Balance", 
                     this.balance);
@@ -227,16 +400,16 @@ public class Wallet implements Serializable {
      * @return The transaction representing this deposit
      * @throws IllegalArgumentException If the amount is negative
      */
-    public WalletTransaction deposit(double amount, String source) {
+    public Transaction deposit(double amount, String source) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be positive");
         }
         
         balance += amount;
         
-        WalletTransaction transaction = new WalletTransaction(
+        Transaction transaction = new Transaction(
                 patientId, 
-                WalletTransaction.Type.DEPOSIT, 
+                TransactionType.DEPOSIT, 
                 amount, 
                 source, 
                 balance);
@@ -265,9 +438,9 @@ public class Wallet implements Serializable {
         
         balance -= amount;
         
-        WalletTransaction transaction = new WalletTransaction(
+        Transaction transaction = new Transaction(
                 patientId, 
-                WalletTransaction.Type.WITHDRAWAL, 
+                TransactionType.WITHDRAWAL, 
                 amount, 
                 reason, 
                 balance);
@@ -384,7 +557,7 @@ public class Wallet implements Serializable {
      * 
      * @return The transactions
      */
-    public List<WalletTransaction> getTransactions() {
+    public List<Transaction> getTransactions() {
         return new ArrayList<>(transactions);
     }
     
@@ -415,7 +588,7 @@ public class Wallet implements Serializable {
         }
         
         int transactionLimit = 5;
-        List<WalletTransaction> recentTransactions = getTransactions();
+        List<Transaction> recentTransactions = getTransactions();
         
         if (recentTransactions.size() > transactionLimit) {
             recentTransactions = recentTransactions.subList(
@@ -426,7 +599,7 @@ public class Wallet implements Serializable {
         if (!recentTransactions.isEmpty()) {
             System.out.println("\n🧾 ===== RECENT TRANSACTIONS ===== 🧾");
             
-            for (WalletTransaction transaction : recentTransactions) {
+            for (Transaction transaction : recentTransactions) {
                 System.out.println("- " + transaction.getFormattedDescription());
             }
         }

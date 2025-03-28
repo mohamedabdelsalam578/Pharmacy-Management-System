@@ -209,42 +209,6 @@ public class Medicine implements Serializable {
     }
     
     /**
-     * Get the quantity of this medicine (alias for getStock())
-     * 
-     * @return The quantity
-     */
-    public int getQuantity() {
-        return stock;
-    }
-    
-    /**
-     * Set the quantity of this medicine (alias for setStock())
-     * 
-     * @param quantity The new quantity
-     */
-    public void setQuantity(int quantity) {
-        this.stock = quantity;
-    }
-    
-    /**
-     * Restore stock after an order is cancelled
-     * 
-     * @param quantity The quantity to restore
-     */
-    public void restoreStock(int quantity) {
-        this.stock += quantity;
-    }
-    
-    /**
-     * Check if this medicine requires a prescription (alias for isPrescription())
-     * 
-     * @return true if prescription required, false otherwise
-     */
-    public boolean isRequiresPrescription() {
-        return prescription;
-    }
-    
-    /**
      * Get the category of this medicine
      * 
      * @return The category

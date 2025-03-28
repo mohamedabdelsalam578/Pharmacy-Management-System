@@ -3,9 +3,7 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -636,73 +634,6 @@ public class Order implements Serializable {
      */
     public int getTotalQuantity() {
         return items.stream().mapToInt(OrderItem::getQuantity).sum();
-    }
-    
-    /**
-     * Get a map of medicines and their quantities in this order
-     * 
-     * @return The map of medicines and quantities
-     */
-    public Map<Medicine, Integer> getMedicines() {
-        Map<Medicine, Integer> medicineMap = new HashMap<>();
-        
-        for (OrderItem item : items) {
-            // In a real system, we would fetch the medicine from a repository
-            // For now, we create a simple medicine object with just the ID and name
-            Medicine medicine = new Medicine(
-                    item.getMedicineId(),
-                    item.getMedicineName(),
-                    "",
-                    item.getUnitPrice(),
-                    0  // We don't know the stock here
-            );
-            
-            medicineMap.put(medicine, item.getQuantity());
-        }
-        
-        return medicineMap;
-    }
-    
-    /**
-     * Display detailed order information in the console
-     */
-    public void displayInfo() {
-        System.out.println("================================================");
-        System.out.println("                ORDER INFORMATION               ");
-        System.out.println("================================================");
-        System.out.println("Order ID: " + id);
-        System.out.println("Patient ID: " + patientId);
-        System.out.println("Date: " + orderDate);
-        System.out.println("Status: " + status.getDisplayName());
-        System.out.println("Total: " + getFormattedTotalAmount());
-        System.out.println("Payment Method: " + paymentMethod.getDisplayName());
-        System.out.println("Paid: " + (isPaid ? "Yes" : "No"));
-        System.out.println("================================================");
-        
-        System.out.println("\nItems:");
-        System.out.println("------------------------------------------------");
-        
-        int index = 1;
-        for (OrderItem item : items) {
-            System.out.printf("%d. %s\n", index++, item.toString());
-        }
-        
-        System.out.println("------------------------------------------------");
-        System.out.println("Total Amount: " + getFormattedTotalAmount());
-        
-        if (deliveryMethod != null) {
-            System.out.println("Delivery Method: " + deliveryMethod.getDisplayName());
-        }
-        
-        if (trackingNumber != null && !trackingNumber.isEmpty()) {
-            System.out.println("Tracking Number: " + trackingNumber);
-        }
-        
-        if (notes != null && !notes.isEmpty()) {
-            System.out.println("Notes: " + notes);
-        }
-        
-        System.out.println("================================================");
     }
     
     /**

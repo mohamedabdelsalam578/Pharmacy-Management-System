@@ -203,4 +203,83 @@ public class ConsoleUI {
     public static void printColoredText(String text, String color) {
         System.out.println(color + text + RESET);
     }
+    
+    /**
+     * Read an integer input within a range
+     * 
+     * @param prompt The prompt to display
+     * @param min The minimum value (inclusive)
+     * @param max The maximum value (inclusive)
+     * @return The integer input
+     */
+    public static int readIntInput(String prompt, int min, int max) {
+        int input = 0;
+        boolean valid = false;
+        
+        while (!valid) {
+            try {
+                System.out.print(prompt);
+                input = Integer.parseInt(new java.util.Scanner(System.in).nextLine().trim());
+                
+                if (input >= min && input <= max) {
+                    valid = true;
+                } else {
+                    System.out.println(RED + "Input must be between " + min + " and " + max + RESET);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(RED + "Invalid input. Please enter a number." + RESET);
+            }
+        }
+        
+        return input;
+    }
+    
+    /**
+     * Read a double input within a range
+     * 
+     * @param prompt The prompt to display
+     * @param min The minimum value (inclusive)
+     * @param max The maximum value (inclusive)
+     * @return The double input
+     */
+    public static double readDoubleInput(String prompt, double min, double max) {
+        double input = 0;
+        boolean valid = false;
+        
+        while (!valid) {
+            try {
+                System.out.print(prompt);
+                input = Double.parseDouble(new java.util.Scanner(System.in).nextLine().trim());
+                
+                if (input >= min && input <= max) {
+                    valid = true;
+                } else {
+                    System.out.println(RED + "Input must be between " + min + " and " + max + RESET);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(RED + "Invalid input. Please enter a number." + RESET);
+            }
+        }
+        
+        return input;
+    }
+    
+    /**
+     * Read a string input
+     * 
+     * @param prompt The prompt to display
+     * @return The string input
+     */
+    public static String readStringInput(String prompt) {
+        System.out.print(prompt);
+        return new java.util.Scanner(System.in).nextLine().trim();
+    }
+    
+    /**
+     * Wait for the user to press Enter
+     */
+    public static void pressEnterToContinue() {
+        System.out.print(YELLOW + "Press Enter to continue..." + RESET);
+        new java.util.Scanner(System.in).nextLine();
+    }
 }

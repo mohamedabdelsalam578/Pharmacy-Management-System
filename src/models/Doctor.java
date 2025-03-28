@@ -7,15 +7,35 @@ import java.util.HashMap;
 import java.time.LocalDate;
 
 public class Doctor extends User {
+    private static final long serialVersionUID = 1L;
+    
+    private String name;
+    private String email;
+    private String phoneNumber;
     private String licenseNumber;
     private String specialization;
     private List<Prescription> issuedPrescriptions;
     private List<MedicalReport> issuedReports;
     private List<Consultation> consultations;
 
+    /**
+     * Constructor for creating a new doctor
+     * 
+     * @param id The unique identifier for this doctor
+     * @param name The name of this doctor
+     * @param username The username for this doctor
+     * @param password The password for this doctor
+     * @param email The email of this doctor
+     * @param phoneNumber The phone number of this doctor
+     * @param licenseNumber The license number of this doctor
+     * @param specialization The specialization of this doctor
+     */
     public Doctor(int id, String name, String username, String password, String email, 
                  String phoneNumber, String licenseNumber, String specialization) {
-        super(id, name, username, password, email, phoneNumber);
+        super(id, username, password, "DOCTOR");
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.licenseNumber = licenseNumber;
         this.specialization = specialization;
         this.issuedPrescriptions = new ArrayList<>();
@@ -23,10 +43,74 @@ public class Doctor extends User {
         this.consultations = new ArrayList<>();
     }
 
-    // Simpler constructor for backward compatibility
+    /**
+     * Simpler constructor for backward compatibility
+     * 
+     * @param id The unique identifier for this doctor
+     * @param name The name of this doctor
+     * @param username The username for this doctor
+     * @param password The password for this doctor
+     * @param email The email of this doctor
+     * @param phoneNumber The phone number of this doctor
+     * @param specialization The specialization of this doctor
+     */
     public Doctor(int id, String name, String username, String password, String email, 
                  String phoneNumber, String specialization) {
         this(id, name, username, password, email, phoneNumber, "L" + id, specialization);
+    }
+    
+    /**
+     * Get the name of this doctor
+     * 
+     * @return The name
+     */
+    public String getName() {
+        return name;
+    }
+    
+    /**
+     * Set the name of this doctor
+     * 
+     * @param name The name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    /**
+     * Get the email of this doctor
+     * 
+     * @return The email
+     */
+    public String getEmail() {
+        return email;
+    }
+    
+    /**
+     * Set the email of this doctor
+     * 
+     * @param email The email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    /**
+     * Get the phone number of this doctor
+     * 
+     * @return The phone number
+     */
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    
+    /**
+     * Set the phone number of this doctor
+     * 
+     * @param phoneNumber The phone number
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     // Getters

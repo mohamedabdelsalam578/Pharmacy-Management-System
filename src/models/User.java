@@ -18,6 +18,14 @@ public class User implements Serializable {
     private boolean locked;
     
     /**
+     * Display information about this user
+     * This method is meant to be overridden by subclasses
+     */
+    public void displayInfo() {
+        System.out.println("User [ID: " + id + ", Username: " + username + ", Role: " + role + "]");
+    }
+    
+    /**
      * Constructor for creating a new user
      * 
      * @param id The unique identifier for this user

@@ -40,6 +40,7 @@ public class Order implements Serializable {
         WALLET("Wallet"),
         CREDIT_CARD("Credit Card"),
         CASH_ON_DELIVERY("Cash on Delivery"),
+        FREE("Free"),
         NOT_PAID("Not Paid");
         
         private final String displayName;
@@ -240,6 +241,20 @@ public class Order implements Serializable {
         
         if (wallet == null) {
             return false;
+        }
+        
+        // Handle zero or negative amount orders (free prescriptions, etc.)
+        if (totalAmount <= 0) {
+            // Mark as paid without wallet transaction
+            this.isPaid = true;
+            this.paymentMethod = PaymentMethod.FREE;
+            this.paymentDate = new Date();
+            this.paymentReference = "Free Order #" + id;
+            
+            if (this.status == Status.PAYMENT_PENDING) {
+                this.status = Status.PROCESSING;
+            }
+            return true;
         }
         
         boolean success = wallet.withdraw(totalAmount, "Order #" + id);

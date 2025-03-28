@@ -13,8 +13,7 @@ import java.util.Map;
 
 import models.Patient;
 import models.Wallet;
-import models.Transaction;
-import models.Transaction.Type;
+// Using Transaction as inner class of Wallet
 import utils.ConsoleUI;
 import utils.FileHandler;
 
@@ -229,9 +228,9 @@ public class WalletService {
      * @param limit The maximum number of transactions to return (0 for all)
      * @return The list of transactions, sorted by date (most recent first)
      */
-    public List<Transaction> getTransactionHistory(Wallet wallet, int limit) {
+    public List<Wallet.Transaction> getTransactionHistory(Wallet wallet, int limit) {
         // Return directly from wallet object (already loaded from file system)
-        List<Transaction> transactions = wallet.getTransactions();
+        List<Wallet.Transaction> transactions = wallet.getTransactions();
         
         if (transactions.isEmpty() || limit <= 0 || limit >= transactions.size()) {
             return transactions;
@@ -395,13 +394,13 @@ public class WalletService {
         System.out.println("Current balance: " + wallet.getFormattedBalance());
         System.out.println("--------------------");
         
-        List<Transaction> transactions = getTransactionHistory(wallet, 20);
+        List<Wallet.Transaction> transactions = getTransactionHistory(wallet, 20);
         
         if (transactions.isEmpty()) {
             System.out.println("No transactions found.");
         } else {
             for (int i = 0; i < transactions.size(); i++) {
-                Transaction transaction = transactions.get(i);
+                Wallet.Transaction transaction = transactions.get(i);
                 String amountStr = String.format("%.2f LE", transaction.getAmount());
                 String description = transaction.getDescription();
                 

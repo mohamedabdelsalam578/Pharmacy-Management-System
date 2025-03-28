@@ -1,3 +1,2 @@
-
 1|Mohamed Ahmed|admin|admin123|mohamed@elta3ban.com|01012345678|Manager|Management
 2|Fatma Ibrahim|fatma_admin|password|fatma@elta3ban.com|01112345678|Assistant Manager|Management

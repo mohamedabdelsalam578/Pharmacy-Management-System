@@ -18,6 +18,7 @@
    - [Pharmacy Service](#9-pharmacyservice-functions)
 4. [Utility Classes](#utility-classes)
    - [FileHandler](#10-filehandler-functions)
+   - [ConsoleUI](#11-consoleui-functions)
 5. [Main Application](#main-application)
 6. [Payment System](#payment-system)
    - [Wallet](#1-wallet-class-functions)
@@ -80,6 +81,26 @@ The system now runs in extended mode by default, providing access to all feature
 | `FileHandler` | Manages data persistence | `initializeFiles()`, `loadFromFile()`, `saveToFile()`, various entity-specific load/save methods |
 | `ConsoleUI` | Provides enhanced console interface | `clearScreen()`, `showMenu()`, `showTableHeader()`, `showTableRow()`, `showSuccess()`, `showError()`, `showLoading()` |
 | `SystemTools` | Utility methods for common operations | `validateEmail()`, `formatCurrency()`, `generateId()`, `validatePhoneNumber()` |
+
+### 11. ConsoleUI Functions
+
+| Function | Description | Parameters | Return Type |
+|----------|-------------|------------|-------------|
+| `clearScreen()` | Clears the console output | - | `void` |
+| `printHeader(String title, int width, String color)` | Displays a styled header with title | Title text, width, color code | `void` |
+| `printMenuItem(int number, String description, String emoji, String color)` | Displays a menu item with emoji | Item number, description, emoji, color code | `void` |
+| `printProgressBar(int current, int total, int width, String color)` | Shows a visual progress bar | Current progress, total value, width, color code | `void` |
+| `showLoadingSpinner(String message, int seconds, String color)` | Displays an animated spinner | Message text, duration in seconds, color code | `void` |
+| `printSuccess(String message)` | Shows a success message with green checkmark | Message text | `void` |
+| `printError(String message)` | Shows an error message with red X | Message text | `void` |
+| `printInfo(String message)` | Shows an information message with blue icon | Message text | `void` |
+| `printWarning(String message)` | Shows a warning message with yellow icon | Message text | `void` |
+| `printLine(int width, String color)` | Prints a horizontal line | Line width, color code | `void` |
+| `confirmPrompt(String message)` | Shows a yes/no confirmation prompt | Prompt message | `boolean` |
+| `typeText(String message, int delayMs, String color)` | Displays text with typing animation | Message text, typing delay in ms, color code | `void` |
+| `printTableHeader(String[] columns, int[] widths, String color)` | Creates a styled table header | Column names, column widths, color code | `void` |
+| `printTableRow(String[] data, int[] widths, String color)` | Creates a styled table row | Row data, column widths, color code | `void` |
+| `promptInput(String prompt, String color)` | Prompts user for text input | Prompt message, color code | `String` |
 
 ## Main Application
 
@@ -290,41 +311,43 @@ The Pharmacy Management System includes a comprehensive internal payment system 
 
 | Function | Description | Parameters | Return Type |
 |----------|-------------|------------|-------------|
-| `Wallet()` | Constructor initializing wallet with zero balance | - | - |
+| `Wallet(Patient owner)` | Constructor initializing wallet with owner and zero balance | Patient owner | - |
+| `getOwner()` | Gets wallet owner | - | `Patient` |
 | `getBalance()` | Gets current wallet balance | - | `double` |
+| `getTransactions()` | Gets all wallet transactions | - | `List<Transaction>` |
 | `deposit(double amount, String description)` | Adds funds to wallet | Amount, transaction description | `boolean` |
 | `withdraw(double amount, String description)` | Removes funds from wallet | Amount, transaction description | `boolean` |
-| `getTransactionHistory()` | Gets all wallet transactions | - | `List<Transaction>` |
-| `addCreditCard(CreditCard card)` | Adds a credit card to wallet | Credit card object | `boolean` |
-| `removeCreditCard(String cardNumber)` | Removes a card from wallet | Card number to remove | `boolean` |
-| `getCreditCards()` | Gets all registered cards | - | `List<CreditCard>` |
-| `findCardByNumber(String cardNumber)` | Finds card by number | Card number to find | `CreditCard` |
-| `toString()` | String representation of wallet | - | `String` |
+| `makePayment(double amount, int orderId)` | Makes payment for an order | Amount, order ID | `boolean` |
+| `displayInfo()` | Displays wallet information | - | `void` |
+| `displayTransactions()` | Displays transaction history | - | `void` |
+| `getSavedCards()` | Gets all saved credit cards | - | `List<CreditCard>` |
+| `addCard(String cardNumber, String cardHolderName, String expiryDate, String cardType)` | Adds a credit card to wallet | Card details | `boolean` |
+| `removeCard(String lastFourDigits)` | Removes a card from wallet | Last four digits of card | `boolean` |
+| `displaySavedCards()` | Displays all saved cards | - | `void` |
 
 ### 2. CreditCard Class Functions
 
 | Function | Description | Parameters | Return Type |
 |----------|-------------|------------|-------------|
-| `CreditCard(String cardNumber, String cardHolderName, String expiryDate, String cvv)` | Constructor initializing card | Card details | - |
-| `getCardNumber()` | Gets full card number | - | `String` |
-| `getMaskedCardNumber()` | Gets masked card number (only last 4 digits visible) | - | `String` |
+| `CreditCard(String cardNumber, String cardHolderName, String expiryDate, String cardType)` | Constructor initializing card | Card details | - |
+| `getCardNumber()` | Gets masked card number | - | `String` |
 | `getCardHolderName()` | Gets card holder name | - | `String` |
 | `getExpiryDate()` | Gets card expiry date | - | `String` |
-| `getCvv()` | Gets card CVV code | - | `String` |
-| `isValid()` | Validates card details format | - | `boolean` |
-| `toString()` | String representation with masked details | - | `String` |
+| `getCardType()` | Gets type of card (Visa, Mastercard, etc.) | - | `String` |
+| `getLastFourDigits()` | Gets last 4 digits of card number | - | `String` |
+| `maskCardNumber(String cardNumber)` | Masks card number for security | Full card number | `String` |
+| `displayInfo()` | Displays formatted card information | - | `void` |
 
 ### 3. Transaction Class Functions
 
 | Function | Description | Parameters | Return Type |
 |----------|-------------|------------|-------------|
-| `Transaction(double amount, String type, String description, double finalBalance, LocalDateTime timestamp)` | Constructor initializing transaction | Transaction details | - |
+| `Transaction(int id, double amount, String type, String description, LocalDateTime dateTime)` | Constructor initializing transaction | Transaction details | - |
+| `getId()` | Gets transaction ID | - | `int` |
 | `getAmount()` | Gets transaction amount | - | `double` |
-| `getType()` | Gets transaction type (deposit, withdraw, payment) | - | `String` |
+| `getType()` | Gets transaction type (DEPOSIT, WITHDRAWAL, PAYMENT) | - | `String` |
 | `getDescription()` | Gets transaction description | - | `String` |
-| `getBalance()` | Gets balance after transaction | - | `double` |
-| `getTimestamp()` | Gets when transaction occurred | - | `LocalDateTime` |
-| `toString()` | String representation of transaction | - | `String` |
+| `getDateTime()` | Gets date and time of transaction | - | `LocalDateTime` |
 
 ## Prescription Workflow
 

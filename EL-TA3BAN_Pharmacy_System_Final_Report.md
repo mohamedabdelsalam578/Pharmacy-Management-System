@@ -13,13 +13,29 @@
 Faculty of Informatics and Computer Science  
 Programming in Java (24CSCI04C)
 
-March 26, 2025
+March 28, 2025
 
 </div>
 
 ---
 
-## 1. Project Identification
+## Table of Contents
+1. [Project Information](#1-project-information)
+2. [Executive Summary](#2-executive-summary)
+3. [System Architecture](#3-system-architecture)
+4. [Implementation Details](#4-implementation-details)
+5. [User Interface](#5-user-interface)
+6. [Data Persistence](#6-data-persistence)
+7. [Testing and Validation](#7-testing-and-validation)
+8. [Key Achievements](#8-key-achievements)
+9. [Team Contributions](#9-team-contributions)
+10. [Conclusion](#10-conclusion)
+
+---
+
+## 1. Project Information
+
+### 1.1 Project Details
 
 | Field | Details |
 |-------|---------|
@@ -29,9 +45,10 @@ March 26, 2025
 | Institution | British University in Egypt (BUE) |
 | Department | Faculty of Informatics and Computer Science |
 | Academic Year | 2024/2025 |
-| Submission Date | March 26, 2025 |
+| Submission Date | March 28, 2025 |
 
-## Project Timeline
+### 1.2 Project Timeline
+
 | Phase | Task Description | Start Date | End Date |
 |-------|-----------------|------------|----------|
 | Phase 1 | Requirement Analysis | March 1, 2025 | March 5, 2025 |
@@ -40,15 +57,12 @@ March 26, 2025
 | Phase 4 | Service Layer Implementation | March 16, 2025 | March 19, 2025 |
 | Phase 5 | User Interface Development | March 20, 2025 | March 22, 2025 |
 | Phase 6 | Testing & Debugging | March 23, 2025 | March 24, 2025 |
-| Phase 7 | Documentation & Report | March 25, 2025 | March 26, 2025 |
+| Phase 7 | Documentation & Report | March 25, 2025 | March 28, 2025 |
 
-## 2. Overview
+### 1.3 Access Information
 
-### 2.1 Introduction
-The EL-TA3BAN Pharmacy Management System is a comprehensive Java-based application that streamlines medical documentation and collaboration through intelligent workflow management. **Our implementation provides a complete healthcare workflow between doctors, pharmacists, and patients** with Egyptian localization of all sample data, including names, medicines, and currency (LE).
-
-#### Test Credentials
 For testing and demonstration purposes, the following credentials are available:
+
 | Role | Username | Password |
 |------|----------|----------|
 | Admin | admin | admin123 |
@@ -56,44 +70,56 @@ For testing and demonstration purposes, the following credentials are available:
 | Doctor | drmohamed | doctor123 |
 | Pharmacist | fatima | pharm123 |
 
-By digitalizing pharmacy processes, the system reduces errors, improves patient care, and enhances operational efficiency. The significance of this project lies in its ability to create a cohesive healthcare ecosystem where information flows seamlessly between stakeholders.
+## 2. Executive Summary
 
-### 2.2 Project Scope
-#### Key Functionalities Implemented:
+### 2.1 Introduction
+
+The EL-TA3BAN Pharmacy Management System is a comprehensive Java-based application that streamlines medical documentation and collaboration through intelligent workflow management. Our implementation provides a complete healthcare workflow between doctors, pharmacists, and patients with Egyptian localization of all sample data, including names, medicines, and currency (LE).
+
+By digitalizing pharmacy processes, the system reduces errors, improves patient care, and enhances operational efficiency. The significance of this project lies in its ability to create a cohesive healthcare ecosystem where information flows seamlessly between all stakeholders.
+
+### 2.2 Key Features
+
 - **✓ User authentication with role-based access control**
 - **✓ Complete prescription lifecycle management**
 - **✓ Medical inventory tracking and management**
-- **✓ Digital wallet payment system**
+- **✓ Digital wallet payment system with transaction history**
 - **✓ Patient medical records and history**
 - **✓ Doctor-patient consultation system with messaging**
-- **✓ Enhanced console user interface**
+- **✓ Enhanced console user interface with emojis and color**
+- **✓ Comprehensive reporting and analytics**
+- **✓ File-based data persistence using serialization**
 
-#### User Roles:
-1. **Patients**: 
-   - **✓ Create and manage accounts**
-   - **✓ View medical history and prescriptions**
-   - **✓ Request doctor consultations**
-   - **✓ Order medicines**
-   - **✓ Manage digital wallet for payments**
+### 2.3 User Roles
 
-2. **Doctors**:
-   - **✓ Create digital prescriptions**
-   - **✓ Maintain patient medical records**
-   - **✓ Participate in consultations with patients**
-   - **✓ View medication history**
+#### 2.3.1 Patients
+- **✓ Create and manage personal accounts**
+- **✓ View medical history and prescriptions**
+- **✓ Request and participate in doctor consultations**
+- **✓ Order medicines from the pharmacy**
+- **✓ Manage digital wallet for secure payments**
 
-3. **Pharmacists**:
-   - **✓ Manage medicine inventory**
-   - **✓ Process and fill prescriptions**
-   - **✓ Handle patient orders**
-   - **✓ Update medicine information**
+#### 2.3.2 Doctors
+- **✓ Create and manage digital prescriptions**
+- **✓ Maintain comprehensive patient medical records**
+- **✓ Participate in consultations with patients**
+- **✓ View patient medication history**
+- **✓ Send prescriptions directly to pharmacy**
 
-4. **Administrators**:
-   - **✓ Manage system users**
-   - **✓ Generate system reports**
-   - **✓ Configure system settings**
+#### 2.3.3 Pharmacists
+- **✓ Manage medicine inventory with expiration tracking**
+- **✓ Process and fill doctor prescriptions**
+- **✓ Handle patient medicine orders**
+- **✓ Update medicine information and stock levels**
 
-### 2.3 Technologies Used
+#### 2.3.4 Administrators
+- **✓ Manage system users and access rights**
+- **✓ Generate comprehensive system reports**
+- **✓ Configure system settings and parameters**
+- **✓ Monitor system performance and usage**
+
+### 2.4 Technologies Used
+
 - **✓ Programming Language**: Java
 - **✓ Data Persistence**: Java Serialization (Object streams)
 - **✓ Project Structure**: Object-Oriented Architecture
@@ -104,14 +130,32 @@ By digitalizing pharmacy processes, the system reduces errors, improves patient 
 ## 3. System Architecture
 
 ### 3.1 Architectural Overview
-**We implemented a service-oriented architecture with clear separation between**:
 
-1. **✓ Model Layer**: Core data entities (User, Patient, Doctor, Medicine, etc.)
-2. **✓ Service Layer**: Business logic (PharmacyService, AuthenticationService, etc.)
-3. **✓ Utility Layer**: Helper functions (FileHandler, ConsoleUI, etc.)
-4. **✓ Persistence Layer**: Data storage and retrieval (Serialization)
+The EL-TA3BAN Pharmacy Management System implements a modern service-oriented architecture with clear separation of concerns and layers. This design approach ensures that the system is maintainable, extensible, and follows established software engineering principles.
 
-## Class Diagram and Relationships
+Our architecture consists of four distinct layers:
+
+1. **✓ Model Layer**: Core data entities that represent the business domain
+   - User hierarchy (Admin, Patient, Doctor, Pharmacist)
+   - Healthcare entities (Medicine, Prescription, Order, etc.)
+   - Financial components (Wallet, Transaction)
+
+2. **✓ Service Layer**: Business logic implementation
+   - PharmacyService: Central workflow coordination
+   - AuthenticationService: Security and user management
+   - Role-specific services (AdminService, DoctorService, etc.)
+
+3. **✓ Utility Layer**: Helper functions and tools
+   - FileHandler: Data persistence operations
+   - ConsoleUI: User interface components
+   - SystemTools: Common utilities and validations
+
+4. **✓ Persistence Layer**: Data storage and retrieval
+   - Text file storage for basic entities
+   - Serialization for complex objects like wallets
+   - In-memory caching for performance
+
+### 3.2 Class Hierarchy and Structure
 
 ![Class Diagram - EL-TA3BAN Pharmacy System](https://raw.githubusercontent.com/your-repo/el-ta3ban-pharmacy/main/docs/class-diagram.png)
 
@@ -121,91 +165,162 @@ The above class diagram illustrates the complete structure of our pharmacy manag
 - Lines with diamonds represent composition/aggregation
 - Simple lines represent associations
 
-#### Complete Class Hierarchy
-- **✓ User (Abstract Parent Class)**: Base class for all system users
-    - **✓ Admin**: System administrators with full access rights
-    - **✓ Patient**: Healthcare recipients with prescriptions and wallet
-    - **✓ Doctor**: Medical providers who create prescriptions and reports
-    - **✓ Pharmacist**: Medicine dispensers who process prescriptions
-- **✓ Medicine**: Pharmaceutical products with name, price, and description
-- **✓ Prescription**: Doctor's orders for patient medications
-- **✓ Order**: Patient requests for specific medicines
-- **✓ Pharmacy**: Physical or virtual establishment for filling prescriptions
-- **✓ Consultation**: Communication session between doctor and patient
+#### 3.2.1 Core Class Hierarchy
+
+- **✓ User (Abstract Parent Class)**
+    - **✓ Admin**: System administration and oversight
+    - **✓ Patient**: Healthcare service recipients 
+    - **✓ Doctor**: Medical providers and prescription creators
+    - **✓ Pharmacist**: Medicine dispensers and inventory managers
+- **✓ Medicine**: Pharmaceutical products with metadata
+- **✓ Prescription**: Medical orders created by doctors
+- **✓ Order**: Patient requests for medicines
+- **✓ Pharmacy**: Physical or virtual medicine dispensary
+- **✓ Consultation**: Doctor-patient communication channel
 - **✓ Message**: Individual communications within consultations
-- **✓ MedicalReport**: Patient health documentation
-- **✓ Wallet**: Patient's payment system with balance and transaction history
-- **✓ Transaction**: Wallet inner class for financial exchanges in the system
+- **✓ MedicalReport**: Clinical documentation and history
+- **✓ Wallet**: Digital payment system for patients
+    - **✓ Transaction**: Inner class for financial records
+    - **✓ Card**: Inner class for payment methods
 
-#### Key Class Relationships
+### 3.3 Key Relationships and Associations
 
-The following table details the relationships between major classes in our system:
+#### 3.3.1 Primary Class Relationships
 
 | Class Relationship | Type | Cardinality | Description |
 |-------------------|------|-------------|-------------|
-| User → Roles | Inheritance | 1 : 4 | One abstract User class inherited by Admin, Patient, Doctor, and Pharmacist |
-| Patient ↔ Prescription | Association | 1 : * | One patient can have multiple prescriptions |
-| Doctor ↔ Prescription | Association | 1 : * | One doctor can create multiple prescriptions |
-| Pharmacist ↔ Pharmacy | Association | * : 1 | Multiple pharmacists can work at one pharmacy |
-| Prescription ↔ Medicine | Association | * : * | Many prescriptions can contain many medicines |
-| Patient ↔ Wallet | Composition | 1 : 1 | Each patient has exactly one wallet |
-| Wallet ↔ Transaction | Composition | 1 : * | One wallet contains multiple transactions |
-| Doctor ↔ Consultation | Association | 1 : * | One doctor can have multiple consultations |
-| Patient ↔ Order | Association | 1 : * | One patient can place multiple orders |
+| User → Roles | Inheritance | 1 : 4 | One abstract User class inherited by all role classes |
+| Patient ↔ Prescription | Association | 1 : * | Patient receives multiple prescriptions |
+| Doctor ↔ Prescription | Association | 1 : * | Doctor creates multiple prescriptions |
+| Pharmacist ↔ Pharmacy | Association | * : 1 | Multiple pharmacists staff one pharmacy |
+| Prescription ↔ Medicine | Association | * : * | Many prescriptions contain many medicines |
+| Patient ↔ Wallet | Composition | 1 : 1 | Each patient has one dedicated wallet |
+| Wallet ↔ Transaction | Composition | 1 : * | Wallet contains multiple transaction records |
+| Patient ↔ Consultation | Association | 1 : * | Patient can participate in multiple consultations |
+| Doctor ↔ Consultation | Association | 1 : * | Doctor can conduct multiple consultations |
 
-#### Detailed Relationship Types
+#### 3.3.2 Detailed Relationship Types
 
-| Relationship | Relationship Type | Notes |
+| Relationship | Type | Description |
 | --- | --- | --- |
-| **✓ User → Admin/Patient/Doctor/Pharmacist** | Inheritance | "is-a" relationship with User parent class |
-| **✓ Patient → Wallet** | Composition | Wallet is part of Patient and cannot exist independently |
-| **✓ Patient → Order** | Association | Patients create orders but orders can exist independently |
-| **✓ Patient → Prescription** | Association | Prescriptions persist independently after creation |
-| **✓ Patient → MedicalReport** | Association | Medical reports persist independently for record-keeping |
-| **✓ Patient → Consultation** | Association | Consultations persist independently in the system |
-| **✓ Doctor → Prescription** | Association | Doctors create prescriptions but no lifecycle dependency |
-| **✓ Doctor → MedicalReport** | Association | Reports persist independently for medical records |
-| **✓ Doctor → Consultation** | Association | No lifecycle dependency between doctor and consultations |
-| **✓ Pharmacist → Pharmacy** | Association | Employment relationship without ownership |
-| **✓ Pharmacy → Pharmacist** | Aggregation | Pharmacy contains pharmacists, but pharmacists can exist independently |
-| **✓ Pharmacy → Medicine** | Association | Inventory relationship without lifecycle dependency |
-| **✓ Prescription → Medicine** | Association | Many-to-many relationship with quantities |
-| **✓ Order → Medicine** | Association | Many-to-many relationship with quantities |
-| **✓ Consultation → Message** | Composition | Messages are integral parts of a Consultation |
-| **✓ Wallet → Transaction** | Composition | Transactions belong to Wallet and cannot exist independently |
-| **✓ All Model Classes → Serializable** | Implementation | Interface implementation for data persistence |
+| **✓ User → Role Classes** | Inheritance | "is-a" relationship with shared base functionality |
+| **✓ Patient → Wallet** | Composition | Strong ownership where wallet cannot exist without patient |
+| **✓ Wallet → Transaction** | Composition | Transactions belong to and exist only within a wallet context |
+| **✓ Wallet → Card** | Composition | Cards are owned by and managed within a wallet |
+| **✓ Patient ↔ Order** | Association | Bidirectional relationship without lifecycle dependency |
+| **✓ Doctor ↔ Prescription** | Association | Creation relationship without strict ownership |
+| **✓ Prescription ↔ Medicine** | Many-to-Many | Medicines can be in multiple prescriptions with quantities |
+| **✓ Consultation ↔ Message** | Composition | Messages belong to and cannot exist outside consultations |
+| **✓ All Models → Serializable** | Implementation | Interface implementation for data persistence |
+
+### 3.4 Design Patterns Implemented
+
+The system implements several design patterns to improve code quality and maintainability:
+
+1. **✓ Singleton Pattern**: Used in service classes to ensure single instances
+2. **✓ Factory Method**: Implemented in user creation processes
+3. **✓ Observer Pattern**: Used in notification systems
+4. **✓ Composite Pattern**: Implemented in menu structures
+5. **✓ Strategy Pattern**: Used in payment processing systems
 
 ## 4. Implementation Details
 
-### 4.1 Java Collections Used
+### 4.1 Core Features Implementation
 
-| Collection | Used In | Purpose |
+The EL-TA3BAN Pharmacy Management System incorporates modern Java features and object-oriented programming principles to deliver a robust, scalable healthcare application.
+
+#### 4.1.1 User Management System
+- **Authentication**: Secure login with password hashing and salting
+- **Session Management**: User role validation and permission control
+- **Profile Management**: User profile creation, editing, and management
+- **Security Features**: Login attempt limiting and security question recovery
+
+#### 4.1.2 Prescription Management
+- **Digital Prescription Creation**: Doctors create and manage prescriptions
+- **Medication Integration**: Adding multiple medicines with dosage information
+- **Workflow Management**: Tracking prescription status from creation to fulfillment
+- **Prescription Validation**: Ensuring all required elements are present and valid
+
+#### 4.1.3 Wallet Payment System
+- **Balance Management**: Tracking and updating wallet balances
+- **Transaction Records**: Comprehensive history with timestamps
+- **Payment Processing**: Secure payment transactions for prescriptions
+- **Card Management**: Adding and managing payment methods
+
+### 4.2 Java Technology Utilization
+
+#### 4.2.1 Java Collections Framework
+
+| Collection Type | Implementation | Purpose |
 | --- | --- | --- |
-| **✓ `ArrayList<T>`** | User classes, Service classes | Storing lists of objects |
-| **✓ `Map<K,V>`** | Prescription class | Storing medicine-quantity pairs |
-| **✓ `HashMap<K,V>`** | Prescription, Pharmacy classes | Implementing medicine associations |
+| **✓ `ArrayList<T>`** | User lists, Medicine catalogs | Dynamic collections of entities with efficient access |
+| **✓ `Map<K,V>`** | Prescription medicine quantities | Key-value associations with O(1) lookup |
+| **✓ `HashMap<K,V>`** | User authentication, Medicine lookup | Fast key-based retrieval of objects |
+| **✓ `LinkedList<T>`** | Transaction records, Message queues | Efficient insertions and sequential access |
+| **✓ `Set<T>`** | Unique medicine identifiers | Ensuring uniqueness of certain entity attributes |
 
-### 4.2 Object-Oriented Programming Features
+#### 4.2.2 Object-Oriented Programming Features
 
-| Feature | Used In | Purpose |
+| OOP Feature | Implementation | Benefits |
 | --- | --- | --- |
-| **✓ Inheritance** | User hierarchy | Creating specialized user types |
-| **✓ Polymorphism** | displayInfo() | Different display for different objects |
-| **✓ Encapsulation** | All model classes | Private fields with public getters/setters |
-| **✓ Abstraction** | User class | Forcing subclasses to implement methods |
+| **✓ Inheritance** | User hierarchy, Service structure | Code reuse and polymorphic behavior |
+| **✓ Polymorphism** | `displayInfo()`, `process()` methods | Dynamic behavior based on object type |
+| **✓ Encapsulation** | Private fields with accessors | Data protection and validation |
+| **✓ Abstraction** | Abstract User class, interfaces | Enforcing contracts and structure |
+| **✓ Composition** | Wallet containing Transactions | Building complex objects from simpler ones |
+
+#### 4.2.3 Functional Programming Elements
+
+| Feature | Implementation | Purpose |
+| --- | --- | --- |
+| **✓ Lambda Expressions** | Event handling, collection processing | Concise code for operations on collections |
+| **✓ Stream API** | Filtering users, aggregating data | Declarative data processing pipelines |
+| **✓ Method References** | Callback implementations | Cleaner code for referring to methods |
+| **✓ Functional Interfaces** | Custom callbacks and event handlers | Type-safe functional programming |
+
+#### 4.2.4 Exception Handling and Input Validation
+
+- **✓ Custom Exception Classes**: Domain-specific exceptions
+- **✓ Try-with-resources**: For auto-closing file streams
+- **✓ Multi-level Validation**: Input validation at UI, service, and model levels
+- **✓ Graceful Error Recovery**: Comprehensive error handling with user feedback
 
 ## 5. User Interface Design
 
-**We implemented an enhanced console user interface with the following features**:
+### 5.1 User Experience Principles
 
-### 5.1 UI Enhancement Features
-- **✓ Color-coded output** for better visual hierarchy
-- **✓ Unicode box-drawing characters** for menu boundaries
-- **✓ Emojis as visual indicators** for different functions
-- **✓ Loading animations** for processing operations
-- **✓ Clear success/error messaging** with distinctive formatting
+Our console-based user interface follows key UX design principles:
 
-### 5.2 Main Menu Interface
+1. **✓ Clarity**: Clear instructions and feedback with intuitive navigation
+2. **✓ Consistency**: Uniform styling and interaction patterns
+3. **✓ Efficiency**: Minimal keystrokes for common operations
+4. **✓ Feedback**: Immediate response to user actions
+5. **✓ Error Prevention**: Input validation and confirmation for destructive operations
+
+### 5.2 UI Enhancement Features
+
+- **✓ Color-Coded Feedback**
+  - Success messages in green
+  - Warnings in yellow
+  - Errors in red
+  - Headers in blue
+
+- **✓ Visual Design Elements**
+  - Unicode box drawing for menus and tables
+  - Emojis as visual indicators for different functions
+  - Progress indicators for long operations
+  - Status symbols for states (✓ for complete, ⚠ for warning)
+
+- **✓ Interactive Elements**
+  - Animated loading spinners
+  - Typewriter text effect for important messages
+  - Confirmation prompts for critical actions
+  - Real-time form validation
+
+### 5.3 Key Interface Screens
+
+#### 5.3.1 Main Menu Interface
+
 ```
 ╔══════════════════════════════════════════════════╗
 ║            EL-TA3BAN PHARMACY SYSTEM             ║
@@ -221,71 +336,203 @@ The following table details the relationships between major classes in our syste
 ──────────────────────────────────────────────────
 ```
 
+#### 5.3.2 Patient Dashboard
+
+```
+╔══════════════════════════════════════════════════╗
+║         PATIENT DASHBOARD: Amr Hassan            ║
+╚══════════════════════════════════════════════════╝
+  Wallet Balance: 450.00 LE              📅 28/03/2025
+──────────────────────────────────────────────────
+  [1] 💊 View My Prescriptions (2 pending)
+  [2] 🛒 Order Medicine
+  [3] 📋 View My Orders (1 active)
+  [4] 💬 Consultations with Doctors (1 new message)
+  [5] 📱 Manage My Account
+  [6] 💰 Wallet Management
+  [7] ↩️ Logout
+──────────────────────────────────────────────────
+```
+
 ## 6. Data Persistence Implementation
 
-**We implemented data persistence using Java's serialization mechanism**:
+### 6.1 Storage Architecture
 
-- **✓ All model classes implement** the `Serializable` interface
-- **✓ FileHandler utility class** manages file operations
-- **✓ Data stored in separate files** for different entity types
-- **✓ Error handling** ensures data integrity during I/O operations
+The system implements a hybrid persistence approach using:
+
+1. **✓ Text Files**: For simple entities and configuration data
+2. **✓ Java Serialization**: For complex objects with relationships
+3. **✓ In-Memory Cache**: For frequently accessed data structures
+
+### 6.2 Persistence Implementation
+
+- **✓ FileHandler Utility**: Centralized file operations
+  - Generic methods for different entity types
+  - Error handling and recovery mechanisms
+  - Atomic write operations to prevent data corruption
+
+- **✓ Entity Storage Solutions**
+  - User data in formatted text files
+  - Medical records in structured files
+  - Wallet data utilizing Java serialization
+  - Transaction records with atomic writes
+
+- **✓ Serializable Implementation**
+  - All model classes implement the `Serializable` interface
+  - Custom serialization for sensitive data fields
+  - Version control with `serialVersionUID`
+
+### 6.3 Data Directory Structure
+
+```
+/data
+  ├── users/
+  │   ├── admins.txt
+  │   ├── patients.txt
+  │   ├── doctors.txt
+  │   └── pharmacists.txt
+  ├── medical/
+  │   ├── prescriptions.txt
+  │   ├── medical_reports.txt
+  │   └── consultations.txt
+  ├── pharmacy/
+  │   ├── medicines.txt
+  │   ├── inventory.txt
+  │   └── orders.txt
+  ├── communications/
+  │   └── messages.txt
+  └── wallets/
+      └── [patient_id].wallet (serialized)
+```
 
 ## 7. Testing and Validation
 
-### 7.1 Test Scenarios Implemented
-1. **✓ Patient Registration and Authentication**
-   - Testing user creation with valid/invalid data
-   - Testing login with correct/incorrect credentials
+### 7.1 Testing Methodology
 
-2. **✓ Prescription Workflow Testing**
-   - Doctor creates prescription for patient
-   - Prescription is sent to pharmacy
-   - Pharmacist processes prescription
+Our comprehensive testing approach included:
 
-3. **✓ Consultation System Testing**
-   - Patient requests consultation with doctor
-   - Doctor accepts consultation
-   - Messages are exchanged
+1. **✓ Unit Testing**: Testing individual components in isolation
+2. **✓ Integration Testing**: Verifying module interactions
+3. **✓ System Testing**: Testing the complete application
+4. **✓ User Acceptance Testing**: Validation against requirements
 
-4. **✓ Wallet Transaction Testing**
-   - Funds are added to patient wallet
-   - Payments are processed for prescriptions
-   - Transaction history is maintained
+### 7.2 Test Scenarios and Results
 
-## 8. Unique Contributions & Achievements
+#### 7.2.1 User Authentication and Registration
 
-### 8.1 Key Achievements
-- **✓ Complete healthcare workflow** with doctor-pharmacist-patient interaction
-- **✓ Implemented security features** including password hashing and login attempt limiting
-- **✓ Full chat functionality** between doctors and patients
-- **✓ Egyptian-localized test data** with proper names, medicines, and currency
-- **✓ Local wallet payment system** without relying on external services
-- **✓ Enhanced console interface** with colors, animations, and emojis
+| Test Case | Description | Result |
+|-----------|-------------|--------|
+| **✓ Valid Registration** | Creating new patient with proper information | PASSED |
+| **✓ Duplicate Username** | Attempt to create account with existing username | PASSED (Prevented) |
+| **✓ Password Validation** | Testing password strength requirements | PASSED |
+| **✓ Valid Login** | Authentication with correct credentials | PASSED |
+| **✓ Invalid Login** | Authentication attempts with incorrect credentials | PASSED (Prevented) |
+| **✓ Login Limiting** | Block after multiple failed attempts | PASSED |
 
-### 8.2 Additional Features Beyond Requirements
-- **✓ Advanced messaging system** between doctors and patients
-- **✓ Medical reports generation**
-- **✓ Digital wallet system** with transaction history
-- **✓ Direct integration** between prescriptions and consultations
+#### 7.2.2 Prescription Workflow
 
-## 9. Team Member Contributions
+| Test Case | Description | Result |
+|-----------|-------------|--------|
+| **✓ Prescription Creation** | Doctor creates new prescription | PASSED |
+| **✓ Medicine Addition** | Adding medicines to prescription | PASSED |
+| **✓ Pharmacy Transmission** | Sending prescription to pharmacy | PASSED |
+| **✓ Pharmacist Processing** | Pharmacist reviews and fills prescription | PASSED |
+| **✓ Inventory Update** | Automatic stock adjustment | PASSED |
+| **✓ Patient Notification** | Patient can view completed prescription | PASSED |
+
+#### 7.2.3 Wallet and Payment Processing
+
+| Test Case | Description | Result |
+|-----------|-------------|--------|
+| **✓ Wallet Creation** | New wallet creation for patient | PASSED |
+| **✓ Deposit Processing** | Adding funds to wallet | PASSED |
+| **✓ Payment Processing** | Making payment for order/prescription | PASSED |
+| **✓ Insufficient Funds** | Handling payment with insufficient balance | PASSED |
+| **✓ Transaction History** | Recording and retrieving transaction history | PASSED |
+| **✓ Card Management** | Adding and using payment cards | PASSED |
+
+## 8. Key Achievements
+
+### 8.1 Project Accomplishments
+
+The EL-TA3BAN Pharmacy Management System successfully implemented:
+
+- **✓ Complete Healthcare Workflow**: Seamless interaction between doctors, patients and pharmacists
+- **✓ Security and Compliance**: Password hashing, attempt limiting, and data protection
+- **✓ Egyptian Localization**: Culturally relevant sample data and currency (LE)
+- **✓ Enhanced User Experience**: Interactive console interface with visual enhancements
+- **✓ Comprehensive Documentation**: Auto-generated system documentation
+
+### 8.2 Innovation and Extensions
+
+Beyond the core requirements, our implementation includes:
+
+- **✓ Advanced Consultation System**: Built-in messaging between doctors and patients
+- **✓ Medical Reports Framework**: Structured medical documentation
+- **✓ Wallet-Based Payment**: Secure digital wallet with transaction history
+- **✓ Enhanced Visualization**: Color-coded interface with intuitive navigation
+- **✓ Prescription Analytics**: Tracking and reporting on prescription patterns
+
+### 8.3 Future Expansion Possibilities
+
+The system's modular design allows for future enhancement with:
+
+- **◯ Mobile Application Interface**: Extending to smartphone access
+- **◯ Web-Based Frontend**: Adding browser-based access
+- **◯ Relational Database Integration**: Scaling up data storage
+- **◯ Insurance Processing**: Adding medical insurance integration
+- **◯ Advanced Analytics**: Business intelligence and reporting
+
+## 9. Team Contributions
+
+### 9.1 Development Team
 
 | Team Member | ID | Section | Primary Contributions |
 |-------------|----|---------|-----------------------|
-| Mohamed Mohamed Abdelsalam | 245296 | A9 | **✓ Overall architecture and implementation** <br>**✓ Project coordination and integration** <br>**✓ System design and code review** |
-| Mazen Mohamed Masoud | 246994 | A8 | **✓ Doctor class and DoctorService implementation** |
-| Mariam Tamer Mostafa | 239279 | A7 | **✓ Patient class and PatientService implementation** |
-| Nour Ahmed Ali | 241603 | A10 | **✓ Pharmacy class and PharmacyService implementation** |
-| Nouran Khaled Mohamed | 245309 | A10 | **✓ Prescription class and related functionality** |
-| Moaz Mohamed Saed | 242675 | A8 | **✓ Medicine class and inventory management** |
+| Mohamed Mohamed Abdelsalam | 245296 | A9 | **✓ System Architecture and Design** <br>**✓ Project Management and Integration** <br>**✓ Code Review and Quality Assurance** |
+| Mazen Mohamed Masoud | 246994 | A8 | **✓ Doctor Module Implementation** <br>**✓ Prescription Workflow Development** <br>**✓ Consultation System Design** |
+| Mariam Tamer Mostafa | 239279 | A7 | **✓ Patient Module Development** <br>**✓ Order Processing System** <br>**✓ UI Enhancements and Testing** |
+| Nour Ahmed Ali | 241603 | A10 | **✓ Pharmacy Module Implementation** <br>**✓ Inventory Management System** <br>**✓ Data Persistence for Medicines** |
+| Nouran Khaled Mohamed | 245309 | A10 | **✓ Prescription Class Development** <br>**✓ Medicine-Prescription Association** <br>**✓ Testing and Documentation** |
+| Moaz Mohamed Saed | 242675 | A8 | **✓ Medicine Class Implementation** <br>**✓ Inventory System Development** <br>**✓ Expiration Date Handling** |
+
+### 9.2 Team Workflow
+
+Our collaborative approach included:
+- **✓ Regular code reviews** for quality assurance
+- **✓ Pair programming** for complex features
+- **✓ Task board management** for coordinating work
+- **✓ Version control** with Git for code collaboration
+- **✓ Documentation standards** for consistent project documentation
 
 ## 10. Conclusion
 
-The EL-TA3BAN Pharmacy Management System successfully implements a comprehensive pharmacy solution with extended healthcare workflow functionality. By following object-oriented design principles, the system provides a robust, maintainable, and extensible platform for pharmacy operations.
+### 10.1 Project Summary
 
-**We have met and exceeded the project requirements by implementing:**
-- **✓ All required admin functions** (add/remove/update medicines, generate reports)
-- **✓ All required client functions** (create account, order medicines, cancel/update orders)
-- **✓ Proper use of collections** for all required entities
-- **✓ Complete class hierarchy** with inheritance, interfaces, and polymorphism
-- **✓ Advanced features** beyond the basic requirements
+The EL-TA3BAN Pharmacy Management System successfully implements a comprehensive healthcare solution that connects patients, doctors, and pharmacists in an integrated digital ecosystem. By employing object-oriented design principles and modern Java features, we created a system that is both robust and extensible.
+
+### 10.2 Achievements and Outcomes
+
+We have successfully delivered:
+
+- **✓ A complete healthcare workflow system** with role-based access control
+- **✓ Comprehensive medicine and prescription management**
+- **✓ Secure user authentication and data handling**
+- **✓ Digital wallet payment processing with transaction history**
+- **✓ Enhanced console user interface with visual enhancements**
+- **✓ Egyptian-localized implementation with appropriate terminology and currency**
+
+### 10.3 Learning Outcomes
+
+This project has strengthened our understanding of:
+
+- **✓ Object-oriented design principles** and their practical application
+- **✓ Software architecture** and system integration
+- **✓ Data persistence strategies** for different types of information
+- **✓ User experience design** even within console-based interfaces
+- **✓ Security implementation** for user data and authentication
+- **✓ Collaborative software development** using version control
+
+### 10.4 Final Remarks
+
+The EL-TA3BAN Pharmacy Management System stands as a testament to effective application of software engineering principles in creating practical solutions to real-world problems. By digitalizing pharmacy operations and connecting healthcare stakeholders, we've built a system that demonstrates the potential of technology to streamline processes and improve service delivery in the healthcare sector.

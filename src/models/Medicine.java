@@ -23,7 +23,35 @@ public class Medicine implements Serializable {
     private int quantity; // Added for compatibility
     
     /**
-     * Constructor for creating a new medicine
+     * Constructor for creating a new medicine - Used by the FileHandler
+     * 
+     * @param id The unique identifier for this medicine
+     * @param name The name of this medicine
+     * @param description The description of this medicine
+     * @param manufacturer The manufacturer of this medicine
+     * @param price The price of this medicine
+     * @param quantity The quantity/stock of this medicine
+     * @param category The category of this medicine
+     * @param requiresPrescription Whether this medicine requires a prescription
+     */
+    public Medicine(int id, String name, String description, String manufacturer, 
+                    double price, int quantity, String category, boolean requiresPrescription) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.manufacturer = manufacturer;
+        this.price = price;
+        this.stock = quantity;
+        this.quantity = quantity; // Initialize quantity to match stock
+        this.category = category;
+        this.dosage = "As directed"; // Default dosage
+        this.prescription = requiresPrescription;
+        this.expiryDate = new Date(System.currentTimeMillis() + 365L * 24 * 60 * 60 * 1000); // Default: 1 year from now
+        this.imageUrl = "";
+    }
+    
+    /**
+     * Constructor for creating a new medicine with full details
      * 
      * @param id The unique identifier for this medicine
      * @param name The name of this medicine
@@ -311,6 +339,16 @@ public class Medicine implements Serializable {
      * @return The expiry date
      */
     public Date getExpiryDate() {
+        return expiryDate;
+    }
+    
+    /**
+     * Get the date/time of this medicine's expiry
+     * Used by FileHandler for persistence
+     * 
+     * @return The date/time
+     */
+    public Date getDateTime() {
         return expiryDate;
     }
     

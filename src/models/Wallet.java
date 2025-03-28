@@ -139,6 +139,16 @@ public class Wallet implements Serializable {
         }
         
         /**
+         * Get the date/time of this transaction
+         * Used by FileHandler for persistence
+         * 
+         * @return The date/time
+         */
+        public Date getDateTime() {
+            return timestamp;
+        }
+        
+        /**
          * Get the formatted timestamp
          * 
          * @return The formatted timestamp
@@ -157,6 +167,19 @@ public class Wallet implements Serializable {
         public String toString() {
             return String.format("[%s] %s: %.2f LE - %s", getTimestamp(), type.getDisplayName(), amount, description);
         }
+    }
+    
+    /**
+     * Constructor for creating a new wallet with just a patient ID
+     * 
+     * @param patientId The ID of the patient who owns this wallet
+     */
+    public Wallet(int patientId) {
+        this.patientId = patientId;
+        this.patientUsername = "patient" + patientId; // Default username
+        this.balance = 0.0;
+        this.cards = new HashMap<>();
+        this.transactions = new ArrayList<>();
     }
     
     /**

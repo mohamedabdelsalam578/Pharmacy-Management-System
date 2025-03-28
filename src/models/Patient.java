@@ -22,9 +22,48 @@ public class Patient extends User {
     private String medicalHistory;
     private List<String> allergies;
     private Wallet wallet;
+    private List<Order> orders;
+    private List<Prescription> prescriptions;
     
     /**
      * Constructor for creating a new patient
+     * Used by FileHandler and other services for creating patients with full name
+     * 
+     * @param id The unique identifier for this patient
+     * @param name The full name of this patient
+     * @param username The username for this patient
+     * @param password The password for this patient
+     * @param email The email of this patient
+     * @param phoneNumber The phone number of this patient
+     * @param address The address of this patient
+     */
+    public Patient(int id, String name, String username, String password, 
+                 String email, String phoneNumber, String address) {
+        super(id, username, password, "PATIENT");
+        
+        // Split the full name into first and last name
+        String[] nameParts = name.split(" ", 2);
+        this.firstName = nameParts.length > 0 ? nameParts[0] : "";
+        this.lastName = nameParts.length > 1 ? nameParts[1] : "";
+        
+        this.dateOfBirth = new Date(); // Default date of birth
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.email = email;
+        this.gender = "";
+        this.insuranceInfo = "";
+        this.emergencyContact = "";
+        this.medicalHistory = "";
+        this.allergies = new ArrayList<>();
+        this.orders = new ArrayList<>();
+        this.prescriptions = new ArrayList<>();
+        
+        // Initialize wallet
+        this.wallet = new Wallet(id);
+    }
+    
+    /**
+     * Constructor for creating a new patient with detailed information
      * 
      * @param id The unique identifier for this patient
      * @param username The username for this patient
@@ -38,7 +77,7 @@ public class Patient extends User {
      */
     public Patient(int id, String username, String passwordHash, String firstName, String lastName,
                  Date dateOfBirth, String phoneNumber, String address, String email) {
-        super(id, username, passwordHash, UserType.PATIENT);
+        super(id, username, passwordHash, "PATIENT");
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -50,7 +89,11 @@ public class Patient extends User {
         this.emergencyContact = "";
         this.medicalHistory = "";
         this.allergies = new ArrayList<>();
-        this.wallet = null; // Will be initialized separately
+        this.orders = new ArrayList<>();
+        this.prescriptions = new ArrayList<>();
+        
+        // Initialize wallet
+        this.wallet = new Wallet(id);
     }
     
     /**
@@ -115,6 +158,16 @@ public class Patient extends User {
      * @return The date of birth
      */
     public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+    
+    /**
+     * Get the date/time of this patient's birth date
+     * Used by FileHandler for persistence
+     * 
+     * @return The date/time
+     */
+    public Date getDateTime() {
         return dateOfBirth;
     }
     
@@ -327,6 +380,112 @@ public class Patient extends User {
      */
     public boolean hasWallet() {
         return wallet != null;
+    }
+    
+    /**
+     * Get the orders of this patient
+     * 
+     * @return The orders
+     */
+    public List<Order> getOrders() {
+        return new ArrayList<>(orders);
+    }
+    
+    /**
+     * Add an order to this patient
+     * 
+     * @param order The order to add
+     */
+    public void addOrder(Order order) {
+        if (order != null && !orders.contains(order)) {
+            orders.add(order);
+        }
+    }
+    
+    /**
+     * Remove an order from this patient
+     * 
+     * @param order The order to remove
+     * @return true if removed, false if not found
+     */
+    public boolean removeOrder(Order order) {
+        return orders.remove(order);
+    }
+    
+    /**
+     * Get the prescriptions of this patient
+     * 
+     * @return The prescriptions
+     */
+    public List<Prescription> getPrescriptions() {
+        return new ArrayList<>(prescriptions);
+    }
+    
+    /**
+     * Add a prescription to this patient
+     * 
+     * @param prescription The prescription to add
+     */
+    public void addPrescription(Prescription prescription) {
+        if (prescription != null && !prescriptions.contains(prescription)) {
+            prescriptions.add(prescription);
+        }
+    }
+    
+    /**
+     * Remove a prescription from this patient
+     * 
+     * @param prescription The prescription to remove
+     * @return true if removed, false if not found
+     */
+    public boolean removePrescription(Prescription prescription) {
+        return prescriptions.remove(prescription);
+    }
+    
+    /**
+     * Find a prescription by ID
+     * 
+     * @param prescriptionId The ID of the prescription to find
+     * @return The prescription, or null if not found
+     */
+    public Prescription findPrescriptionById(int prescriptionId) {
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                return prescription;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Find an order by ID
+     * 
+     * @param orderId The ID of the order to find
+     * @return The order, or null if not found
+     */
+    public Order findOrderById(int orderId) {
+        for (Order order : orders) {
+            if (order.getId() == orderId) {
+                return order;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Display information about this patient
+     */
+    @Override
+    public void displayInfo() {
+        System.out.println("\n===== PATIENT INFORMATION =====");
+        System.out.println("ID: " + getId());
+        System.out.println("Name: " + getName());
+        System.out.println("Email: " + email);
+        System.out.println("Phone Number: " + phoneNumber);
+        System.out.println("Address: " + address);
+        System.out.println("Wallet Balance: " + (wallet != null ? wallet.getBalance() : 0.0) + " LE");
+        System.out.println("Orders: " + orders.size());
+        System.out.println("Prescriptions: " + prescriptions.size());
     }
     
     /**

@@ -116,6 +116,32 @@ public class Order implements Serializable {
     }
     
     /**
+     * Constructor for loading an order from file storage
+     * 
+     * @param id The order ID number
+     * @param patientId The ID of the patient placing the order
+     * @param orderDateStr The order date as a string
+     */
+    public Order(int id, int patientId, String orderDateStr) {
+        this.id = String.valueOf(id);
+        this.patientId = patientId;
+        this.items = new ArrayList<>();
+        this.status = Status.PENDING;
+        this.paymentMethod = PaymentMethod.NOT_PAID;
+        this.deliveryMethod = DeliveryMethod.PICKUP;
+        this.isPaid = false;
+        
+        try {
+            // Parse date string - expect format like "yyyy-MM-dd HH:mm:ss"
+            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            this.orderDate = dateFormat.parse(orderDateStr);
+        } catch (Exception e) {
+            // Fallback to current date if parsing fails
+            this.orderDate = new Date();
+        }
+    }
+    
+    /**
      * Calculate the total amount for this order
      * 
      * @return The total amount
@@ -340,6 +366,16 @@ public class Order implements Serializable {
     }
     
     /**
+     * Get the date/time of this order
+     * Used by FileHandler for persistence
+     * 
+     * @return The date/time
+     */
+    public Date getDateTime() {
+        return orderDate;
+    }
+    
+    /**
      * Get the status of this order
      * 
      * @return The status
@@ -355,6 +391,21 @@ public class Order implements Serializable {
      */
     public void setStatus(Status status) {
         this.status = status;
+    }
+    
+    /**
+     * Set the status of this order using a string value
+     * Needed for file storage operations
+     * 
+     * @param statusStr The status as a string
+     */
+    public void setStatus(String statusStr) {
+        try {
+            this.status = Status.valueOf(statusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Default to PENDING if the status string is invalid
+            this.status = Status.PENDING;
+        }
     }
     
     /**
@@ -376,6 +427,15 @@ public class Order implements Serializable {
     }
     
     /**
+     * Set the total amount for this order
+     * 
+     * @param totalAmount The total amount
+     */
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+    
+    /**
      * Get the payment method for this order
      * 
      * @return The payment method
@@ -391,6 +451,38 @@ public class Order implements Serializable {
      */
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+    
+    /**
+     * Set the payment method for this order using a string value
+     * Needed for file storage operations
+     * 
+     * @param paymentMethodStr The payment method as a string
+     */
+    public void setPaymentMethod(String paymentMethodStr) {
+        try {
+            this.paymentMethod = PaymentMethod.valueOf(paymentMethodStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Default to NOT_PAID if the payment method string is invalid
+            this.paymentMethod = PaymentMethod.NOT_PAID;
+        }
+    }
+    
+    /**
+     * Set the payment status using a string
+     * Needed for file storage operations
+     * 
+     * @param paymentStatus The payment status as a string ("true" or "false")
+     */
+    public void setPaymentStatus(String paymentStatus) {
+        if (paymentStatus != null) {
+            this.isPaid = paymentStatus.trim().equalsIgnoreCase("true");
+            
+            // If marked as paid but no payment date, set it to now
+            if (this.isPaid && this.paymentDate == null) {
+                this.paymentDate = new Date();
+            }
+        }
     }
     
     /**

@@ -23,12 +23,18 @@ March 28, 2025
 1. [Project Information](#1-project-information)
 2. [Executive Summary](#2-executive-summary)
 3. [System Architecture](#3-system-architecture)
+   - [3.1 Architectural Overview](#31-architectural-overview)
+   - [3.2 Development Methodology and Process](#32-development-methodology-and-process)
+   - [3.3 Class Hierarchy and Structure](#33-class-hierarchy-and-structure)
+   - [3.4 Key Relationships and Associations](#34-key-relationships-and-associations)
 4. [Implementation Details](#4-implementation-details)
 5. [User Interface](#5-user-interface)
 6. [Data Persistence](#6-data-persistence)
 7. [Testing and Validation](#7-testing-and-validation)
 8. [Key Achievements](#8-key-achievements)
 9. [Team Contributions](#9-team-contributions)
+   - [9.1 Individual Contributions](#91-individual-contributions)
+   - [9.2 Team Workflow and Development Approach](#92-team-workflow-and-development-approach)
 10. [Conclusion](#10-conclusion)
 
 ---
@@ -141,13 +147,44 @@ The system employs a service-oriented architecture, ensuring maintainability and
 
 4. **Persistence Layer**: Manages data storage with text files, serialization, and in-memory caching.
 
-### 3.2 Class Hierarchy and Structure
+### 3.2 Development Methodology and Process
+
+Our team implemented a structured development workflow that combined agile methodology with thorough planning and collaboration:
+
+#### 3.2.1 Planning and Requirements Analysis
+- **✓ Collaborative Blueprint Sessions**: Team meetings to identify users and core functions
+- **✓ Iterative Draft Creation**: Initial drafts were created and refined with AI-assisted enhancements
+- **✓ System Architecture Planning**: Deep research to inform architectural decisions (model-service-utility paradigm)
+
+#### 3.2.2 Design Phase
+- **✓ Class Diagram Development**: Created comprehensive visual representations of class relationships
+- **✓ Relationship Modeling**: Carefully defined inheritance, composition, aggregation, and association relationships
+- **✓ Design Refinement**: Strategic decisions about promoting functionality to dedicated classes
+- **✓ Architecture Validation**: Verified design against requirements to ensure completeness
+
+#### 3.2.3 Implementation Strategy
+- **✓ NetBeans Configuration**: Set up development environment with proper project structure
+- **✓ Documentation Framework**: Established a comment system for consistent code documentation
+- **✓ Coding Standards**: Created guidelines to ensure consistent implementation across team members
+
+#### 3.2.4 Collaborative Development
+- **✓ GitHub Workflow**: Implemented version control with pull request reviews
+- **✓ Class Assignments**: Distributed development tasks based on team member expertise
+- **✓ Code Quality Control**: Team leader reviewed and refined code contributions
+- **✓ Regular Integration**: Frequent merges to ensure system cohesion
+
+#### 3.2.5 Quality Assurance
+- **✓ Comprehensive Testing**: Verified system functionality against requirements
+- **✓ Documentation Generation**: Created extensive documentation with AI assistance
+- **✓ Final System Validation**: End-to-end testing of complete system workflow
+
+### 3.3 Class Hierarchy and Structure
 
 ![Class Diagram - EL-TA3BAN Pharmacy System](https://raw.githubusercontent.com/your-repo/el-ta3ban-pharmacy/main/docs/class-diagram.png)
 
-### 3.3 Key Relationships and Associations
+### 3.4 Key Relationships and Associations
 
-#### 3.3.1 Primary Class Relationships
+#### 3.4.1 Primary Class Relationships
 
 | Class Relationship | Type | Cardinality | Description |
 |-------------------|------|-------------|-------------|
@@ -161,7 +198,7 @@ The system employs a service-oriented architecture, ensuring maintainability and
 | Patient ↔ Consultation | Association | 1 : * | Patient can participate in multiple consultations |
 | Doctor ↔ Consultation | Association | 1 : * | Doctor can conduct multiple consultations |
 
-#### 3.3.2 Detailed Relationship Types
+#### 3.4.2 Detailed Relationship Types
 
 | Relationship | Type | Description |
 | --- | --- | --- |
@@ -276,6 +313,8 @@ The system employs a service-oriented architecture, ensuring maintainability and
 
 ## 6. Team Contributions
 
+### 6.1 Individual Contributions
+
 | Team Member | ID | Section | Primary Contributions |
 |-------------|----|---------|-----------------------|
 | Mohamed Mohamed Abdelsalam | 245296 | A9 | **✓ Contributed to every aspect of the project** |
@@ -285,18 +324,4 @@ The system employs a service-oriented architecture, ensuring maintainability and
 | Nouran Khaled Mohamed | 245309 | A10 | **✓ Prescription Class Implementation** <br>**✓ Class Diagram Contributions** |
 | Moaz Mohamed Saed | 242675 | A8 | **✓ Large sections of the class diagram** <br>**✓ Medicine Class Implementation** <br>**✓ Pharmacist Class Implementation** |
 
-### 9.2 Team Workflow
-
-Our collaborative approach included:
-- **✓ Regular code reviews** for quality assurance
-- **✓ Pair programming** for complex features
-- **✓ Task board management** for coordinating work
-- **✓ Version control** with Git for code collaboration
-- **✓ Documentation standards** for consistent project documentation
-
-## 10. Conclusion
-
-### 10.1 Project Summary
-
-The EL-TA3BAN Pharmacy Management System successfully implements a comprehensive healthcare solution that connects patients, doctors, and pharmacists in an integrated digital ecosystem. By employing object-oriented design principles and modern Java features, we created a system that is both robust and extensible.
 

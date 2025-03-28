@@ -1,59 +1,103 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Represents a patient in the pharmacy system
- * Extends the User class with patient-specific properties
  */
 public class Patient extends User {
     private static final long serialVersionUID = 1L;
     
-    private String fullName;
-    private String address;
+    private String firstName;
+    private String lastName;
+    private Date dateOfBirth;
     private String phoneNumber;
+    private String address;
     private String email;
     private String gender;
-    private int age;
+    private String insuranceInfo;
+    private String emergencyContact;
+    private String medicalHistory;
+    private List<String> allergies;
     private Wallet wallet;
-    private List<Order> orders;
     
     /**
-     * Constructor for creating a new Patient
+     * Constructor for creating a new patient
      * 
      * @param id The unique identifier for this patient
      * @param username The username for this patient
-     * @param password The password for this patient
-     * @param fullName The full name of this patient
-     * @param address The address of this patient
+     * @param passwordHash The password hash for this patient
+     * @param firstName The first name of this patient
+     * @param lastName The last name of this patient
+     * @param dateOfBirth The date of birth of this patient
      * @param phoneNumber The phone number of this patient
-     * @param email The email address of this patient
-     * @param gender The gender of this patient
-     * @param age The age of this patient
+     * @param address The address of this patient
+     * @param email The email of this patient
      */
-    public Patient(int id, String username, String password, String fullName, String address, 
-                   String phoneNumber, String email, String gender, int age) {
-        super(id, username, password, "PATIENT");
-        this.fullName = fullName;
-        this.address = address;
+    public Patient(int id, String username, String passwordHash, String firstName, String lastName,
+                 Date dateOfBirth, String phoneNumber, String address, String email) {
+        super(id, username, passwordHash, UserType.PATIENT);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
         this.phoneNumber = phoneNumber;
+        this.address = address;
         this.email = email;
-        this.gender = gender;
-        this.age = age;
-        this.orders = new ArrayList<>();
+        this.gender = "";
+        this.insuranceInfo = "";
+        this.emergencyContact = "";
+        this.medicalHistory = "";
+        this.allergies = new ArrayList<>();
+        this.wallet = null; // Will be initialized separately
     }
     
     /**
-     * Constructor for creating a new Patient with minimal information
+     * Constructor for creating a new patient with minimal information
      * 
      * @param id The unique identifier for this patient
      * @param username The username for this patient
-     * @param password The password for this patient
-     * @param fullName The full name of this patient
+     * @param passwordHash The password hash for this patient
      */
-    public Patient(int id, String username, String password, String fullName) {
-        this(id, username, password, fullName, "", "", "", "", 0);
+    public Patient(int id, String username, String passwordHash) {
+        this(id, username, passwordHash, "", "", new Date(), "", "", "");
+    }
+    
+    /**
+     * Get the first name of this patient
+     * 
+     * @return The first name
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+    
+    /**
+     * Set the first name of this patient
+     * 
+     * @param firstName The first name
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    /**
+     * Get the last name of this patient
+     * 
+     * @return The last name
+     */
+    public String getLastName() {
+        return lastName;
+    }
+    
+    /**
+     * Set the last name of this patient
+     * 
+     * @param lastName The last name
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
     
     /**
@@ -61,35 +105,26 @@ public class Patient extends User {
      * 
      * @return The full name
      */
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return firstName + " " + lastName;
     }
     
     /**
-     * Set the full name of this patient
+     * Get the date of birth of this patient
      * 
-     * @param fullName The full name
+     * @return The date of birth
      */
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
     
     /**
-     * Get the address of this patient
+     * Set the date of birth of this patient
      * 
-     * @return The address
+     * @param dateOfBirth The date of birth
      */
-    public String getAddress() {
-        return address;
-    }
-    
-    /**
-     * Set the address of this patient
-     * 
-     * @param address The address
-     */
-    public void setAddress(String address) {
-        this.address = address;
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
     
     /**
@@ -111,18 +146,36 @@ public class Patient extends User {
     }
     
     /**
-     * Get the email address of this patient
+     * Get the address of this patient
      * 
-     * @return The email address
+     * @return The address
+     */
+    public String getAddress() {
+        return address;
+    }
+    
+    /**
+     * Set the address of this patient
+     * 
+     * @param address The address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    /**
+     * Get the email of this patient
+     * 
+     * @return The email
      */
     public String getEmail() {
         return email;
     }
     
     /**
-     * Set the email address of this patient
+     * Set the email of this patient
      * 
-     * @param email The email address
+     * @param email The email
      */
     public void setEmail(String email) {
         this.email = email;
@@ -147,21 +200,106 @@ public class Patient extends User {
     }
     
     /**
-     * Get the age of this patient
+     * Get the insurance information of this patient
      * 
-     * @return The age
+     * @return The insurance information
      */
-    public int getAge() {
-        return age;
+    public String getInsuranceInfo() {
+        return insuranceInfo;
     }
     
     /**
-     * Set the age of this patient
+     * Set the insurance information of this patient
      * 
-     * @param age The age
+     * @param insuranceInfo The insurance information
      */
-    public void setAge(int age) {
-        this.age = age;
+    public void setInsuranceInfo(String insuranceInfo) {
+        this.insuranceInfo = insuranceInfo;
+    }
+    
+    /**
+     * Get the emergency contact of this patient
+     * 
+     * @return The emergency contact
+     */
+    public String getEmergencyContact() {
+        return emergencyContact;
+    }
+    
+    /**
+     * Set the emergency contact of this patient
+     * 
+     * @param emergencyContact The emergency contact
+     */
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+    
+    /**
+     * Get the medical history of this patient
+     * 
+     * @return The medical history
+     */
+    public String getMedicalHistory() {
+        return medicalHistory;
+    }
+    
+    /**
+     * Set the medical history of this patient
+     * 
+     * @param medicalHistory The medical history
+     */
+    public void setMedicalHistory(String medicalHistory) {
+        this.medicalHistory = medicalHistory;
+    }
+    
+    /**
+     * Get the allergies of this patient
+     * 
+     * @return The allergies
+     */
+    public List<String> getAllergies() {
+        return new ArrayList<>(allergies);
+    }
+    
+    /**
+     * Set the allergies of this patient
+     * 
+     * @param allergies The allergies
+     */
+    public void setAllergies(List<String> allergies) {
+        this.allergies = new ArrayList<>(allergies);
+    }
+    
+    /**
+     * Add an allergy to this patient
+     * 
+     * @param allergy The allergy to add
+     */
+    public void addAllergy(String allergy) {
+        if (!allergies.contains(allergy)) {
+            allergies.add(allergy);
+        }
+    }
+    
+    /**
+     * Remove an allergy from this patient
+     * 
+     * @param allergy The allergy to remove
+     * @return true if removed, false if not found
+     */
+    public boolean removeAllergy(String allergy) {
+        return allergies.remove(allergy);
+    }
+    
+    /**
+     * Check if this patient has an allergy
+     * 
+     * @param allergy The allergy to check
+     * @return true if the patient has the allergy, false otherwise
+     */
+    public boolean hasAllergy(String allergy) {
+        return allergies.contains(allergy);
     }
     
     /**
@@ -183,31 +321,12 @@ public class Patient extends User {
     }
     
     /**
-     * Get all orders for this patient
+     * Check if this patient has a wallet
      * 
-     * @return The list of orders
+     * @return true if the patient has a wallet, false otherwise
      */
-    public List<Order> getOrders() {
-        return orders;
-    }
-    
-    /**
-     * Add an order to this patient
-     * 
-     * @param order The order to add
-     */
-    public void addOrder(Order order) {
-        this.orders.add(order);
-    }
-    
-    /**
-     * Remove an order from this patient
-     * 
-     * @param order The order to remove
-     * @return true if the order was removed, false if it wasn't found
-     */
-    public boolean removeOrder(Order order) {
-        return this.orders.remove(order);
+    public boolean hasWallet() {
+        return wallet != null;
     }
     
     /**
@@ -217,7 +336,7 @@ public class Patient extends User {
      */
     @Override
     public String toString() {
-        return String.format("Patient [ID: %d, Username: %s, Full Name: %s, Phone: %s, Email: %s]", 
-                getId(), getUsername(), fullName, phoneNumber, email);
+        return String.format("Patient [ID: %d, Name: %s %s, Email: %s, Phone: %s]", 
+                getId(), firstName, lastName, email, phoneNumber);
     }
 }

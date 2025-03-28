@@ -20,6 +20,7 @@ public class Medicine implements Serializable {
     private boolean prescription;
     private Date expiryDate;
     private String imageUrl;
+    private int quantity; // Added for compatibility
     
     /**
      * Constructor for creating a new medicine
@@ -43,6 +44,7 @@ public class Medicine implements Serializable {
         this.manufacturer = manufacturer;
         this.price = price;
         this.stock = stock;
+        this.quantity = stock; // Initialize quantity to match stock
         this.category = category;
         this.dosage = dosage;
         this.prescription = prescription;
@@ -169,6 +171,38 @@ public class Medicine implements Serializable {
      */
     public void setStock(int stock) {
         this.stock = stock;
+        this.quantity = stock; // Keep quantity in sync with stock
+    }
+    
+    /**
+     * Get the quantity of this medicine (for compatibility with existing code)
+     * 
+     * @return The quantity
+     */
+    public int getQuantity() {
+        return quantity;
+    }
+    
+    /**
+     * Set the quantity of this medicine (for compatibility with existing code)
+     * 
+     * @param quantity The quantity
+     */
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+        this.stock = quantity; // Keep stock in sync with quantity
+    }
+    
+    /**
+     * Restore stock for canceled orders
+     * 
+     * @param quantity The quantity to restore
+     * @return The new stock level
+     */
+    public int restoreStock(int quantity) {
+        this.stock += quantity;
+        this.quantity = this.stock; // Keep quantity in sync with stock
+        return this.stock;
     }
     
     /**
@@ -250,6 +284,15 @@ public class Medicine implements Serializable {
      * @return true if prescription required, false otherwise
      */
     public boolean isPrescription() {
+        return prescription;
+    }
+    
+    /**
+     * Check if this medicine requires a prescription (alternative method name)
+     * 
+     * @return true if prescription required, false otherwise
+     */
+    public boolean isRequiresPrescription() {
         return prescription;
     }
     

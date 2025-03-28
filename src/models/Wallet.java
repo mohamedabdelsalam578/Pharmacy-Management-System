@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a patient's wallet in the system
@@ -12,11 +14,74 @@ import java.util.List;
 public class Wallet implements Serializable {
     private static final long serialVersionUID = 1L;
     
+    // Credit card class for storing card information
+    public static class CreditCard implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private String cardNumber;
+        private String cardHolderName;
+        private String expiryDate;
+        private String cardType;
+        
+        public CreditCard(String cardNumber, String cardHolderName, String expiryDate, String cardType) {
+            this.cardNumber = cardNumber;
+            this.cardHolderName = cardHolderName;
+            this.expiryDate = expiryDate;
+            this.cardType = cardType;
+        }
+        
+        public String getCardNumber() {
+            return cardNumber;
+        }
+        
+        public String getMaskedCardNumber() {
+            if (cardNumber.length() <= 4) {
+                return cardNumber;
+            }
+            
+            String lastFour = cardNumber.substring(cardNumber.length() - 4);
+            StringBuilder masked = new StringBuilder();
+            
+            for (int i = 0; i < cardNumber.length() - 4; i++) {
+                masked.append("*");
+            }
+            
+            masked.append(lastFour);
+            return masked.toString();
+        }
+        
+        public String getLastFourDigits() {
+            if (cardNumber.length() <= 4) {
+                return cardNumber;
+            }
+            
+            return cardNumber.substring(cardNumber.length() - 4);
+        }
+        
+        public String getCardHolderName() {
+            return cardHolderName;
+        }
+        
+        public String getExpiryDate() {
+            return expiryDate;
+        }
+        
+        public String getCardType() {
+            return cardType;
+        }
+        
+        @Override
+        public String toString() {
+            return String.format("%s ending in %s (Expires: %s)", 
+                    cardType, getLastFourDigits(), expiryDate);
+        }
+    }
+    
     private int id;
     private Patient patient;
     private double balance;
     private List<WalletTransaction> transactions;
-    private List<String> creditCards;
+    private Map<String, CreditCard> creditCards;
     
     /**
      * Constructor for creating a new wallet
@@ -30,7 +95,7 @@ public class Wallet implements Serializable {
         this.patient = patient;
         this.balance = balance;
         this.transactions = new ArrayList<>();
-        this.creditCards = new ArrayList<>();
+        this.creditCards = new HashMap<>();
     }
     
     /**
@@ -119,40 +184,63 @@ public class Wallet implements Serializable {
      * 
      * @return The list of credit cards
      */
-    public List<String> getCreditCards() {
-        return creditCards;
+    public List<CreditCard> getSavedCards() {
+        return new ArrayList<>(creditCards.values());
     }
     
     /**
      * Add a credit card to this wallet
      * 
-     * @param cardNumber The credit card number to add
-     * @return true if the card was added, false if it already exists
+     * @param cardNumber The credit card number
+     * @param cardHolderName The card holder name
+     * @param expiryDate The expiry date (MM/YY format)
+     * @param cardType The card type (e.g., Visa, MasterCard)
+     * @return true if the card was added, false if it already exists or is invalid
      */
-    public boolean addCreditCard(String cardNumber) {
+    public boolean addCard(String cardNumber, String cardHolderName, String expiryDate, String cardType) {
         // Validate the card number format (simple validation)
         if (!isValidCreditCardFormat(cardNumber)) {
             return false;
         }
         
         // Check if card already exists
-        if (creditCards.contains(cardNumber)) {
+        if (creditCards.containsKey(cardNumber)) {
             return false;
         }
         
+        // Create a new credit card
+        CreditCard card = new CreditCard(cardNumber, cardHolderName, expiryDate, cardType);
+        
         // Add the card
-        creditCards.add(cardNumber);
+        creditCards.put(cardNumber, card);
         return true;
     }
     
     /**
-     * Remove a credit card from this wallet
+     * Remove a credit card from this wallet by last four digits
      * 
-     * @param cardNumber The credit card number to remove
+     * @param lastFourDigits The last four digits of the card to remove
      * @return true if the card was removed, false if it wasn't found
      */
-    public boolean removeCreditCard(String cardNumber) {
-        return creditCards.remove(cardNumber);
+    public boolean removeCard(String lastFourDigits) {
+        for (Map.Entry<String, CreditCard> entry : creditCards.entrySet()) {
+            if (entry.getValue().getLastFourDigits().equals(lastFourDigits)) {
+                creditCards.remove(entry.getKey());
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Check if this wallet has a card with the specified card number
+     * 
+     * @param cardNumber The credit card number to check
+     * @return true if the wallet has the card, false otherwise
+     */
+    public boolean hasCard(String cardNumber) {
+        return creditCards.containsKey(cardNumber);
     }
     
     /**
@@ -160,20 +248,28 @@ public class Wallet implements Serializable {
      * 
      * @param amount The amount to deposit
      * @param description The description for this deposit
-     * @return The created transaction
+     * @return true if the deposit was successful, false otherwise
      */
-    public WalletTransaction deposit(double amount, String description) {
+    public boolean deposit(double amount, String description) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("Deposit amount must be positive");
+            return false; // Invalid amount
         }
         
-        // Update balance
-        balance += amount;
-        
-        // Create and return the transaction
-        WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.DEPOSIT, description);
-        transactions.add(transaction);
-        return transaction;
+        try {
+            // Update balance
+            balance += amount;
+            
+            // Create and add the transaction
+            WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.DEPOSIT, description);
+            transactions.add(transaction);
+            
+            return true;
+        } catch (Exception e) {
+            // If an error occurs, revert the balance change
+            balance -= amount;
+            System.err.println("Error processing deposit: " + e.getMessage());
+            return false;
+        }
     }
     
     /**
@@ -181,25 +277,32 @@ public class Wallet implements Serializable {
      * 
      * @param amount The amount to withdraw
      * @param description The description for this withdrawal
-     * @return The created transaction
-     * @throws IllegalArgumentException If the amount is negative or if there are insufficient funds
+     * @return true if the withdrawal was successful, false otherwise
      */
-    public WalletTransaction withdraw(double amount, String description) {
+    public boolean withdraw(double amount, String description) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("Withdrawal amount must be positive");
+            return false; // Invalid amount
         }
         
         if (amount > balance) {
-            throw new IllegalArgumentException("Insufficient funds");
+            return false; // Insufficient funds
         }
         
-        // Update balance
-        balance -= amount;
-        
-        // Create and return the transaction
-        WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.WITHDRAWAL, description);
-        transactions.add(transaction);
-        return transaction;
+        try {
+            // Update balance
+            balance -= amount;
+            
+            // Create and add the transaction
+            WalletTransaction transaction = new WalletTransaction(this, amount, WalletTransaction.WITHDRAWAL, description);
+            transactions.add(transaction);
+            
+            return true;
+        } catch (Exception e) {
+            // If an error occurs, revert the balance change
+            balance += amount;
+            System.err.println("Error processing withdrawal: " + e.getMessage());
+            return false;
+        }
     }
     
     /**
@@ -301,6 +404,105 @@ public class Wallet implements Serializable {
         
         // Check if the number contains only digits and has a length of 16
         return cleanedNumber.matches("\\d{16}");
+    }
+    
+    /**
+     * Display detailed wallet information in the console
+     */
+    public void displayInfo() {
+        System.out.println("================================================");
+        System.out.println("               WALLET INFORMATION               ");
+        System.out.println("================================================");
+        System.out.println("Patient: " + patient.getFirstName() + " " + patient.getLastName());
+        System.out.println("Current Balance: " + getFormattedBalance());
+        System.out.println("Saved Cards: " + creditCards.size());
+        System.out.println("Transaction History: " + transactions.size() + " transactions");
+        System.out.println("================================================");
+        
+        // Display saved cards if any
+        if (!creditCards.isEmpty()) {
+            System.out.println("\nSaved Cards:");
+            System.out.println("------------------------------------------------");
+            
+            int index = 1;
+            for (CreditCard card : getSavedCards()) {
+                System.out.printf("%d. %s (%s)\n", index++, card.getMaskedCardNumber(), card.getCardType());
+            }
+            
+            System.out.println("------------------------------------------------");
+        }
+        
+        // Display recent transactions if any
+        if (!transactions.isEmpty()) {
+            System.out.println("\nRecent Transactions:");
+            System.out.println("------------------------------------------------");
+            
+            // Get the 5 most recent transactions
+            List<WalletTransaction> recentTransactions = getTransactionHistory(5);
+            
+            for (WalletTransaction transaction : recentTransactions) {
+                System.out.println(transaction.toString());
+            }
+            
+            System.out.println("------------------------------------------------");
+        }
+    }
+    
+    /**
+     * Display all wallet transactions in the console
+     */
+    public void displayTransactions() {
+        System.out.println("================================================");
+        System.out.println("              TRANSACTION HISTORY               ");
+        System.out.println("================================================");
+        System.out.println("Patient: " + patient.getFirstName() + " " + patient.getLastName());
+        System.out.println("Current Balance: " + getFormattedBalance());
+        System.out.println("Total Transactions: " + transactions.size());
+        System.out.println("================================================");
+        
+        if (transactions.isEmpty()) {
+            System.out.println("\nNo transactions found.");
+            return;
+        }
+        
+        // Sort transactions by date (most recent first)
+        transactions.sort((t1, t2) -> t2.getTimestamp().compareTo(t1.getTimestamp()));
+        
+        System.out.println("\nAll Transactions:");
+        System.out.println("------------------------------------------------");
+        
+        for (WalletTransaction transaction : transactions) {
+            System.out.println(transaction.toString());
+        }
+        
+        System.out.println("------------------------------------------------");
+    }
+    
+    /**
+     * Display all saved cards in the console
+     */
+    public void displaySavedCards() {
+        System.out.println("================================================");
+        System.out.println("                  SAVED CARDS                   ");
+        System.out.println("================================================");
+        System.out.println("Patient: " + patient.getFirstName() + " " + patient.getLastName());
+        System.out.println("Total Cards: " + creditCards.size());
+        System.out.println("================================================");
+        
+        if (creditCards.isEmpty()) {
+            System.out.println("\nNo cards saved yet.");
+            return;
+        }
+        
+        System.out.println("\nAll Saved Cards:");
+        System.out.println("------------------------------------------------");
+        
+        int index = 1;
+        for (CreditCard card : getSavedCards()) {
+            System.out.printf("%d. %s\n", index++, card.toString());
+        }
+        
+        System.out.println("------------------------------------------------");
     }
     
     /**

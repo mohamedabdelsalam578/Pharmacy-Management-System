@@ -26,3 +26,6 @@ replit.nix
 
 # Temporary assets
 attached_assets/
+
+# Data files (generated during runtime)
+data/*.txt

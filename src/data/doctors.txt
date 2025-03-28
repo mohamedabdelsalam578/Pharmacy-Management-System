@@ -1,2 +1,0 @@
-1|Dr. Smith|dr_smith|password|smith@hospital.com|123-456-7892|Cardiology|MD12345
-2|Dr. Johnson|dr_johnson|password|johnson@hospital.com|123-456-7893|Neurology|MD67890

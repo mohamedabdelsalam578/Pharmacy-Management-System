@@ -20,14 +20,15 @@
    - [FileHandler](#10-filehandler-functions)
    - [ConsoleUI](#11-consoleui-functions)
 5. [Main Application](#main-application)
-6. [Payment System](#payment-system)
+6. [Date Formatting Standards](#date-formatting-standards)
+7. [Payment System](#payment-system)
    - [Wallet](#1-wallet-class-functions)
    - [Wallet.Card](#2-walletcard-class-functions)
    - [Transaction](#3-transaction-class-functions)
-7. [Prescription Workflow](#prescription-workflow)
+8. [Prescription Workflow](#prescription-workflow)
    - [Workflow Stages](#prescription-workflow-stages)
    - [Key Classes](#key-classes-in-prescription-workflow)
-8. [Data Flow Diagram](#data-flow-diagram)
+9. [Data Flow Diagram](#data-flow-diagram)
 
 ## System Overview
 
@@ -298,10 +299,26 @@ The system now runs in extended mode by default, providing access to all feature
 | `saveMedicalReports(List<MedicalReport> reports)` | Saves medical report data | Report list | `void` |
 | `loadConsultations()` | Loads consultation data from file | - | `List<Consultation>` |
 | `saveConsultations(List<Consultation> consultations)` | Saves consultation data | Consultation list | `void` |
+| `formatDate(Date date)` | Formats Date object to ISO-8601 string | Date object | `String` |
+| `parseDate(String dateStr)` | Parses ISO-8601 string to Date object | Date string in ISO format | `Date` |
+| `formatLocalDate(LocalDate date)` | Formats LocalDate to ISO-8601 string | LocalDate object | `String` |
+| `parseLocalDate(String dateStr)` | Parses ISO-8601 string to LocalDate | Date string in ISO format | `LocalDate` |
 | `loadMessages()` | Loads message data from file | - | `List<Message>` |
 | `saveMessages(List<Message> messages)` | Saves message data | Message list | `void` |
 | `saveToFile(List<T> objects, String filePath)` | Deprecated serialization method | Object list, file path | `void` |
 | `loadFromFile(String filePath)` | Deprecated deserialization method | File path | `Object` |
+
+## Date Formatting Standards
+
+The Pharmacy Management System uses a consistent ISO-8601 date formatting standard (`yyyy-MM-dd'T'HH:mm:ss`) throughout the application to ensure compatibility between different date representations. This standardization is particularly important for:
+
+1. **Date Storage and Retrieval**: All dates stored in text files follow the ISO-8601 format
+2. **Wallet Transactions**: Transaction dates are stored and retrieved with precise timestamps
+3. **Prescription Dates**: Issue and expiry dates maintain consistent formatting 
+4. **Order Timestamps**: Order creation and processing times maintain consistency
+5. **Payment Records**: Payment timestamps use the standard format
+
+The FileHandler utility class provides methods to format and parse dates in this standard format, ensuring date compatibility across the entire system.
 
 ## Payment System
 

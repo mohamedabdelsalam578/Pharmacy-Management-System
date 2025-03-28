@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pharmacist extends User {
+    private String name;
+    private String email;
+    private String phoneNumber;
     private String licenseNumber;
     private String qualification;
     private int pharmacyId;
@@ -13,7 +16,10 @@ public class Pharmacist extends User {
 
     public Pharmacist(int id, String name, String username, String password, String email, 
                      String phoneNumber, String licenseNumber, String qualification) {
-        super(id, name, username, password, email, phoneNumber);
+        super(id, username, password, "PHARMACIST");
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.licenseNumber = licenseNumber;
         this.qualification = qualification;
         this.filledPrescriptions = new ArrayList<>();
@@ -27,6 +33,9 @@ public class Pharmacist extends User {
     }
 
     // Getters
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getPhoneNumber() { return phoneNumber; }
     public String getLicenseNumber() { return licenseNumber; }
     public String getQualification() { return qualification; }
     public int getPharmacyId() { return pharmacyId; }
@@ -35,6 +44,9 @@ public class Pharmacist extends User {
     public String getPosition() { return position; }
 
     // Setters
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setLicenseNumber(String licenseNumber) { this.licenseNumber = licenseNumber; }
     public void setQualification(String qualification) { this.qualification = qualification; }
     public void setPharmacyId(int pharmacyId) { this.pharmacyId = pharmacyId; }

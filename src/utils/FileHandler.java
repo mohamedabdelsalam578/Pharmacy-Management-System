@@ -198,15 +198,17 @@ public class FileHandler {
                                     }
                                     // Extract order ID from description if possible
                                     int orderId = 0;
+                                    String paymentDescription = description;
                                     if (description.contains("#")) {
                                         try {
                                             String orderIdStr = description.substring(description.indexOf("#") + 1);
                                             orderId = Integer.parseInt(orderIdStr.split(" ")[0]);
+                                            paymentDescription = "Payment for Order #" + orderId;
                                         } catch (Exception e) {
                                             // If parsing fails, use 0
                                         }
                                     }
-                                    patient.getWallet().makePayment(amount, orderId);
+                                    patient.getWallet().makePayment(amount, orderId, paymentDescription);
                                 }
                             }
                         }

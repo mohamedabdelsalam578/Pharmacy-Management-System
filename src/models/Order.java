@@ -3,8 +3,11 @@ package models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Represents an order in the pharmacy system
@@ -66,7 +69,7 @@ public class Order implements Serializable {
     }
     
     // Required fields
-    private String id;
+    private int id;
     private int patientId;
     private Date orderDate;
     private Status status;
@@ -91,28 +94,19 @@ public class Order implements Serializable {
     /**
      * Constructor for creating a new order
      * 
+     * @param id The ID of the order
      * @param patientId The ID of the patient placing the order
-     * @param items The list of items in this order
      */
-    public Order(int patientId, List<OrderItem> items) {
-        this.id = UUID.randomUUID().toString();
+    public Order(int id, int patientId) {
+        this.id = id;
         this.patientId = patientId;
+        this.items = new ArrayList<>();
         this.orderDate = new Date();
         this.status = Status.PENDING;
-        this.items = new ArrayList<>(items);
-        this.totalAmount = calculateTotal();
+        this.totalAmount = 0.0;
         this.paymentMethod = PaymentMethod.NOT_PAID;
         this.deliveryMethod = DeliveryMethod.PICKUP;
         this.isPaid = false;
-    }
-    
-    /**
-     * Constructor for creating a new order with minimal information
-     * 
-     * @param patientId The ID of the patient placing the order
-     */
-    public Order(int patientId) {
-        this(patientId, new ArrayList<>());
     }
     
     /**
@@ -123,7 +117,7 @@ public class Order implements Serializable {
      * @param orderDateStr The order date as a string
      */
     public Order(int id, int patientId, String orderDateStr) {
-        this.id = String.valueOf(id);
+        this.id = id;
         this.patientId = patientId;
         this.items = new ArrayList<>();
         this.status = Status.PENDING;
@@ -146,7 +140,7 @@ public class Order implements Serializable {
      * 
      * @return The total amount
      */
-    private double calculateTotal() {
+    public double calculateTotal() {
         return items.stream()
                 .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
                 .sum();
@@ -248,6 +242,15 @@ public class Order implements Serializable {
     }
     
     /**
+     * Set the prescription ID as an integer
+     * 
+     * @param prescriptionId The prescription ID
+     */
+    public void setPrescriptionId(int prescriptionId) {
+        this.prescriptionId = String.valueOf(prescriptionId);
+    }
+    
+    /**
      * Process payment with a credit card
      * 
      * @param patient The patient making the payment
@@ -334,7 +337,7 @@ public class Order implements Serializable {
      * 
      * @return The ID
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
     
@@ -415,6 +418,108 @@ public class Order implements Serializable {
      */
     public List<OrderItem> getItems() {
         return new ArrayList<>(items);
+    }
+    
+    /**
+     * Add a medicine to this order
+     * 
+     * @param medicine The medicine to add
+     * @param quantity The quantity to add
+     */
+    public void addMedicine(Medicine medicine, int quantity) {
+        if (medicine == null || quantity <= 0) {
+            return;
+        }
+        
+        OrderItem newItem = new OrderItem(medicine.getId(), medicine.getName(), quantity, medicine.getPrice());
+        addItem(newItem);
+    }
+    
+    /**
+     * Get the medicines in this order as a map of medicine to quantity
+     * 
+     * @return A map of medicine to quantity
+     */
+    public Map<Medicine, Integer> getMedicines() {
+        Map<Medicine, Integer> medicineMap = new HashMap<>();
+        // In a real application, this would fetch medicines from a repository
+        return medicineMap;
+    }
+    
+    /**
+     * Get a list of medicines in this order 
+     * Used by FileHandler for persistence
+     * 
+     * @return A list of medicines
+     */
+    public List<Medicine> getMedicinesList() {
+        return new ArrayList<>();
+    }
+    
+    /**
+     * Get a list of quantities for medicines in this order
+     * Used by FileHandler for persistence
+     * 
+     * @return A list of quantities
+     */
+    public List<Integer> getQuantities() {
+        return items.stream()
+                .map(OrderItem::getQuantity)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Get the payment status of this order
+     * 
+     * @return The payment status
+     */
+    public String getPaymentStatus() {
+        return isPaid ? "true" : "false";
+    }
+    
+    /**
+     * Display information about this order
+     */
+    public void displayInfo() {
+        System.out.println(toDetailedString());
+    }
+    
+    /**
+     * Print a receipt for this order
+     * 
+     * @param customerName The name of the customer
+     */
+    public void printReceipt(String customerName) {
+        System.out.println("\n===============================================");
+        System.out.println("               EL-TA3BAN PHARMACY              ");
+        System.out.println("                  ORDER RECEIPT                ");
+        System.out.println("===============================================");
+        System.out.println("Order #: " + id);
+        System.out.println("Date: " + new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(orderDate));
+        System.out.println("Customer: " + customerName);
+        System.out.println("-----------------------------------------------");
+        System.out.println("Items:");
+        
+        for (OrderItem item : items) {
+            System.out.printf("  %-30s %2d × %8.2f LE = %8.2f LE%n", 
+                     item.getMedicineName(), 
+                     item.getQuantity(),
+                     item.getUnitPrice(),
+                     item.getQuantity() * item.getUnitPrice());
+        }
+        
+        System.out.println("-----------------------------------------------");
+        System.out.printf("Total Amount: %33.2f LE%n", totalAmount);
+        System.out.println("Payment Method: " + paymentMethod.getDisplayName());
+        System.out.println("Payment Status: " + (isPaid ? "Paid" : "Not Paid"));
+        
+        if (isPaid && paymentDate != null) {
+            System.out.println("Payment Date: " + new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(paymentDate));
+        }
+        
+        System.out.println("===============================================");
+        System.out.println("Thank you for shopping at EL-TA3BAN Pharmacy!");
+        System.out.println("===============================================\n");
     }
     
     /**
@@ -735,7 +840,7 @@ public class Order implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Order [ID: %s, Patient ID: %d, Items: %d, Total: %s, Status: %s]", 
+        return String.format("Order [ID: %d, Patient ID: %d, Items: %d, Total: %s, Status: %s]", 
                 id, patientId, getItemCount(), getFormattedTotalAmount(), status.getDisplayName());
     }
     

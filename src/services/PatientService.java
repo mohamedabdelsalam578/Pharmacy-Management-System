@@ -197,18 +197,18 @@ public class PatientService {
             return false;
         }
         
-        if (orderToCancel.getStatus().equals("Canceled")) {
+        if (orderToCancel.getStatus() == Order.Status.CANCELLED) {
             System.out.println("Order is already canceled.");
             return false;
         }
         
-        if (orderToCancel.getStatus().equals("Completed")) {
+        if (orderToCancel.getStatus() == Order.Status.COMPLETED) {
             System.out.println("Cannot cancel a completed order.");
             return false;
         }
         
         // Update order status
-        orderToCancel.setStatus("Canceled");
+        orderToCancel.setStatus(Order.Status.CANCELLED);
         
         // Restore medicine stock
         for (Map.Entry<Medicine, Integer> entry : orderToCancel.getMedicines().entrySet()) {

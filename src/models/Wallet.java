@@ -346,6 +346,19 @@ public class Wallet implements Serializable {
      * @return true if the card was added, false if it already exists
      */
     public boolean addCard(String cardNumber, String holderName, String expiryDate) {
+        return addCard(cardNumber, holderName, expiryDate, "Credit");
+    }
+    
+    /**
+     * Add a card to this wallet with card type
+     * 
+     * @param cardNumber The card number
+     * @param holderName The holder name
+     * @param expiryDate The expiry date
+     * @param cardType The card type
+     * @return true if added, false otherwise
+     */
+    public boolean addCard(String cardNumber, String holderName, String expiryDate, String cardType) {
         if (cardNumber == null || cardNumber.trim().isEmpty()) {
             return false;
         }
@@ -454,6 +467,22 @@ public class Wallet implements Serializable {
      */
     public int getTransactionCount() {
         return transactions.size();
+    }
+    
+    /**
+     * Display all transactions in the wallet
+     */
+    public void displayTransactions() {
+        System.out.println("\n🧾 ===== TRANSACTION HISTORY ===== 🧾");
+        
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+            return;
+        }
+        
+        for (Transaction transaction : transactions) {
+            System.out.println("- " + transaction.toString());
+        }
     }
     
     /**

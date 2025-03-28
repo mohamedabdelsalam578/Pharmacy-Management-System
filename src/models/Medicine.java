@@ -334,6 +334,15 @@ public class Medicine implements Serializable {
     }
     
     /**
+     * Set whether this medicine requires a prescription (alternative method name)
+     * 
+     * @param requiresPrescription Whether prescription is required
+     */
+    public void setRequiresPrescription(boolean requiresPrescription) {
+        this.prescription = requiresPrescription;
+    }
+    
+    /**
      * Get the expiry date of this medicine
      * 
      * @return The expiry date
@@ -411,5 +420,25 @@ public class Medicine implements Serializable {
     public String toString() {
         return String.format("Medicine [ID: %d, Name: %s, Price: %s, Stock: %d]", 
                 id, name, getFormattedPrice(), stock);
+    }
+    
+    /**
+     * Display information about this medicine
+     */
+    public void displayInfo() {
+        System.out.println("\n===== MEDICINE INFORMATION =====");
+        System.out.println("ID: " + id);
+        System.out.println("Name: " + name);
+        System.out.println("Price: " + getFormattedPrice());
+        System.out.println("Stock: " + stock);
+        System.out.println("Category: " + category);
+        System.out.println("Manufacturer: " + manufacturer);
+        System.out.println("Description: " + description);
+        System.out.println("Requires Prescription: " + (prescription ? "Yes" : "No"));
+        
+        if (expiryDate != null) {
+            System.out.println("Expiry Date: " + new java.text.SimpleDateFormat("yyyy-MM-dd").format(expiryDate));
+            System.out.println("Expired: " + (isExpired() ? "Yes" : "No"));
+        }
     }
 }

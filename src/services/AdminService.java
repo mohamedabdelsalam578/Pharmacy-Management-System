@@ -158,7 +158,7 @@ public class AdminService {
         double totalRevenue = 0.0;
         
         for (Order order : orders) {
-            if (order.getStatus().equals("Completed")) {
+            if (order.getStatus() == Order.Status.COMPLETED) {
                 for (Map.Entry<Medicine, Integer> entry : order.getMedicines().entrySet()) {
                     if (entry.getKey().getId() == medicine.getId()) {
                         int quantity = entry.getValue();
@@ -185,7 +185,7 @@ public class AdminService {
         int totalOrdersCompleted = 0;
         
         for (Order order : orders) {
-            if (order.getStatus().equals("Completed")) {
+            if (order.getStatus() == Order.Status.COMPLETED) {
                 totalRevenue += order.getTotalAmount();
                 totalOrdersCompleted++;
             }
@@ -218,7 +218,7 @@ public class AdminService {
         Map<String, Double> revenueByCategory = new java.util.HashMap<>();
         
         for (Order order : orders) {
-            if (order.getStatus().equals("Completed")) {
+            if (order.getStatus() == Order.Status.COMPLETED) {
                 for (Map.Entry<Medicine, Integer> entry : order.getMedicines().entrySet()) {
                     Medicine medicine = entry.getKey();
                     int quantity = entry.getValue();

@@ -24,6 +24,7 @@ public class Patient extends User {
     private Wallet wallet;
     private List<Order> orders;
     private List<Prescription> prescriptions;
+    private List<Consultation> consultations;
     
     /**
      * Constructor for creating a new patient
@@ -150,6 +151,26 @@ public class Patient extends User {
      */
     public String getName() {
         return firstName + " " + lastName;
+    }
+    
+    /**
+     * Set the full name of this patient
+     * 
+     * @param name The full name
+     */
+    public void setName(String name) {
+        String[] nameParts = name.split(" ", 2);
+        this.firstName = nameParts.length > 0 ? nameParts[0] : "";
+        this.lastName = nameParts.length > 1 ? nameParts[1] : "";
+    }
+    
+    /**
+     * Get the full name of this patient with an alternate method name
+     * 
+     * @return The full name
+     */
+    public String getFullName() {
+        return getName();
     }
     
     /**
@@ -497,5 +518,53 @@ public class Patient extends User {
     public String toString() {
         return String.format("Patient [ID: %d, Name: %s %s, Email: %s, Phone: %s]", 
                 getId(), firstName, lastName, email, phoneNumber);
+    }
+    
+    /**
+     * Get the consultations of this patient
+     * 
+     * @return The consultations
+     */
+    public List<Consultation> getConsultations() {
+        if (consultations == null) {
+            consultations = new ArrayList<>();
+        }
+        return new ArrayList<>(consultations);
+    }
+    
+    /**
+     * Add a consultation to this patient
+     * 
+     * @param consultation The consultation to add
+     */
+    public void addConsultation(Consultation consultation) {
+        if (consultations == null) {
+            consultations = new ArrayList<>();
+        }
+        
+        if (consultation != null && !consultations.contains(consultation)) {
+            consultations.add(consultation);
+        }
+    }
+    
+    /**
+     * Place an order using a prescription
+     * 
+     * @param prescription The prescription to use
+     * @param orderId The order ID to assign
+     * @return The created order
+     */
+    public Order placeOrderWithPrescription(Prescription prescription, int orderId) {
+        if (prescription == null) {
+            return null;
+        }
+        
+        Order order = new Order(orderId, getId(), new Date());
+        order.setPrescriptionId(prescription.getId());
+        
+        // Add order to patient's order list
+        addOrder(order);
+        
+        return order;
     }
 }

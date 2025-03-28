@@ -2,316 +2,21 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
+import models.Transaction;
+import models.Transaction.Type;
 
 /**
  * Represents a wallet in the pharmacy system
  */
 public class Wallet implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    /**
-     * Represents a transaction type in the wallet
-     */
-    public enum TransactionType {
-        DEPOSIT("Deposit"),
-        WITHDRAWAL("Withdrawal"),
-        PAYMENT("Payment"),
-        REFUND("Refund");
-        
-        private final String displayName;
-        
-        TransactionType(String displayName) {
-            this.displayName = displayName;
-        }
-        
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
-    
-    /**
-     * Represents a transaction in the wallet
-     */
-    public static class Transaction implements Serializable {
-        private static final long serialVersionUID = 1L;
-        
-        private String id;
-        private int patientId;
-        private TransactionType type;
-        private double amount;
-        private String description;
-        private double balanceAfter;
-        private Date timestamp;
-        
-        /**
-         * Constructor for creating a new transaction
-         * 
-         * @param patientId The ID of the patient
-         * @param type The type of this transaction
-         * @param amount The amount of this transaction
-         * @param description The description of this transaction
-         * @param balanceAfter The balance after this transaction
-         */
-        public Transaction(int patientId, TransactionType type, double amount, 
-                          String description, double balanceAfter) {
-            this.id = UUID.randomUUID().toString();
-            this.patientId = patientId;
-            this.type = type;
-            this.amount = amount;
-            this.description = description;
-            this.balanceAfter = balanceAfter;
-            this.timestamp = new Date();
-        }
-        
-        /**
-         * Get the ID of this transaction
-         * 
-         * @return The ID
-         */
-        public String getId() {
-            return id;
-        }
-        
-        /**
-         * Get the patient ID of this transaction
-         * 
-         * @return The patient ID
-         */
-        public int getPatientId() {
-            return patientId;
-        }
-        
-        /**
-         * Get the type of this transaction
-         * 
-         * @return The type
-         */
-        public TransactionType getType() {
-            return type;
-        }
-        
-        /**
-         * Get the amount of this transaction
-         * 
-         * @return The amount
-         */
-        public double getAmount() {
-            return amount;
-        }
-        
-        /**
-         * Get the description of this transaction
-         * 
-         * @return The description
-         */
-        public String getDescription() {
-            return description;
-        }
-        
-        /**
-         * Get the balance after this transaction
-         * 
-         * @return The balance after
-         */
-        public double getBalanceAfter() {
-            return balanceAfter;
-        }
-        
-        /**
-         * Get the timestamp of this transaction
-         * 
-         * @return The timestamp
-         */
-        public Date getTimestamp() {
-            return timestamp;
-        }
-        
-        /**
-         * Get a formatted string representation of the timestamp
-         * 
-         * @return The formatted timestamp
-         */
-        public String getFormattedTimestamp() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return sdf.format(timestamp);
-        }
-        
-        /**
-         * Get a formatted string representation of the amount
-         * 
-         * @return The formatted amount
-         */
-        public String getFormattedAmount() {
-            return String.format("%.2f LE", amount);
-        }
-        
-        /**
-         * Get a formatted string representation of the balance after
-         * 
-         * @return The formatted balance after
-         */
-        public String getFormattedBalanceAfter() {
-            return String.format("%.2f LE", balanceAfter);
-        }
-        
-        /**
-         * Get a formatted description of this transaction
-         * 
-         * @return The formatted description
-         */
-        public String getFormattedDescription() {
-            return String.format("%s - %s %s - %s", 
-                    getFormattedTimestamp(), 
-                    type.getDisplayName(), 
-                    getFormattedAmount(), 
-                    description);
-        }
-        
-        /**
-         * Get a formatted string representation of this transaction
-         * 
-         * @return The formatted string
-         */
-        @Override
-        public String toString() {
-            return String.format("Transaction [%s, Type: %s, Amount: %s, Description: %s, Balance After: %s]", 
-                    getFormattedTimestamp(), type.getDisplayName(), 
-                    getFormattedAmount(), description, getFormattedBalanceAfter());
-        }
-    }
-    
-    /**
-     * Represents a payment card in the wallet
-     */
-    public static class Card implements Serializable {
-        private static final long serialVersionUID = 1L;
-        
-        private String number;
-        private String holderName;
-        private String expiryDate;
-        private String cardType;
-        private Date addedDate;
-        
-        /**
-         * Constructor for creating a new card
-         * 
-         * @param number The card number
-         * @param holderName The card holder name
-         * @param expiryDate The card expiry date
-         * @param cardType The card type
-         */
-        public Card(String number, String holderName, String expiryDate, String cardType) {
-            this.number = number;
-            this.holderName = holderName;
-            this.expiryDate = expiryDate;
-            this.cardType = cardType;
-            this.addedDate = new Date();
-        }
-        
-        /**
-         * Get the card number
-         * 
-         * @return The card number
-         */
-        public String getNumber() {
-            return number;
-        }
-        
-        /**
-         * Get the card holder name
-         * 
-         * @return The card holder name
-         */
-        public String getHolderName() {
-            return holderName;
-        }
-        
-        /**
-         * Get the card expiry date
-         * 
-         * @return The card expiry date
-         */
-        public String getExpiryDate() {
-            return expiryDate;
-        }
-        
-        /**
-         * Get the card type
-         * 
-         * @return The card type
-         */
-        public String getCardType() {
-            return cardType;
-        }
-        
-        /**
-         * Get the date this card was added to the wallet
-         * 
-         * @return The added date
-         */
-        public Date getAddedDate() {
-            return addedDate;
-        }
-        
-        /**
-         * Get the last four digits of the card number
-         * 
-         * @return The last four digits
-         */
-        public String getLastFourDigits() {
-            if (number.length() < 4) {
-                return number;
-            }
-            
-            return number.substring(number.length() - 4);
-        }
-        
-        /**
-         * Get a masked version of the card number
-         * 
-         * @return The masked card number
-         */
-        public String getMaskedNumber() {
-            if (number.length() <= 4) {
-                return number;
-            }
-            
-            return "**** **** **** " + getLastFourDigits();
-        }
-        
-        /**
-         * Check if this card is valid (not expired)
-         * 
-         * @return true if valid, false otherwise
-         */
-        public boolean isValid() {
-            // Simple validation - just check if the expiry date is in the format MM/YY
-            if (!expiryDate.matches("\\d{2}/\\d{2}")) {
-                return false;
-            }
-            
-            // In a real system, we would check if the card is expired
-            // For now, we assume all cards are valid
-            return true;
-        }
-        
-        /**
-         * Get a formatted string representation of this card
-         * 
-         * @return The formatted string
-         */
-        @Override
-        public String toString() {
-            return String.format("%s (**** **** **** %s) [%s]", 
-                    cardType, getLastFourDigits(), expiryDate);
-        }
-    }
     
     private int patientId;
     private String patientUsername;
@@ -322,11 +27,12 @@ public class Wallet implements Serializable {
     /**
      * Constructor for creating a new wallet
      * 
-     * @param patient The patient who owns this wallet
+     * @param patientId The ID of the patient who owns this wallet
+     * @param patientUsername The username of the patient who owns this wallet
      */
-    public Wallet(Patient patient) {
-        this.patientId = patient.getId();
-        this.patientUsername = patient.getUsername();
+    public Wallet(int patientId, String patientUsername) {
+        this.patientId = patientId;
+        this.patientUsername = patientUsername;
         this.balance = 0.0;
         this.cards = new HashMap<>();
         this.transactions = new ArrayList<>();
@@ -335,11 +41,12 @@ public class Wallet implements Serializable {
     /**
      * Constructor for creating a new wallet with an initial balance
      * 
-     * @param patient The patient who owns this wallet
+     * @param patientId The ID of the patient who owns this wallet
+     * @param patientUsername The username of the patient who owns this wallet
      * @param initialBalance The initial balance
      */
-    public Wallet(Patient patient, double initialBalance) {
-        this(patient);
+    public Wallet(int patientId, String patientUsername, double initialBalance) {
+        this(patientId, patientUsername);
         
         if (initialBalance > 0) {
             this.balance = initialBalance;
@@ -347,7 +54,7 @@ public class Wallet implements Serializable {
             // Record the initial deposit
             Transaction initialDeposit = new Transaction(
                     this.patientId, 
-                    TransactionType.DEPOSIT, 
+                    Type.DEPOSIT, 
                     initialBalance, 
                     "Initial Balance", 
                     this.balance);
@@ -396,11 +103,11 @@ public class Wallet implements Serializable {
      * Deposit money into the wallet
      * 
      * @param amount The amount to deposit
-     * @param source The source of the deposit
-     * @return The transaction representing this deposit
+     * @param description The description for this deposit
+     * @return true if the deposit was successful
      * @throws IllegalArgumentException If the amount is negative
      */
-    public Transaction deposit(double amount, String source) {
+    public boolean deposit(double amount, String description) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Deposit amount must be positive");
         }
@@ -409,25 +116,25 @@ public class Wallet implements Serializable {
         
         Transaction transaction = new Transaction(
                 patientId, 
-                TransactionType.DEPOSIT, 
+                Type.DEPOSIT, 
                 amount, 
-                source, 
+                description, 
                 balance);
         
         transactions.add(transaction);
         
-        return transaction;
+        return true;
     }
     
     /**
      * Withdraw money from the wallet
      * 
      * @param amount The amount to withdraw
-     * @param reason The reason for the withdrawal
+     * @param description The description for this withdrawal
      * @return true if successful, false if insufficient funds
      * @throws IllegalArgumentException If the amount is negative
      */
-    public boolean withdraw(double amount, String reason) {
+    public boolean withdraw(double amount, String description) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be positive");
         }
@@ -440,9 +147,9 @@ public class Wallet implements Serializable {
         
         Transaction transaction = new Transaction(
                 patientId, 
-                TransactionType.WITHDRAWAL, 
+                Type.WITHDRAWAL, 
                 amount, 
-                reason, 
+                description, 
                 balance);
         
         transactions.add(transaction);
@@ -451,15 +158,36 @@ public class Wallet implements Serializable {
     }
     
     /**
+     * Make a payment from the wallet
+     * 
+     * @param amount The amount to pay
+     * @param description The description for this payment
+     * @return true if successful, false if insufficient funds
+     */
+    public boolean makePayment(double amount, String description) {
+        return withdraw(amount, "Payment: " + description);
+    }
+    
+    /**
+     * Process a refund to the wallet
+     * 
+     * @param amount The amount to refund
+     * @param description The description for this refund
+     * @return true if the refund was successful
+     */
+    public boolean processRefund(double amount, String description) {
+        return deposit(amount, "Refund: " + description);
+    }
+    
+    /**
      * Add a card to the wallet
      * 
      * @param cardNumber The card number
-     * @param cardHolderName The card holder name
+     * @param holderName The card holder name
      * @param expiryDate The card expiry date
-     * @param cardType The card type
      * @return true if the card was added, false if it already exists
      */
-    public boolean addCard(String cardNumber, String cardHolderName, String expiryDate, String cardType) {
+    public boolean addCard(String cardNumber, String holderName, String expiryDate) {
         if (cardNumber == null || cardNumber.trim().isEmpty()) {
             return false;
         }
@@ -470,7 +198,7 @@ public class Wallet implements Serializable {
             return false;
         }
         
-        Card card = new Card(cardNumber, cardHolderName, expiryDate, cardType);
+        Card card = new Card(cardNumber, holderName, expiryDate);
         cards.put(lastFourDigits, card);
         
         return true;
@@ -600,21 +328,114 @@ public class Wallet implements Serializable {
             System.out.println("\n🧾 ===== RECENT TRANSACTIONS ===== 🧾");
             
             for (Transaction transaction : recentTransactions) {
-                System.out.println("- " + transaction.getFormattedDescription());
+                System.out.println("- " + transaction.toString());
             }
         }
-        
-        System.out.println();
     }
     
     /**
-     * Get a formatted string representation of this wallet
+     * Get a string representation of this wallet
      * 
-     * @return The formatted string
+     * @return The string representation
      */
     @Override
     public String toString() {
         return String.format("Wallet [PatientID: %d, Username: %s, Balance: %s, Cards: %d, Transactions: %d]", 
                 patientId, patientUsername, getFormattedBalance(), getCardCount(), getTransactionCount());
+    }
+    
+    /**
+     * Represents a credit card stored in a wallet
+     */
+    public static class Card implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
+        private String number;
+        private String holderName;
+        private String expiryDate;
+        
+        /**
+         * Constructor for a credit card
+         * 
+         * @param number The card number
+         * @param holderName The cardholder name
+         * @param expiryDate The expiry date (MM/YY)
+         */
+        public Card(String number, String holderName, String expiryDate) {
+            this.number = number;
+            this.holderName = holderName;
+            this.expiryDate = expiryDate;
+        }
+        
+        /**
+         * Get the card number
+         * 
+         * @return The card number
+         */
+        public String getNumber() {
+            return number;
+        }
+        
+        /**
+         * Get the cardholder name
+         * 
+         * @return The cardholder name
+         */
+        public String getHolderName() {
+            return holderName;
+        }
+        
+        /**
+         * Get the expiry date
+         * 
+         * @return The expiry date
+         */
+        public String getExpiryDate() {
+            return expiryDate;
+        }
+        
+        /**
+         * Get the last four digits of the card number
+         * 
+         * @return The last four digits
+         */
+        public String getLastFourDigits() {
+            if (number.length() < 4) {
+                return number;
+            }
+            return number.substring(number.length() - 4);
+        }
+        
+        /**
+         * Get a masked version of the card number
+         * 
+         * @return The masked card number (e.g., **** **** **** 1234)
+         */
+        public String getMaskedNumber() {
+            if (number.length() < 4) {
+                return number;
+            }
+            
+            String lastFour = getLastFourDigits();
+            StringBuilder masked = new StringBuilder();
+            for (int i = 0; i < number.length() - 4; i++) {
+                if (i > 0 && i % 4 == 0) {
+                    masked.append(" ");
+                }
+                masked.append("*");
+            }
+            
+            return masked + " " + lastFour;
+        }
+        
+        /**
+         * Get a string representation of this card
+         * 
+         * @return The string representation
+         */
+        @Override
+        public String toString() {
+            return String.format("%s - %s (Expires: %s)", getMaskedNumber(), holderName, expiryDate);
+        }
     }
 }

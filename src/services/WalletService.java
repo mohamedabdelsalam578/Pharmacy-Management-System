@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +13,9 @@ import java.util.Map;
 
 import models.Patient;
 import models.Wallet;
-import models.Wallet.Transaction;
-import models.Wallet.TransactionType;
-import repositories.WalletRepository;
+import models.Transaction;
+import models.Transaction.Type;
 import utils.ConsoleUI;
-import utils.DatabaseUtil;
 import utils.FileHandler;
 
 /**
@@ -32,16 +29,12 @@ public class WalletService {
     // Map of wallets by patient ID
     private Map<Integer, Wallet> walletMap;
     
-    // Database repository
-    private WalletRepository repository;
-    
     /**
      * Constructor
-     * Initializes the wallet map and repository
+     * Initializes the wallet map
      */
     public WalletService() {
         this.walletMap = new HashMap<>();
-        this.repository = new WalletRepository();
         
         // Create the wallets directory if it doesn't exist
         File dir = new File(WALLETS_DIR);
@@ -62,52 +55,19 @@ public class WalletService {
         Wallet wallet = walletMap.get(patient.getId());
         
         if (wallet == null) {
-            // Not in memory, try to get from database if available
-            if (DatabaseUtil.isDatabaseAvailable()) {
-                try {
-                    wallet = repository.getWalletByPatient(patient);
-                    
-                    if (wallet != null) {
-                        // Wallet found in database, add to memory
-                        walletMap.put(patient.getId(), wallet);
-                        
-                        // Load transactions
-                        List<Transaction> transactions = repository.getTransactionsByWallet(wallet);
-                        wallet.setTransactions(transactions);
-                        
-                        return wallet;
-                    }
-                } catch (SQLException e) {
-                    System.err.println("Error retrieving wallet from database: " + e.getMessage());
-                    // Fall back to file-based storage
-                }
-            }
-            
             // Try to load from file
             wallet = loadWalletFromFile(patient);
             
             // If still null, create a new wallet
             if (wallet == null) {
-                try {
-                    if (DatabaseUtil.isDatabaseAvailable()) {
-                        // Create in database
-                        wallet = repository.createWallet(patient);
-                    } else {
-                        // Create in memory only
-                        wallet = new Wallet(patient);
-                    }
-                    
-                    // Add to memory map
-                    walletMap.put(patient.getId(), wallet);
-                    
-                    // Save to file as backup
-                    saveWalletToFile(wallet);
-                } catch (SQLException e) {
-                    System.err.println("Error creating wallet in database: " + e.getMessage());
-                    // Fall back to memory-only wallet
-                    wallet = new Wallet(patient);
-                    walletMap.put(patient.getId(), wallet);
-                }
+                // Create in memory
+                wallet = new Wallet(patient.getId(), patient.getUsername());
+                
+                // Add to memory map
+                walletMap.put(patient.getId(), wallet);
+                
+                // Save to file
+                saveWalletToFile(wallet);
             }
         }
         
@@ -145,7 +105,7 @@ public class WalletService {
      * @return true if saved successfully, false otherwise
      */
     private boolean saveWalletToFile(Wallet wallet) {
-        String filename = String.format(WALLET_FILE_FORMAT, wallet.getPatient().getId());
+        String filename = String.format(WALLET_FILE_FORMAT, wallet.getPatientId());
         
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(wallet);
@@ -167,21 +127,14 @@ public class WalletService {
     public boolean deposit(Wallet wallet, double amount, String description) {
         try {
             // Create transaction in wallet object
-            Transaction transaction = wallet.deposit(amount, description);
+            boolean success = wallet.deposit(amount, description);
             
-            // Save to database if available
-            if (DatabaseUtil.isDatabaseAvailable()) {
-                // Update wallet balance
-                repository.updateWallet(wallet);
-                
-                // Add transaction
-                repository.addTransaction(wallet, amount, TransactionType.DEPOSIT, description);
+            // Save to file
+            if (success) {
+                saveWalletToFile(wallet);
             }
             
-            // Save to file as backup
-            saveWalletToFile(wallet);
-            
-            return true;
+            return success;
         } catch (Exception e) {
             System.err.println("Error processing deposit: " + e.getMessage());
             return false;
@@ -199,26 +152,19 @@ public class WalletService {
     public boolean withdraw(Wallet wallet, double amount, String description) {
         try {
             // Check if there are sufficient funds
-            if (!wallet.hasSufficientFunds(amount)) {
+            if (wallet.getBalance() < amount) {
                 return false;
             }
             
             // Create transaction in wallet object
-            Transaction transaction = wallet.withdraw(amount, description);
+            boolean success = wallet.withdraw(amount, description);
             
-            // Save to database if available
-            if (DatabaseUtil.isDatabaseAvailable()) {
-                // Update wallet balance
-                repository.updateWallet(wallet);
-                
-                // Add transaction
-                repository.addTransaction(wallet, amount, TransactionType.WITHDRAWAL, description);
+            // Save to file
+            if (success) {
+                saveWalletToFile(wallet);
             }
             
-            // Save to file as backup
-            saveWalletToFile(wallet);
-            
-            return true;
+            return success;
         } catch (Exception e) {
             System.err.println("Error processing withdrawal: " + e.getMessage());
             return false;
@@ -236,26 +182,19 @@ public class WalletService {
     public boolean makePayment(Wallet wallet, double amount, String description) {
         try {
             // Check if there are sufficient funds
-            if (!wallet.hasSufficientFunds(amount)) {
+            if (wallet.getBalance() < amount) {
                 return false;
             }
             
-            // Create transaction in wallet object
-            Transaction transaction = wallet.makePayment(amount, description);
+            // Since there's no specific makePayment method, use withdraw with a payment description
+            boolean success = wallet.withdraw(amount, "Payment: " + description);
             
-            // Save to database if available
-            if (DatabaseUtil.isDatabaseAvailable()) {
-                // Update wallet balance
-                repository.updateWallet(wallet);
-                
-                // Add transaction
-                repository.addTransaction(wallet, amount, TransactionType.PAYMENT, description);
+            // Save to file
+            if (success) {
+                saveWalletToFile(wallet);
             }
             
-            // Save to file as backup
-            saveWalletToFile(wallet);
-            
-            return true;
+            return success;
         } catch (Exception e) {
             System.err.println("Error processing payment: " + e.getMessage());
             return false;
@@ -291,20 +230,15 @@ public class WalletService {
      * @return The list of transactions, sorted by date (most recent first)
      */
     public List<Transaction> getTransactionHistory(Wallet wallet, int limit) {
-        try {
-            // Try to get from database if available
-            if (DatabaseUtil.isDatabaseAvailable()) {
-                List<Transaction> transactions = repository.getTransactionsByWallet(wallet);
-                wallet.setTransactions(transactions);
-            }
-            
-            // Return from wallet object
-            return wallet.getTransactionHistory(limit);
-        } catch (SQLException e) {
-            System.err.println("Error retrieving transaction history: " + e.getMessage());
-            // Fall back to in-memory transactions
-            return wallet.getTransactionHistory(limit);
+        // Return directly from wallet object (already loaded from file system)
+        List<Transaction> transactions = wallet.getTransactions();
+        
+        if (transactions.isEmpty() || limit <= 0 || limit >= transactions.size()) {
+            return transactions;
         }
+        
+        // Return the most recent transactions based on limit
+        return transactions.subList(transactions.size() - limit, transactions.size());
     }
     
     /**
@@ -317,22 +251,15 @@ public class WalletService {
      */
     public boolean processRefund(Wallet wallet, double amount, String description) {
         try {
-            // Create transaction in wallet object
-            Transaction transaction = wallet.processRefund(amount, description);
+            // Since there's no specific processRefund method, use deposit with a refund description
+            boolean success = wallet.deposit(amount, "Refund: " + description);
             
-            // Save to database if available
-            if (DatabaseUtil.isDatabaseAvailable()) {
-                // Update wallet balance
-                repository.updateWallet(wallet);
-                
-                // Add transaction
-                repository.addTransaction(wallet, amount, TransactionType.REFUND, description);
+            // Save to file
+            if (success) {
+                saveWalletToFile(wallet);
             }
             
-            // Save to file as backup
-            saveWalletToFile(wallet);
-            
-            return true;
+            return success;
         } catch (Exception e) {
             System.err.println("Error processing refund: " + e.getMessage());
             return false;
@@ -476,21 +403,23 @@ public class WalletService {
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction transaction = transactions.get(i);
                 String amountStr = String.format("%.2f LE", transaction.getAmount());
-                String sign = transaction.getAmountSign();
-                TransactionType type = transaction.getType();
                 String description = transaction.getDescription();
-                String timestamp = transaction.getFormattedTimestamp();
                 
-                String color = ConsoleUI.RESET;
-                if (type == TransactionType.DEPOSIT || type == TransactionType.REFUND) {
-                    color = ConsoleUI.GREEN;
-                } else if (type == TransactionType.WITHDRAWAL || type == TransactionType.PAYMENT) {
+                // Determine sign and color based on description
+                String sign = "+";
+                String color = ConsoleUI.GREEN;
+                
+                if (description.startsWith("Withdrawal") || description.startsWith("Payment:")) {
+                    sign = "-";
                     color = ConsoleUI.RED;
                 }
                 
+                // Format timestamp
+                String timestamp = transaction.getTimestamp();
+                
                 System.out.print((i + 1) + ". [" + timestamp + "] ");
                 ConsoleUI.printColoredText(sign + amountStr, color);
-                System.out.println(" - " + type + " (" + description + ")");
+                System.out.println(" - " + description);
             }
         }
         
@@ -508,16 +437,15 @@ public class WalletService {
             ConsoleUI.printColoredText("💳 MANAGE CREDIT CARDS", ConsoleUI.CYAN);
             System.out.println("--------------------");
             
-            List<String> creditCards = wallet.getCreditCards();
+            List<Wallet.Card> cards = wallet.getCards();
             
-            if (creditCards.isEmpty()) {
+            if (cards.isEmpty()) {
                 System.out.println("No credit cards added yet.");
             } else {
                 System.out.println("Your credit cards:");
-                for (int i = 0; i < creditCards.size(); i++) {
-                    String card = creditCards.get(i);
-                    String maskedCard = maskCardNumber(card);
-                    System.out.println((i + 1) + ". " + maskedCard);
+                for (int i = 0; i < cards.size(); i++) {
+                    Wallet.Card card = cards.get(i);
+                    System.out.println((i + 1) + ". " + card.toString());
                 }
             }
             
@@ -554,8 +482,10 @@ public class WalletService {
         System.out.println("--------------------");
         
         String cardNumber = ConsoleUI.readStringInput("Enter card number (16 digits): ");
+        String name = ConsoleUI.readStringInput("Enter cardholder name: ");
+        String expiryDate = ConsoleUI.readStringInput("Enter expiry date (MM/YY): ");
         
-        boolean success = wallet.addCreditCard(cardNumber);
+        boolean success = wallet.addCard(cardNumber, name, expiryDate);
         
         if (success) {
             ConsoleUI.printColoredText("✅ Credit card added successfully!", ConsoleUI.GREEN);
@@ -579,29 +509,28 @@ public class WalletService {
         ConsoleUI.printColoredText("❌ REMOVE CREDIT CARD", ConsoleUI.CYAN);
         System.out.println("--------------------");
         
-        List<String> creditCards = wallet.getCreditCards();
+        List<Wallet.Card> cards = wallet.getCards();
         
-        if (creditCards.isEmpty()) {
+        if (cards.isEmpty()) {
             System.out.println("No credit cards to remove.");
             ConsoleUI.pressEnterToContinue();
             return;
         }
         
         System.out.println("Select a credit card to remove:");
-        for (int i = 0; i < creditCards.size(); i++) {
-            String card = creditCards.get(i);
-            String maskedCard = maskCardNumber(card);
-            System.out.println((i + 1) + ". " + maskedCard);
+        for (int i = 0; i < cards.size(); i++) {
+            Wallet.Card card = cards.get(i);
+            System.out.println((i + 1) + ". " + card.toString());
         }
         
-        int choice = ConsoleUI.readIntInput("Enter your choice (0 to cancel): ", 0, creditCards.size());
+        int choice = ConsoleUI.readIntInput("Enter your choice (0 to cancel): ", 0, cards.size());
         
         if (choice == 0) {
             return;
         }
         
-        String cardToRemove = creditCards.get(choice - 1);
-        boolean success = wallet.removeCreditCard(cardToRemove);
+        Wallet.Card cardToRemove = cards.get(choice - 1);
+        boolean success = wallet.removeCard(cardToRemove.getLastFourDigits());
         
         if (success) {
             ConsoleUI.printColoredText("✅ Credit card removed successfully!", ConsoleUI.GREEN);

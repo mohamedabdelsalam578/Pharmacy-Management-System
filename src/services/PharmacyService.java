@@ -76,11 +76,18 @@ public class PharmacyService {
      * Calculate the next order ID based on existing orders
      */
     private void calculateNextOrderId() {
-        // Use streams to find max ID or default to 0, then add 1
-        nextOrderId = orders.stream()
-                .mapToInt(Order::getId)
-                .max()
-                .orElse(0) + 1;
+        if (orders.isEmpty()) {
+            nextOrderId = 1;
+        } else {
+            // Find the maximum order ID and add 1
+            int maxId = 0;
+            for (Order order : orders) {
+                if (order.getId() > maxId) {
+                    maxId = order.getId();
+                }
+            }
+            nextOrderId = maxId + 1;
+        }
     }
     
     /**

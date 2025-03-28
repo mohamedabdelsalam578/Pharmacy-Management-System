@@ -39,12 +39,15 @@ public class FileHandler {
      */
     public static void initializeFiles() {
         // Create data directory if it doesn't exist
-        new File(DATA_DIR).mkdirs();
+        File dataDir = new File(DATA_DIR);
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
         
-        // Create all files using streams
-        java.util.Arrays.stream(ALL_FILES)
-            .map(file -> DATA_DIR + "/" + file)
-            .forEach(FileHandler::createFile);
+        // Create all files in a loop
+        for (String file : ALL_FILES) {
+            createFile(DATA_DIR + "/" + file);
+        }
     }
     
     /**
@@ -53,10 +56,14 @@ public class FileHandler {
      * @param filePath Path of the file to create
      */
     private static void createFile(String filePath) {
-        try {
-            new File(filePath).createNewFile(); // Only creates if doesn't exist
-        } catch (IOException e) {
-            System.err.println("Error creating file: " + filePath);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                System.err.println("Error creating file: " + filePath);
+                e.printStackTrace();
+            }
         }
     }
     
@@ -66,10 +73,13 @@ public class FileHandler {
      * @return List of Admin objects
      */
     public static List<Admin> loadAdmins() {
-        return FileUtils.readFromFile(ADMINS_FILE, line -> {
-            String[] parts = line.split("\\|");
-            if (parts.length >= 8) {
-                try {
+        List<Admin> admins = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(ADMINS_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 8) {
                     int id = Integer.parseInt(parts[0].trim());
                     String name = parts[1].trim();
                     String username = parts[2].trim();
@@ -79,13 +89,15 @@ public class FileHandler {
                     String position = parts[6].trim();
                     String department = parts[7].trim();
                     
-                    return new Admin(id, name, username, password, email, phone, position, department);
-                } catch (NumberFormatException e) {
-                    System.err.println("Error parsing admin ID: " + e.getMessage());
+                    Admin admin = new Admin(id, name, username, password, email, phone, position, department);
+                    admins.add(admin);
                 }
             }
-            return null;
-        });
+        } catch (IOException e) {
+            System.err.println("Error loading admins: " + e.getMessage());
+        }
+        
+        return admins;
     }
     
     /**
@@ -94,16 +106,22 @@ public class FileHandler {
      * @param admins List of Admin objects to save
      */
     public static void saveAdmins(List<Admin> admins) {
-        FileUtils.writeToFile(ADMINS_FILE, admins, admin -> 
-            String.format("%d|%s|%s|%s|%s|%s|%s|%s", 
-                admin.getId(), 
-                admin.getName(),
-                admin.getUsername(),
-                admin.getPassword(),
-                admin.getEmail(),
-                admin.getPhoneNumber(),
-                admin.getRole(),
-                admin.getDepartment()));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ADMINS_FILE))) {
+            for (Admin admin : admins) {
+                writer.write(String.format("%d|%s|%s|%s|%s|%s|%s|%s", 
+                    admin.getId(), 
+                    admin.getName(),
+                    admin.getUsername(),
+                    admin.getPassword(),
+                    admin.getEmail(),
+                    admin.getPhoneNumber(),
+                    admin.getRole(),
+                    admin.getDepartment()));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving admins: " + e.getMessage());
+        }
     }
     
     /**
@@ -402,23 +420,31 @@ public class FileHandler {
      * @return List of Medicine objects
      */
     public static List<Medicine> loadMedicines() {
-        return loadFromFile(MEDICINES_FILE, parts -> {
-            try {
-                int id = Integer.parseInt(parts[0].trim());
-                String name = parts[1].trim();
-                String description = parts[2].trim();
-                String manufacturer = parts[3].trim();
-                double price = Double.parseDouble(parts[4].trim());
-                int quantity = Integer.parseInt(parts[5].trim());
-                String category = parts[6].trim();
-                boolean requiresPrescription = Boolean.parseBoolean(parts[7].trim());
-                
-                return new Medicine(id, name, description, manufacturer, price, quantity, category, requiresPrescription);
-            } catch (Exception e) {
-                System.err.println("Error parsing medicine data: " + e.getMessage());
-                return null;
+        List<Medicine> medicines = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(MEDICINES_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 8) {
+                    int id = Integer.parseInt(parts[0].trim());
+                    String name = parts[1].trim();
+                    String description = parts[2].trim();
+                    String manufacturer = parts[3].trim();
+                    double price = Double.parseDouble(parts[4].trim());
+                    int quantity = Integer.parseInt(parts[5].trim());
+                    String category = parts[6].trim();
+                    boolean requiresPrescription = Boolean.parseBoolean(parts[7].trim());
+                    
+                    Medicine medicine = new Medicine(id, name, description, manufacturer, price, quantity, category, requiresPrescription);
+                    medicines.add(medicine);
+                }
             }
-        }, 8);
+        } catch (IOException e) {
+            System.err.println("Error loading medicines: " + e.getMessage());
+        }
+        
+        return medicines;
     }
     
     /**
@@ -648,20 +674,28 @@ public class FileHandler {
      * @return List of Pharmacy objects
      */
     public static List<Pharmacy> loadPharmacies() {
-        return loadFromFile(PHARMACIES_FILE, parts -> {
-            try {
-                int id = Integer.parseInt(parts[0].trim());
-                String name = parts[1].trim();
-                String address = parts[2].trim();
-                String phone = parts[3].trim();
-                String email = parts[4].trim();
-                
-                return new Pharmacy(id, name, address, phone, email);
-            } catch (Exception e) {
-                System.err.println("Error parsing pharmacy data: " + e.getMessage());
-                return null;
+        List<Pharmacy> pharmacies = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(PHARMACIES_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length >= 5) {
+                    int id = Integer.parseInt(parts[0].trim());
+                    String name = parts[1].trim();
+                    String address = parts[2].trim();
+                    String phone = parts[3].trim();
+                    String email = parts[4].trim();
+                    
+                    Pharmacy pharmacy = new Pharmacy(id, name, address, phone, email);
+                    pharmacies.add(pharmacy);
+                }
             }
-        }, 5);
+        } catch (IOException e) {
+            System.err.println("Error loading pharmacies: " + e.getMessage());
+        }
+        
+        return pharmacies;
     }
     
     /**

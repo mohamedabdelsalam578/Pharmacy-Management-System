@@ -5,13 +5,9 @@ import models.Medicine;
 import models.Order;
 import models.Wallet;
 import models.CreditCard;
-import utils.FileHandler;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.ArrayList;
 
 /**
  * 👨‍👩‍👧 PatientService - Provides methods for patient operations in the pharmacy 👨‍👩‍👧
@@ -22,7 +18,7 @@ import java.util.ArrayList;
  * - Wallet management and payments
  * - Patient information updates
  */
-public class PatientService extends BaseService<Patient, Integer> implements GenericService<Patient, Integer> {
+public class PatientService {
     private List<Patient> patients;
     private List<Order> orders;
     private List<Medicine> medicines;
@@ -347,83 +343,10 @@ public class PatientService extends BaseService<Patient, Integer> implements Gen
      * @return The patient object if found, null otherwise
      */
     private Patient findPatientById(int patientId) {
-        return findById(patientId).orElse(null);
-    }
-    
-    /**
-     * Get all entities managed by this service
-     * 
-     * @return List of all entities
-     */
-    @Override
-    protected List<Patient> getEntities() {
-        return patients;
-    }
-
-    /**
-     * Extract the ID from an entity
-     * 
-     * @param entity The entity to extract ID from
-     * @return The ID of the entity
-     */
-    @Override
-    protected Integer getEntityId(Patient entity) {
-        return entity.getId();
-    }
-    
-    /**
-     * Get all patients
-     * 
-     * @return List of all patients
-     */
-    @Override
-    public List<Patient> getAll() {
-        return new ArrayList<>(patients);
-    }
-    
-    /**
-     * Save a patient (create or update)
-     * 
-     * @param patient The patient to save
-     * @return The saved patient
-     */
-    @Override
-    public Patient save(Patient patient) {
-        // If patient with this ID already exists, update it
-        Optional<Patient> existingPatient = findById(patient.getId());
-        if (existingPatient.isPresent()) {
-            // Update existing patient information
-            Patient p = existingPatient.get();
-            p.setName(patient.getName());
-            p.setEmail(patient.getEmail());
-            p.setPhoneNumber(patient.getPhoneNumber());
-            p.setAddress(patient.getAddress());
-            
-            return p;
-        } else {
-            // Add new patient
-            patients.add(patient);
-            return patient;
-        }
-    }
-    
-    /**
-     * Delete a patient by ID
-     * 
-     * @param id The ID of the patient to delete
-     * @return true if deleted successfully, false otherwise
-     */
-    @Override
-    public boolean deleteById(Integer id) {
-        return removeById(id);
-    }
-    
-    /**
-     * Persist changes to permanent storage
-     */
-    @Override
-    public void saveChanges() {
-        FileHandler.savePatients(patients);
+        return patients.stream()
+                      .filter(p -> p.getId() == patientId)
+                      .findFirst()
+                      .orElse(null);
     }
 
     /**

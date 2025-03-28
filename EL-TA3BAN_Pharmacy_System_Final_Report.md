@@ -49,15 +49,15 @@ March 28, 2025
 
 ### 1.2 Project Timeline
 
-| Phase | Task Description | Start Date | End Date |
-|-------|-----------------|------------|----------|
-| Phase 1 | Requirement Analysis | March 1, 2025 | March 5, 2025 |
-| Phase 2 | System Design and Class Diagram | March 6, 2025 | March 10, 2025 |
-| Phase 3 | Core Model Implementation | March 11, 2025 | March 15, 2025 |
-| Phase 4 | Service Layer Implementation | March 16, 2025 | March 19, 2025 |
-| Phase 5 | User Interface Development | March 20, 2025 | March 22, 2025 |
-| Phase 6 | Testing & Debugging | March 23, 2025 | March 24, 2025 |
-| Phase 7 | Documentation & Report | March 25, 2025 | March 28, 2025 |
+| Phase | Task Description |
+|-------|-----------------|
+| Phase 1 | Requirement Analysis |
+| Phase 2 | System Design and Class Diagram |
+| Phase 3 | Core Model Implementation |
+| Phase 4 | Service Layer Implementation |
+| Phase 5 | User Interface Development |
+| Phase 6 | Testing & Debugging |
+| Phase 7 | Documentation & Report |
 
 ### 1.3 Access Information
 
@@ -297,7 +297,7 @@ Our console-based user interface follows key UX design principles:
 4. **✓ Feedback**: Immediate response to user actions
 5. **✓ Error Prevention**: Input validation and confirmation for destructive operations
 
-### 5.2 UI Enhancement Features
+### 5.2 UI Features
 
 - **✓ Color-Coded Feedback**
   - Success messages in green
@@ -311,11 +311,6 @@ Our console-based user interface follows key UX design principles:
   - Progress indicators for long operations
   - Status symbols for states (✓ for complete, ⚠ for warning)
 
-- **✓ Interactive Elements**
-  - Animated loading spinners
-  - Typewriter text effect for important messages
-  - Confirmation prompts for critical actions
-  - Real-time form validation
 
 ### 5.3 Key Interface Screens
 
@@ -353,58 +348,6 @@ Our console-based user interface follows key UX design principles:
   [7] ↩️ Logout
 ──────────────────────────────────────────────────
 ```
-
-## 6. Data Persistence Implementation
-
-### 6.1 Storage Architecture
-
-The system implements a hybrid persistence approach using:
-
-1. **✓ Text Files**: For simple entities and configuration data
-2. **✓ Java Serialization**: For complex objects with relationships
-3. **✓ In-Memory Cache**: For frequently accessed data structures
-
-### 6.2 Persistence Implementation
-
-- **✓ FileHandler Utility**: Centralized file operations
-  - Generic methods for different entity types
-  - Error handling and recovery mechanisms
-  - Atomic write operations to prevent data corruption
-
-- **✓ Entity Storage Solutions**
-  - User data in formatted text files
-  - Medical records in structured files
-  - Wallet data utilizing Java serialization
-  - Transaction records with atomic writes
-
-- **✓ Serializable Implementation**
-  - All model classes implement the `Serializable` interface
-  - Custom serialization for sensitive data fields
-  - Version control with `serialVersionUID`
-
-### 6.3 Data Directory Structure
-
-```
-/data
-  ├── users/
-  │   ├── admins.txt
-  │   ├── patients.txt
-  │   ├── doctors.txt
-  │   └── pharmacists.txt
-  ├── medical/
-  │   ├── prescriptions.txt
-  │   ├── medical_reports.txt
-  │   └── consultations.txt
-  ├── pharmacy/
-  │   ├── medicines.txt
-  │   ├── inventory.txt
-  │   └── orders.txt
-  ├── communications/
-  │   └── messages.txt
-  └── wallets/
-      └── [patient_id].wallet (serialized)
-```
-
 ## 7. Testing and Validation
 
 ### 7.1 Testing Methodology

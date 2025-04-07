@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,6 @@ import models.Patient;
 import models.Wallet;
 // Using Transaction as inner class of Wallet
 import utils.ConsoleUI;
-import utils.FileHandler;
 
 /**
  * Service class for wallet operations

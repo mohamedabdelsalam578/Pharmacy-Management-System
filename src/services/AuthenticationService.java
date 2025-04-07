@@ -16,30 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * 🔐 AuthenticationService - Security management for user authentication 🔐
- *
- * This service implements industry-standard security practices including password hashing
- * with salting, brute force protection, input validation, and automatic security upgrades
- * for legacy accounts. It serves as the security gateway for the entire pharmacy system.
- *
- * 🔑 OOP Concepts Demonstrated:
- * - Encapsulation: Security-critical methods are kept private
- * - Polymorphism: Same authentication process for different user types
- * - Single Responsibility: Focused solely on authentication concerns
- *
- * 📚 Class Responsibilities:
- * - Securely authenticate all types of users (Admins, Patients, Doctors, Pharmacists)
- * - Protect against brute force attacks through account lockouts
- * - Hash and verify passwords using secure algorithms
- * - Validate login inputs to prevent injection attacks
- * - Automatically upgrade legacy plaintext passwords to secure hashes
- *
- * 🌐 Role in System:
- * This service acts as the gatekeeper for the entire EL-TA3BAN Pharmacy System,
- * ensuring that only authorized users can access their respective functionalities
- * while protecting sensitive healthcare and financial data from unauthorized access.
- */
+
 public class AuthenticationService {
     private static final int MAX_LOGIN_ATTEMPTS = 5;
     private static final int LOCKOUT_DURATION_MINUTES = 15;
@@ -182,7 +159,7 @@ public class AuthenticationService {
     }
     
     /**
-     * 🔒 hashPassword - Creates a secure SHA-256 password hash with salt
+     * hashPassword - Creates a secure SHA-256 password hash with salt
      * 
      * This method implements cryptographic best practices by generating
      * a random salt for each password and applying SHA-256 hashing.
@@ -218,7 +195,7 @@ public class AuthenticationService {
     }
     
     /**
-     * 🔐 verifyPassword - Securely validates user password against stored hash
+     *verifyPassword - Securely validates user password against stored hash
      * 
      * This method demonstrates secure password verification by extracting
      * the salt from the stored hash, applying the same hashing algorithm,
@@ -259,12 +236,7 @@ public class AuthenticationService {
     }
     
     /**
-     * 🛡️ validateLoginInput - Prevents injection attacks and ensures data quality
-     * 
-     * This method prevents SQL injection and other security attacks by
-     * validating user input before processing. It checks for empty inputs,
-     * minimum length requirements, and potentially dangerous characters
-     * that could be used in injection attacks.
+     * validateLoginInput - Prevents injection attacks and ensures data quality
      * 
      * @param username The username to validate
      * @param password The password to validate
@@ -281,7 +253,7 @@ public class AuthenticationService {
             return false;
         }
         
-        if (username.length() < 3) {
+        if (username.length() < 2) {
             System.out.println("Username must be at least 3 characters long.");
             return false;
         }
@@ -297,7 +269,7 @@ public class AuthenticationService {
     }
     
     /**
-     * 🔒 recordFailedLoginAttempt - Implements brute force attack protection
+     * recordFailedLoginAttempt - Implements brute force attack protection
      * 
      * This method enhances system security by tracking failed login attempts
      * and implementing account lockouts after reaching a threshold. It provides
@@ -323,7 +295,7 @@ public class AuthenticationService {
     }
     
     /**
-     * ✅ resetLoginAttempts - Clears security constraints after successful login
+     *resetLoginAttempts - Clears security constraints after successful login
      * 
      * This method works in tandem with the account lockout system to
      * reset the security constraints when a user successfully authenticates.
@@ -338,7 +310,7 @@ public class AuthenticationService {
     }
     
     /**
-     * 🔒 isAccountLocked - Enforces temporary account lockout policy
+     *isAccountLocked - Enforces temporary account lockout policy
      * 
      * This method implements a time-based account lockout mechanism that
      * automatically expires after the defined lockout duration. It prevents
@@ -368,7 +340,7 @@ public class AuthenticationService {
     }
     
     /**
-     * 🔐 setHashedPassword - Secures user credentials during account creation
+     *setHashedPassword - Secures user credentials during account creation
      * 
      * This utility method simplifies the process of securely storing
      * passwords when creating new users or updating existing credentials.

@@ -75,7 +75,7 @@ public class Consultation {
      * @return The generated prescription
      */
     public Prescription generatePrescription(int prescriptionId, String instructions) {
-        Prescription prescription = new Prescription(
+        return new Prescription(
             prescriptionId,
             patientId,
             doctorId,
@@ -85,7 +85,7 @@ public class Consultation {
             instructions
         );
         
-        return prescription;
+
     }
 
     /**

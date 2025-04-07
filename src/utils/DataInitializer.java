@@ -3,8 +3,6 @@ package utils;
 import models.*;
 import services.PharmacyService;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -258,7 +256,7 @@ public class DataInitializer {
         pharmacyService.getMedicines().add(medicine5);
         
         // Create test patient
-        Patient patient = new Patient(1, "Amr Hassan", "amr_patient", "amr123", 
+        Patient patient = new Patient(1, "Amr Hassan", "Amr", "Amr123", 
                                  "amr@gmail.com", "01123456789", "123 El Geish St, Cairo");
         // Initialize wallet with funds for testing
         patient.getWallet().deposit(500.0, "Initial test deposit");

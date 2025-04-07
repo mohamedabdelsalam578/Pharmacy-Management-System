@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Represents an item in an order
  */
 public class OrderItem implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     
     private int medicineId;
     private String medicineName;

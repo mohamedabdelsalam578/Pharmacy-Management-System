@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 👨‍👩‍👧 PatientService - Provides methods for patient operations in the pharmacy 👨‍👩‍👧
+ * PatientService - Provides methods for patient operations in the pharmacy
  * 
  * This service class handles all patient-related operations including:
  * - Account management

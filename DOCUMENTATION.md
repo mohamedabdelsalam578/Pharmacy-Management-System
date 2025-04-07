@@ -401,7 +401,7 @@ The Pharmacy Management System includes a complete prescription workflow from do
       │                   │                   │
       ▼                   ▼                   ▼
 ┌───────────┐       ┌───────────┐       ┌───────────┐
-│MedicalReport│      │  Medicine │       │  Pharmacy │
+│MedicalReport│     │  Medicine │       │  Pharmacy │
 └───────────┘       └───────────┘       └───────────┘
       │                   ▲                   │
       │                   │                   │
@@ -413,7 +413,7 @@ The Pharmacy Management System includes a complete prescription workflow from do
     │                                         │
     ▼                                         ▼
 ┌───────────┐       ┌───────────┐       ┌───────────┐
-│Consultation│       │   Wallet  │       │   Report  │
+│Consultation│      │   Wallet  │       │   Report  │
 └───────────┘       └─────┬─────┘       └───────────┘
                           │
                           ▼

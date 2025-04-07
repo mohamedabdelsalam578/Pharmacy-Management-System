@@ -8,7 +8,7 @@ import java.util.List;
  * Represents a patient in the pharmacy system
  */
 public class Patient extends User {
-    private static final long serialVersionUID = 1L;
+  
     
     private String firstName;
     private String lastName;

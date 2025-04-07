@@ -6,8 +6,8 @@ import java.io.Serializable;
  * Base class for all users in the system
  * Provides common properties and methods for all user types
  */
-public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class User {
+  
     
     private int id;
     private String username;

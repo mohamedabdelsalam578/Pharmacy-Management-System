@@ -2,20 +2,12 @@ import services.PharmacyService;
 import utils.DataInitializer;
 import utils.FileHandler;
 import utils.ConsoleUI;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- * 🏥 Welcome to the Pharmacy Management System! 🏥
- * Test credentials:
- *    - Admin: username "admin", password "admin123"
- *    - Patient: username "amr", password "alice123"
- *    - Doctor: username "drmohamed", password "doctor123"
- *    - Pharmacist: username "fatima", password "pharm123"
- */
+
 public class PharmacyManagementSystem {
-    private static final Logger LOGGER = Logger.getLogger(PharmacyManagementSystem.class.getName());
     
     /**
      * Main method to start the application
@@ -23,6 +15,10 @@ public class PharmacyManagementSystem {
      * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
+        System.setProperty("file.encoding", "UTF-8");
+        PrintStream ps = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        System.setOut(ps);
+        
         System.out.println("Starting Pharmacy Management System...");
         ConsoleUI.printColoredText("EL-TA3BAN PHARMACY MANAGEMENT SYSTEM", ConsoleUI.CYAN);
         ConsoleUI.printColoredText("----------------------------------------", ConsoleUI.CYAN);

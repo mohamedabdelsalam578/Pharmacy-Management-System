@@ -1,8 +1,7 @@
 package models;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +12,8 @@ import java.util.UUID;
 /**
  * Represents a wallet in the pharmacy system
  */
-public class Wallet implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Wallet  {
+
     
     private int patientId;
     private String patientUsername;
@@ -25,8 +24,8 @@ public class Wallet implements Serializable {
     /**
      * Represents a transaction in the pharmacy system
      */
-    public static class Transaction implements Serializable {
-        private static final long serialVersionUID = 1L;
+    public static class Transaction  {
+      
         
         /**
          * Represents the types of transactions
@@ -579,8 +578,8 @@ public class Wallet implements Serializable {
     /**
      * Represents a credit card stored in a wallet
      */
-    public static class Card implements Serializable {
-        private static final long serialVersionUID = 1L;
+    public static class Card  {
+      
         
         private String number;
         private String holderName;

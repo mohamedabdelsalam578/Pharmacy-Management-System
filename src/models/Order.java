@@ -1,6 +1,5 @@
 package models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,9 +11,8 @@ import java.util.stream.Collectors;
 /**
  * Represents an order in the pharmacy system
  */
-public class Order implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
+public class Order {
+
     public enum Status {
         PENDING("Pending"),
         PROCESSING("Processing"),

@@ -4,12 +4,7 @@ import models.*;
 import utils.FileHandler;
 import utils.ConsoleUI;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +181,7 @@ public class PharmacyService {
      * Initialize sample doctors with Egyptian names
      */
     private void initializeDoctors() {
-        doctors.add(new Doctor(1, "Dr. Ahmed Mahmoud", "dr_ahmed", "password", "ahmed@elta3ban.com", "01212345678", 
+        doctors.add(new Doctor(1, "Dr. Ahmed Mahmoud", "dr_ahmed", "1234", "ahmed@elta3ban.com", "01212345678", 
                               "Cardiology", "EGP12345"));
         doctors.add(new Doctor(2, "Dr. Nour El-Din", "dr_nour", "password", "nour@elta3ban.com", "01512345678", 
                               "Neurology", "EGP67890"));
@@ -196,7 +191,7 @@ public class PharmacyService {
      * Initialize sample patients with Egyptian names
      */
     private void initializePatients() {
-        patients.add(new Patient(1, "Amr Khaled", "alice", "alice123", "amr@gmail.com", "01112345679", 
+        patients.add(new Patient(1, "Amr Khaled", "Amr", "Amr123", "amr@gmail.com", "01112345679", 
                               "22 Tahrir St, Cairo"));
         patients.add(new Patient(2, "Laila Mostafa", "laila_patient", "password", "laila@gmail.com", "01012345670", 
                               "15 Pyramids St, Giza"));

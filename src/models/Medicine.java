@@ -1,13 +1,12 @@
 package models;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents a medicine in the pharmacy system
  */
-public class Medicine implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Medicine  {
+ 
     
     private int id;
     private String name;

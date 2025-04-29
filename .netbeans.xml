@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auxiliary-configuration xmlns="http://www.netbeans.org/ns/auxiliary-configuration/1">
+    <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
+        <module name="org-netbeans-modules-maven">
+            <property name="Env.MAVEN_OPTS" value="-Dmaven.ext.class.path=${netbeans.installation}/java/maven-nblib/netbeans-eventspy.jar"/>
+            <property name="NetBeans.Project.Properties" value="mainClass=PharmacyGUI"/>
+            <property name="NetBeans.Project.Exec.Args" value="-classpath %classpath PharmacyGUI"/>
+        </module>
+    </preferences>
+</auxiliary-configuration> 

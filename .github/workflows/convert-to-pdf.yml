@@ -1,0 +1,27 @@
+
+name: Convert Markdown to PDF
+
+on:
+  push:
+    paths:
+      - 'EL-TA3BAN_Pharmacy_System_Final_Report.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install Pandoc
+      run: sudo apt-get install -y pandoc
+
+    - name: Convert Markdown to PDF
+      run: pandoc EL-TA3BAN_Pharmacy_System_Final_Report.md -o EL-TA3BAN_Pharmacy_System_Final_Report.pdf
+
+    - name: Upload PDF
+      uses: actions/upload-artifact@v2
+      with:
+        name: report-pdf
+        path: EL-TA3BAN_Pharmacy_System_Final_Report.pdf

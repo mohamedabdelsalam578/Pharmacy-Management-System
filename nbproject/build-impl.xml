@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+*** GENERATED FROM project.xml - DO NOT EDIT  ***
+***         EDIT ../build.xml INSTEAD         ***
+-->
+<project name="PharmacyManagementSystem-impl" default="default" basedir=".." xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc">
+    <target name="-init-platform">
+        <property name="platform.java" value="${java.home}/bin/java"/>
+    </target>
+    <target name="-init-private" depends="-init-platform">
+        <property file="nbproject/private/private.properties"/>
+    </target>
+    <target name="-init-user" depends="-init-private">
+        <property file="${user.properties.file}"/>
+    </target>
+    <target name="-init-project" depends="-init-user">
+        <property file="nbproject/project.properties"/>
+    </target>
+    <target name="-init-libraries" depends="-init-project">
+        <property location="./lib/" name="endorsed.classpath.cmd.line.arg" value=""/>
+    </target>
+    <target name="init" depends="-init-platform,-init-private,-init-user,-init-project,-init-libraries"/>
+    
+    <target name="clean" depends="init">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+    
+    <target name="compile" depends="init">
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" includeantruntime="false" debug="true" encoding="UTF-8">
+            <classpath>
+                <pathelement path="${javac.classpath}"/>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="jar" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.jar}" basedir="${build.classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+    
+    <target name="run" depends="jar">
+        <java jar="${dist.jar}" fork="true"/>
+    </target>
+    
+    <target name="javadoc" depends="init">
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc sourcepath="${src.dir}" destdir="${dist.javadoc.dir}"/>
+    </target>
+    
+    <target name="default" depends="clean,jar"/>
+</project>

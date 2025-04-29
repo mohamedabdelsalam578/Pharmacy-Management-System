@@ -1,0 +1,63 @@
+[2025-04-28 17:42:19] Login attempt - Username: dr_ahmed, UserType: Admin
+[2025-04-28 17:42:19] Login failed for: dr_ahmed
+[2025-04-28 17:43:16] Login attempt - Username: dr_ahmed, UserType: Doctor
+[2025-04-28 17:43:16] Login failed for: dr_ahmed
+[2025-04-28 17:46:27] Login attempt - Username: dr_ahmed, UserType: Doctor
+[2025-04-28 17:46:27] Login failed for: dr_ahmed
+[2025-04-28 17:46:37] Login attempt - Username: dr_mohamed, UserType: Doctor
+[2025-04-28 17:46:37] Login failed for: dr_mohamed
+[2025-04-28 17:47:18] Login attempt - Username: mo, UserType: Admin
+[2025-04-28 17:47:18] Login failed for: mo
+[2025-04-28 17:47:24] Login attempt - Username: mo, UserType: Doctor
+[2025-04-28 17:47:24] Login failed for: mo
+[2025-04-28 17:55:13] Login attempt - Username: admin, UserType: Admin
+[2025-04-28 17:55:13] Login failed for: admin
+[2025-04-28 17:55:18] Login attempt - Username: admin, UserType: Admin
+[2025-04-28 17:55:18] Login failed for: admin
+[2025-04-28 17:55:29] Login attempt - Username: admin, UserType: Admin
+[2025-04-28 17:55:29] Login failed for: admin
+[2025-04-28 17:55:31] Login attempt - Username: admin, UserType: Admin
+[2025-04-28 17:55:31] Login failed for: admin
+[2025-04-28 17:56:16] Login attempt - Username: admin, UserType: Admin
+[2025-04-28 17:56:16] Login failed for: admin
+[2025-04-28 17:56:39] Login attempt - Username: drmohamed, UserType: Doctor
+[2025-04-28 17:56:39] Login failed for: drmohamed
+[2025-04-28 18:00:48] Login attempt - Username: admin, UserType: ADMIN
+[2025-04-28 18:00:48] Attempting to authenticate username: admin
+[2025-04-28 18:00:48] Found user for username: admin, user ID: 1, password: $SHA$bCe69kyGbur/91rl+D3lgA==$m9ugPsrrY1uXB/Xipr7Jo9O9dNTrf7C22qx3kcM2FII=
+[2025-04-28 18:00:48] Verifying hashed password for admin
+[2025-04-28 18:00:48] Authentication successful for admin
+[2025-04-28 18:00:48] Login successful for: admin
+[2025-04-28 18:01:03] Login attempt - Username: dr_ahmed, UserType: DOCTOR
+[2025-04-28 18:01:03] Doctor login attempt with username: dr_ahmed
+[2025-04-28 18:01:03] Attempting to authenticate username: dr_ahmed
+[2025-04-28 18:01:03] Found user for username: dr_ahmed, user ID: 28, password: 1234
+[2025-04-28 18:01:03] Using plaintext password comparison for dr_ahmed
+[2025-04-28 18:01:03] Comparing input password '1234' with stored '1234'
+[2025-04-28 18:01:03] Upgrading to hashed password for dr_ahmed
+[2025-04-28 18:01:03] Authentication successful for dr_ahmed
+[2025-04-28 18:01:03] Authentication returned: User found
+[2025-04-28 18:01:03] Login successful for: dr_ahmed
+[2025-04-28 18:01:03] Error during login: Cannot invoke "models.Doctor.getName()" because "this.currentDoctor" is null
+[2025-04-28 18:02:19] Login attempt - Username: dr_ahmed, UserType: DOCTOR
+[2025-04-28 18:02:19] Doctor login attempt with username: dr_ahmed
+[2025-04-28 18:02:19] Attempting to authenticate username: dr_ahmed
+[2025-04-28 18:02:19] Found user for username: dr_ahmed, user ID: 28, password: 1234
+[2025-04-28 18:02:19] Using plaintext password comparison for dr_ahmed
+[2025-04-28 18:02:19] Comparing input password '1234' with stored '1234'
+[2025-04-28 18:02:19] Upgrading to hashed password for dr_ahmed
+[2025-04-28 18:02:19] Authentication successful for dr_ahmed
+[2025-04-28 18:02:19] Authentication returned: User found
+[2025-04-28 18:02:19] Login successful for: dr_ahmed
+[2025-04-28 18:02:19] Error during login: Cannot invoke "models.Doctor.getName()" because "this.currentDoctor" is null
+[2025-04-28 18:07:03] Login attempt - Username: dr_ahmed, UserType: DOCTOR
+[2025-04-28 18:07:03] Doctor login attempt with username: dr_ahmed
+[2025-04-28 18:07:03] Attempting to authenticate username: dr_ahmed
+[2025-04-28 18:07:03] Found user for username: dr_ahmed, user ID: 28, password: 1234
+[2025-04-28 18:07:03] Using plaintext password comparison for dr_ahmed
+[2025-04-28 18:07:03] Comparing input password '1234' with stored '1234'
+[2025-04-28 18:07:03] Upgrading to hashed password for dr_ahmed
+[2025-04-28 18:07:03] Authentication successful for dr_ahmed
+[2025-04-28 18:07:03] Authentication returned: User found
+[2025-04-28 18:07:03] Login successful for: dr_ahmed
+[2025-04-28 18:07:03] Error during login: Cannot invoke "models.Doctor.getName()" because "this.currentDoctor" is null

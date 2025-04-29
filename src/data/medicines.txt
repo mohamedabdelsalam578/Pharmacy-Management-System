@@ -1,0 +1,5 @@
+1|Paramol|20.50|100|Pain reliever|As directed|Pain Relief|false
+2|Megamox|35.75|50|Antibiotic|As directed|Antibiotics|true
+3|Lopresor|65.25|75|Blood pressure medication|As directed|Blood Pressure|true
+4|Brufen|18.50|150|Anti-inflammatory|As directed|Pain Relief|false
+5|Claritine|32.00|80|Antihistamine|As directed|Allergy|false

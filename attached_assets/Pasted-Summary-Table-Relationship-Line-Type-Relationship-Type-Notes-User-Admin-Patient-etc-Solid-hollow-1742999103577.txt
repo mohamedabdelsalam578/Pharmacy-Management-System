@@ -1,0 +1,32 @@
+Summary Table
+Relationship	Line Type	Relationship Type	Notes
+User → Admin/Patient/etc.	Solid, hollow arrow	Inheritance	"is-a" relationship
+Patient → Order	Solid, no diamond	Association	No lifecycle dependency
+Patient → Prescription	Solid, no diamond	Association	Persists independently
+Patient → Wallet	Solid, filled diamond	Composition	Wallet destroyed with Patient
+Patient → MedicalReport	Solid, no diamond	Association	Persists independently
+Patient → Consultation	Solid, no diamond	Association	Persists independently
+Doctor → Prescription	Solid, no diamond	Association	No lifecycle dependency
+Doctor → MedicalReport	Solid, no diamond	Association	Persists independently
+Doctor → Consultation	Solid, no diamond	Association	Persists independently
+Pharmacist → Pharmacy	Solid, no diamond	Association	No ownership
+Pharmacist → Prescription	Solid, no diamond	Association	No lifecycle dependency
+Pharmacy → Pharmacist	Solid, empty diamond	Aggregation	Pharmacists can exist independently
+Prescription → Patient/Doctor	Solid, no diamond	Association	No lifecycle dependency
+Prescription → Pharmacy	Solid, no diamond	Association	Nullable relationship
+Prescription → Pharmacist	Solid, no diamond	Association	Optional (0..1)
+Prescription → Medicine	Solid, no diamond	Association	Many-to-many
+Order → Patient	Solid, no diamond	Association	No lifecycle dependency
+Order → Medicine	Solid, no diamond	Association	Many-to-many
+Pharmacy → Medicine	Solid, no diamond	Association	No lifecycle dependency
+Pharmacy → Prescription	Solid, no diamond	Association	No lifecycle dependency
+Wallet → Patient	Solid, filled diamond	Composition	Part of Patient
+Wallet → Transaction	Solid, filled diamond	Composition	Transactions destroyed with Wallet
+Wallet → CreditCard	Solid, filled diamond	Composition	CreditCards destroyed with Wallet
+Medicine → Prescription/Order/Pharmacy	Solid, no diamond	Association	Many-to-many, independent existence
+Consultation → Patient/Doctor	Solid, no diamond	Association	No lifecycle dependency
+Consultation → Message	Solid, filled diamond	Composition	Messages part of Consultation
+MedicalReport → Patient/Doctor	Solid, no diamond	Association	No lifecycle dependency
+MedicalReport → Prescription	Solid, no diamond	Association	References, no ownership
+Message → Consultation	Solid, filled diamond	Composition	Part of Consultation
+All Classes → Serializable	Dashed, hollow arrow	Implementation	For persistence

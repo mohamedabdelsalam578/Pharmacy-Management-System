@@ -7,10 +7,12 @@
                 <dependency dependsOn="jnlp" target="-post-jar"/>
                 <dependency dependsOn="jnlp" target="jar"/>
             </extension>
+            <extension file="build-native.xml" id="j2sedeploy"/>
         </buildExtensions>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>PharmacyManagementSystem</name>
             <source-roots>
+                <root id="src.configs.dir"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>

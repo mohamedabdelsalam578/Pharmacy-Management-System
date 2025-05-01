@@ -34,8 +34,8 @@ public class DoctorDashboard extends BasePanel {
     public DoctorDashboard(MainFrame mainFrame) {
         super(mainFrame);
         try {
-            this.currentDoctor = (Doctor) mainFrame.getCurrentUser();
-            initializeComponents();
+        this.currentDoctor = (Doctor) mainFrame.getCurrentUser();
+        initializeComponents();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
                 "Error initializing doctor dashboard: " + e.getMessage(), 

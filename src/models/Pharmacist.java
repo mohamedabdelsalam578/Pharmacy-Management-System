@@ -92,6 +92,15 @@ public class Pharmacist extends User {
         return true;
     }
 
+    public void completePrescription(int prescriptionId) {
+        for (Prescription prescription : filledPrescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                prescription.setStatus(PrescriptionStatus.COMPLETED);
+                break;
+            }
+        }
+    }
+
     @Override
     public void displayInfo() {
         System.out.println("Pharmacist: " + getName() + " (License: " + licenseNumber + ")");

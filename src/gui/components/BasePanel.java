@@ -27,7 +27,6 @@ public abstract class BasePanel extends JPanel {
         this();
         this.mainFrame = mainFrame;
         this.service = mainFrame != null ? mainFrame.getService() : null;
-        initializeComponents();
     }
     
     protected Border createBorder() {

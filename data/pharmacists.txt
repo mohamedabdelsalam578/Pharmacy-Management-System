@@ -1,0 +1,2 @@
+10|null|tpharm|123|test@pharmacy.com|01000000000|PHR-TEST|0
+11|null|mo1|$SHA$J4e1+7N290ePR0M9rc6U1w==$c5T9uhNDCO9BmZKMWsEe5dFswzD2BGd1CogUQhm70Mk=|mo@l|011|111|111

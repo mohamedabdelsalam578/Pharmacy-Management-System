@@ -25,6 +25,8 @@ public class DoctorService {
     
     private Scanner scanner;
     
+    private int prescriptionIdCounter = 1;
+    
     /**
      * Constructor to initialize DoctorService
      * 
@@ -167,7 +169,8 @@ public class DoctorService {
         LocalDate expiryDate = issueDate.plusDays(30); // Default 30-day validity
         
         Prescription prescription = new Prescription(prescriptionId, patient.getId(), doctor.getId(), 
-                                                  issueDate, expiryDate, notes);
+                                                  issueDate, expiryDate, notes,
+                                                  PrescriptionStatus.PENDING);
         
         // Add medicines to prescription
         boolean addMoreMedicines = true;
@@ -727,47 +730,16 @@ public class DoctorService {
      * @return The newly created prescription
      */
     public Prescription createPrescription(int doctorId, int patientId, String instructions) {
-        // Find the doctor
-        Doctor doctor = doctors.stream()
-            .filter(d -> d.getId() == doctorId)
-            .findFirst()
-            .orElse(null);
-            
-        if (doctor == null) {
-            System.out.println("Doctor with ID " + doctorId + " not found.");
-            return null;
-        }
-        
-        // Find the patient
-        Patient patient = patients.stream()
-            .filter(p -> p.getId() == patientId)
-            .findFirst()
-            .orElse(null);
-            
-        if (patient == null) {
-            System.out.println("Patient with ID " + patientId + " not found.");
-            return null;
-        }
-        
-        // Create a new prescription
-        int prescriptionId = prescriptions.size() + 1;
-        LocalDate issueDate = LocalDate.now();
-        LocalDate expiryDate = issueDate.plusDays(30); // Default 30-day validity
-        
-        Prescription prescription = new Prescription(prescriptionId, patientId, doctorId, 
-                                                  issueDate, expiryDate, instructions);
-        
-        // Add prescription to the system
+        Prescription prescription = new Prescription(
+            prescriptionIdCounter++,
+            doctorId,
+            patientId,
+            LocalDate.now(),
+            LocalDate.now().plusDays(30),
+            instructions,
+            PrescriptionStatus.PENDING
+        );
         prescriptions.add(prescription);
-        
-        // Add to doctor's issued prescriptions
-        doctor.getIssuedPrescriptions().add(prescription);
-        
-        // Add to patient's prescriptions
-        patient.addPrescription(prescription);
-        
-        System.out.println("Prescription #" + prescription.getId() + " created successfully for " + patient.getName() + ".");
-        
         return prescription;
     }
     
@@ -894,5 +866,23 @@ public class DoctorService {
         doctors.add(doctor);
         System.out.println("Doctor account created successfully for: " + doctor.getName());
         return true;
+    }
+    
+    public void validatePrescription(int prescriptionId) {
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                prescription.setStatus(PrescriptionStatus.VALIDATED);
+                break;
+            }
+        }
+    }
+    
+    public void rejectPrescription(int prescriptionId) {
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                prescription.setStatus(PrescriptionStatus.REJECTED);
+                break;
+            }
+        }
     }
 }

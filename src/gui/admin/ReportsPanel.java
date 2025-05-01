@@ -38,6 +38,7 @@ public class ReportsPanel extends BasePanel {
     public ReportsPanel(MainFrame mainFrame) {
         super(mainFrame);
         setBackground(ThemeColors.BACKGROUND);
+        initializeComponents();
     }
     
     @Override

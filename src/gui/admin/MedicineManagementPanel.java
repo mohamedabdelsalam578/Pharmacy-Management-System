@@ -23,7 +23,7 @@ import java.util.List;
  * Panel for managing medicines in the pharmacy system
  */
 public class MedicineManagementPanel extends BasePanel {
-    private JTable medicineTable;
+    private gui.components.StyledTable<Object[]> medicineTable;
     private DefaultTableModel tableModel;
     private JTextField searchField;
     private StyledButton addButton;
@@ -34,6 +34,7 @@ public class MedicineManagementPanel extends BasePanel {
     public MedicineManagementPanel(MainFrame mainFrame) {
         super(mainFrame);
         setBackground(ThemeColors.BACKGROUND);
+        initializeComponents();
     }
     
     @Override
@@ -56,8 +57,32 @@ public class MedicineManagementPanel extends BasePanel {
         JPanel footerPanel = createFooterPanel();
         add(footerPanel, BorderLayout.SOUTH);
         
-        // Load medicines data
-        loadMedicinesData();
+        // Load medicines data with error handling
+        try {
+            System.out.println("MedicineManagementPanel: Attempting to load medicine data...");
+            loadMedicinesData();
+            System.out.println("MedicineManagementPanel: Medicine data loaded successfully");
+        } catch (Exception e) {
+            System.err.println("CRITICAL ERROR in MedicineManagementPanel: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error loading inventory data: " + e.getMessage() + "\n\nCheck console for details.",
+                "Initialization Error", 
+                JOptionPane.ERROR_MESSAGE);
+            
+            // Add a label with error information instead of failing silently
+            JLabel errorLabel = new JLabel("Failed to load inventory data. Error: " + e.getMessage());
+            errorLabel.setForeground(Color.RED);
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            errorLabel.setFont(ThemeFonts.BOLD_MEDIUM);
+            
+            // Clear the content panel and add the error message
+            contentPanel.removeAll();
+            contentPanel.setLayout(new BorderLayout());
+            contentPanel.add(errorLabel, BorderLayout.CENTER);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
     }
     
     private JPanel createHeaderPanel() {
@@ -128,8 +153,8 @@ public class MedicineManagementPanel extends BasePanel {
             }
         };
         
-        // Create table
-        medicineTable = new JTable(tableModel);
+        // Create table using StyledTable for consistent theming
+        medicineTable = new gui.components.StyledTable<>(tableModel);
         medicineTable.setFont(ThemeFonts.REGULAR_MEDIUM);
         medicineTable.setRowHeight(30);
         medicineTable.setShowGrid(true);
@@ -200,8 +225,36 @@ public class MedicineManagementPanel extends BasePanel {
         
         // Get medicines from pharmacy service
         PharmacyService service = mainFrame.getPharmacyService();
-        if (service != null) {
+        if (service == null) {
+            System.err.println("ERROR: PharmacyService is null in MedicineManagementPanel!");
+            JOptionPane.showMessageDialog(this, 
+                "Cannot load medicines: Service is unavailable", 
+                "Service Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            System.out.println("Checking medicine data availability");
             List<Medicine> medicines = service.getMedicines();
+            
+            if (medicines == null) {
+                System.err.println("Medicine list is null, attempting to initialize service");
+                service.initialize();
+                medicines = service.getMedicines();
+                
+                if (medicines == null) {
+                    System.err.println("Failed to initialize medicine data");
+                    throw new Exception("Medicine data could not be initialized");
+                }
+                
+                System.out.println("Medicine data initialized with " + medicines.size() + " items");
+                // Save to ensure data persists
+                service.saveDataToFiles();
+            }
+            
+            System.out.println("Loading " + medicines.size() + " medicines into table");
+            
             for (Medicine medicine : medicines) {
                 Object[] row = {
                     medicine.getId(),
@@ -213,10 +266,17 @@ public class MedicineManagementPanel extends BasePanel {
                 };
                 tableModel.addRow(row);
             }
+            
+            System.out.println("Successfully loaded " + tableModel.getRowCount() + " medicine rows");
+            
+        } catch (Exception e) {
+            System.err.println("Error loading medicine data: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load medicine data: " + e.getMessage(), e);
         }
     }
     
-    private void searchMedicines(String query) {
+    protected void searchMedicines(String query) {
         // Clear existing data
         tableModel.setRowCount(0);
         

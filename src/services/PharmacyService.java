@@ -115,6 +115,7 @@ public class PharmacyService {
         patients = FileHandler.loadPatients();
         doctors = FileHandler.loadDoctors();
         medicines = FileHandler.loadMedicines();
+        pharmacists = FileHandler.loadPharmacists();
         
         // Orders need to be loaded after medicines since they reference medicines
         orders = FileHandler.loadOrders(medicines);
@@ -123,9 +124,11 @@ public class PharmacyService {
         for (Patient patient : patients) {
             if (patient.getCartOrder() == null) {
                 patient.setCartOrder(new Order(0, patient.getId()));
-                System.out.println("Initialized missing cart for patient: " + patient.getName());
             }
         }
+        
+        // Fix corrupted pharmacists data if needed
+        fixPharmacistsData();
         
         // Fix corrupted doctors data if needed
         fixDoctorsData();
@@ -135,6 +138,85 @@ public class PharmacyService {
             System.out.println("No data found in files. Initializing with sample data.");
             initialize();
             saveDataToFiles();
+        }
+    }
+    
+    /**
+     * Fix corrupted pharmacists data
+     */
+    private void fixPharmacistsData() {
+        // If pharmacists data is empty but pharmacist file exists, try to load it again
+        if (pharmacists.isEmpty()) {
+            pharmacists = FileHandler.loadPharmacists();
+            System.out.println("Reloaded pharmacists data, found " + pharmacists.size() + " records.");
+        }
+        
+        // Check for duplicate IDs
+        boolean hasDuplicates = false;
+        Set<Integer> pharmacistIds = new HashSet<>();
+        
+        for (Pharmacist pharmacist : pharmacists) {
+            if (!pharmacistIds.add(pharmacist.getId())) {
+                hasDuplicates = true;
+                break;
+            }
+        }
+        
+        if (hasDuplicates) {
+            System.out.println("Fixing duplicate pharmacist IDs...");
+            
+            // Find the highest ID currently in use
+            int maxId = pharmacists.stream()
+                .mapToInt(User::getId)
+                .max()
+                .orElse(0);
+            
+            // Create a set of used IDs to track which ones are already assigned
+            Set<Integer> usedIds = new HashSet<>();
+            
+            // Fix duplicates by assigning new IDs where needed
+            for (Pharmacist pharmacist : pharmacists) {
+                if (!usedIds.add(pharmacist.getId())) {
+                    // This ID is already used, assign a new unique ID
+                    maxId++;
+                    System.out.println("Reassigning pharmacist " + pharmacist.getName() + 
+                                     " from ID " + pharmacist.getId() + " to " + maxId);
+                    pharmacist.setId(maxId);
+                    usedIds.add(maxId);
+                }
+            }
+            
+            // Save the fixed data
+            FileHandler.savePharmacists(pharmacists);
+            System.out.println("Pharmacist IDs have been fixed and saved.");
+        }
+    }
+    
+    /**
+     * Reload pharmacist data from files
+     * This public method can be called when pharmacist login fails to ensure data is properly loaded
+     */
+    public void reloadPharmacistData() {
+        try {
+            System.out.println("Reloading pharmacist data from files...");
+            List<Pharmacist> reloadedPharmacists = FileHandler.loadPharmacists();
+            
+            // If we found data, replace the current list
+            if (reloadedPharmacists != null && !reloadedPharmacists.isEmpty()) {
+                System.out.println("Found " + reloadedPharmacists.size() + " pharmacists in data file");
+                this.pharmacists = reloadedPharmacists;
+                
+                // Reinitialize authentication service with updated pharmacist list
+                this.authService = new AuthenticationService(admins, patients, doctors, pharmacists);
+                
+                // Save the data to ensure it's properly persisted
+                FileHandler.savePharmacists(pharmacists);
+            } else {
+                System.out.println("No pharmacist data found in file");
+            }
+        } catch (Exception e) {
+            System.err.println("Error reloading pharmacist data: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -201,12 +283,17 @@ public class PharmacyService {
      * Save all data to files
      */
     public void saveDataToFiles() {
-        // Save data to files
         FileHandler.saveAdmins(admins);
         FileHandler.savePatients(patients);
         FileHandler.saveDoctors(doctors);
         FileHandler.saveMedicines(medicines);
         FileHandler.saveOrders(orders);
+        FileHandler.savePharmacists(pharmacists);
+        
+        // Save prescriptions after medicines are saved
+        if (prescriptions != null) {
+            FileHandler.savePrescriptions(prescriptions);
+        }
         
         System.out.println("All data saved to files.");
     }
@@ -1574,13 +1661,47 @@ public class PharmacyService {
      * @return true if pharmacist was added successfully
      */
     public boolean addPharmacist(Pharmacist pharmacist) {
-        // Check if username already exists
-        if (pharmacists.stream().anyMatch(p -> p.getUsername().equals(pharmacist.getUsername()))) {
+        if (pharmacist == null) {
+            System.err.println("Cannot add null pharmacist");
             return false;
         }
+        
+        // Validate pharmacist data
+        if (pharmacist.getName() == null || pharmacist.getName().trim().isEmpty() ||
+            pharmacist.getUsername() == null || pharmacist.getUsername().trim().isEmpty() ||
+            pharmacist.getPassword() == null || pharmacist.getPassword().trim().isEmpty() ||
+            pharmacist.getLicenseNumber() == null || pharmacist.getLicenseNumber().trim().isEmpty() ||
+            pharmacist.getQualification() == null || pharmacist.getQualification().trim().isEmpty()) {
+            System.err.println("Invalid pharmacist data: missing required fields");
+            return false;
+        }
+        
+        // Check for duplicate username
+        boolean usernameExists = pharmacists.stream()
+            .anyMatch(p -> p.getUsername().equals(pharmacist.getUsername()));
+        
+        if (usernameExists) {
+            System.err.println("Username already exists: " + pharmacist.getUsername());
+            return false;
+        }
+        
+        // Add the pharmacist
         pharmacists.add(pharmacist);
-        saveDataToFiles();
-        return true;
+        
+        // Save to file immediately
+        try {
+            FileHandler.savePharmacists(pharmacists);
+            System.out.println("Successfully added pharmacist: " + pharmacist.getName());
+            
+            // Reinitialize authentication service with updated pharmacist list
+            this.authService = new AuthenticationService(admins, patients, doctors, pharmacists);
+            
+            return true;
+        } catch (Exception e) {
+            System.err.println("Error saving pharmacist data: " + e.getMessage());
+            pharmacists.remove(pharmacist); // Rollback the addition
+            return false;
+        }
     }
     
     /**
@@ -1937,4 +2058,5 @@ public class PharmacyService {
                 .findFirst()
                 .orElse(null);
     }
+
 }

@@ -1,0 +1,97 @@
+Extended Pharmacy Management System Documentation
+Generated on: 2025-03-25
+
+Table of Contents
+System Overview
+Classes
+Services
+Healthcare Workflow
+Data Flow
+System Statistics
+System Overview
+The Extended Pharmacy Management System is a comprehensive healthcare application that integrates pharmacy operations with doctor-patient interactions. It follows object-oriented design principles and provides functionality for different user roles including administrators, patients, doctors, and pharmacists. The system features a complete healthcare workflow from prescription creation to medicine dispensing.
+
+Classes
+User Class Hierarchy
+Class	Description
+User	Abstract base class for all users
+Admin	System administrator with elevated privileges
+Patient	Represents patients in the healthcare system
+Doctor	Medical professionals who create prescriptions
+Pharmacist	Pharmacy staff who process prescriptions
+Healthcare Entities
+Class	Description
+Medicine	Pharmaceutical products available in the system
+Prescription	Medical orders created by doctors for patients
+Order	Patient requests for medicines
+MedicalReport	Patient health information and diagnosis
+Pharmacy	Represents physical pharmacy locations
+Consultation	Doctor-patient interaction records
+Message	Communication between healthcare providers
+Services
+Service	Description
+AdminService	Handles admin operations and system management
+PatientService	Manages patient functionality including orders
+DoctorService	Manages doctor operations, prescriptions, and medical reports
+PharmacistService	Handles prescription processing and inventory
+UpdatedPharmacyService	Core service integrating all functionality
+Healthcare Workflow
+The system supports a complete healthcare workflow:
+
+Patient Registration: Patients create accounts or are registered by admin
+Doctor Consultation: Doctors create medical reports and prescriptions for patients
+Prescription Processing: Prescriptions are sent to pharmacies
+Pharmacist Review: Pharmacists validate and process prescriptions
+Medicine Dispensing: Pharmacists prepare and dispense medicines
+Patient Collection: Patients collect their medicines from pharmacy
+Pharmacy Operations
+The system supports multiple pharmacy locations, each with its own:
+
+Inventory management
+Staff (pharmacists) assignments
+Prescription processing queue
+Contact information and location details
+Data Flow
+Doctor ──────────────> Prescription ──────────────> Pharmacist
+  │         creates          │      processes          │
+  │                          │                         │
+  ▼                          ▼                         ▼
+MedicalReport         Medicine Order             Pharmacy
+  │                          ▲                         │
+  │                          │                         │
+  └────> Patient <──────────┘           Admin <────────┘
+         consults         places       manages
+Doctor-Patient Chat System
+The pharmacy management system includes a complete doctor-patient chat functionality:
+
+Chat Features
+Consultations: Doctors can create and manage patient consultations
+Messaging: Real-time messaging between doctors and patients
+History: Complete message history with timestamps
+Patient Selection: Doctors can initiate chats with any patient
+Integration: Fully integrated with the prescription workflow
+Consultation Workflow
+Initiation: Doctor or patient creates a new consultation
+Messaging: Both parties exchange messages about health concerns
+Prescription: Doctor can create a prescription directly from the consultation
+Follow-up: Ongoing communication about treatment progress
+System Statistics
+Users: 4
+Administrators: 1
+Patients: 1
+Doctors: 1
+Pharmacists: 1
+Pharmacies: 1
+Medicines: 5
+Orders: 0
+Prescriptions: 1
+Consultations: 1
+System Features
+User authentication and role-based access control
+Prescription management with digital validation
+Inventory tracking with automatic updates
+Medical record keeping with patient history
+Multi-pharmacy support with location management
+Order processing with prescription validation
+Doctor-patient communication through secure chat
+Reporting capabilities for inventory and revenue

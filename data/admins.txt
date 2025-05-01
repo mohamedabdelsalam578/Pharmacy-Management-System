@@ -1,0 +1,2 @@
+1|null|admin|$SHA$EPvJswTj4XPs6CRtECkC8g==$lb001/3XJ2h6l9mKX64TWOciwaZwubU5mGdHEN51yio=|mohamed@elta3ban.com|01012345678|ADMIN|Management
+2|null|fatma_admin|password|fatma@elta3ban.com|01112345678|ADMIN|Management

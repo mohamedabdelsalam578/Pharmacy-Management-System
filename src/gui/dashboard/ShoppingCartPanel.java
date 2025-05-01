@@ -30,7 +30,8 @@ public class ShoppingCartPanel extends BasePanel {
 
     public ShoppingCartPanel(MainFrame mainFrame) {
         super(mainFrame);
-        // cartOrder will be set in initializeComponents based on current patient
+        // Immediately build UI so the panel is ready when added
+        initializeComponents();
     }
 
     @Override
@@ -151,7 +152,7 @@ public class ShoppingCartPanel extends BasePanel {
             return;
         }
 
-        // Persist globally
+        // Add the order to the global list and persist
         var service = mainFrame.getService();
         if (service != null) {
             if (!service.getOrders().contains(completedOrder)) {
@@ -179,7 +180,23 @@ public class ShoppingCartPanel extends BasePanel {
 
     // Public method to refresh table & total when cart changes
     public void refreshData() {
-        cartTable.setData(cartOrder.getItems());
+        if (cartOrder == null && mainFrame.getCurrentUser() instanceof Patient) {
+            cartOrder = ((Patient) mainFrame.getCurrentUser()).getCartOrder();
+        }
+        if (cartOrder != null) {
+            List<OrderItem> items = cartOrder.getItems();
+            System.out.println("Shopping cart refreshed with " + items.size() + " items");
+            cartTable.setData(items);
+        } else {
+            System.out.println("Shopping cart is empty/null");
+            cartTable.setData(new ArrayList<>());
+        }
         refreshTotal();
+        
+        // Force UI update
+        cartTable.revalidate();
+        cartTable.repaint();
+        revalidate();
+        repaint();
     }
 } 

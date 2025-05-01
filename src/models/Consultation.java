@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class Consultation {
     private String notes;
     private List<Message> messages;
     private String status;
+    private Prescription prescription;
 
     /**
      * Constructor for Consultation class
@@ -51,6 +53,7 @@ public class Consultation {
     public String getNotes() { return notes; }
     public List<Message> getMessages() { return messages; }
     public String getStatus() { return status; }
+    public Prescription getPrescription() { return prescription; }
 
     // Setters
     public void setId(int id) { this.id = id; }
@@ -60,6 +63,7 @@ public class Consultation {
     public void setNotes(String notes) { this.notes = notes; }
     public void setMessages(List<Message> messages) { this.messages = messages; }
     public void setStatus(String status) { this.status = status; }
+    public void setPrescription(Prescription prescription) { this.prescription = prescription; }
 
     /**
      * Add a message to the consultation
@@ -86,11 +90,9 @@ public class Consultation {
             doctorId,
             java.time.LocalDate.now(),
             java.time.LocalDate.now().plusMonths(1),
-            PrescriptionStatus.CREATED,
-            instructions
+            instructions,
+            PrescriptionStatus.PENDING
         );
-        
-
     }
 
     /**
@@ -105,5 +107,11 @@ public class Consultation {
         System.out.println("Status: " + status);
         System.out.println("Notes: " + notes);
         System.out.println("Messages: " + messages.size());
+    }
+
+    public void completePrescription() {
+        if (prescription != null) {
+            prescription.setStatus(PrescriptionStatus.COMPLETED);
+        }
     }
 }

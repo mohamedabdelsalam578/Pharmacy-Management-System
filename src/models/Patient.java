@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import services.PharmacyService;
 
 /**
  * Represents a patient in the pharmacy system
@@ -661,7 +660,7 @@ public class Patient extends User {
                 // For now use time-based ID to avoid conflict - should use a proper ID generator
                 // We can't directly set the ID since Order doesn't have setId
                 // Instead create a new order with a proper ID and copy items over
-                int newId = PharmacyService.getInstance().generateOrderId();
+                int newId = (int)(System.currentTimeMillis() % 100000);
                 Order newOrder = new Order(newId, getId());
                 
                 // Copy items from cart to new order

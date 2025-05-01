@@ -1,31 +1,56 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# IDE specific files
+.idea/
+.vscode/
+*.iml
+*.iws
+.settings/
+.classpath
+.project
+.factorypath
+
+# Build directories
+target/
+build/
+bin/
+dist/
+out/
 
 # NetBeans specific
 nbproject/private/
-build/
 nbbuild/
-dist/
 nbdist/
-.nb-gradle/
+nb-configuration.xml
 
-# Class files
-*.class
+# Debug files
+debug.log
 
-# Package files
-*.jar
-*.war
-*.ear
-
-# IDE files
-.idea/
-*.iml
-
-# Replit specific
-.replit
-replit.nix
-.breakpoints
-
-# Temporary assets
-attached_assets/
-
-# Data files (generated during runtime)
-data/*.txt
+# Temporary files
+*~
+*.swp
+*.swo
+.DS_Store

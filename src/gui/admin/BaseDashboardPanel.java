@@ -28,13 +28,37 @@ public abstract class BaseDashboardPanel extends BasePanel {
     protected JPanel contentPanel;
     protected JPanel statsPanel;
     protected JPanel recentActivityPanel;
+    protected boolean componentsInitialized = false;
     
     public BaseDashboardPanel(MainFrame mainFrame) {
         super(mainFrame);
         setBackground(ThemeColors.BACKGROUND);
         setLayout(new BorderLayout(15, 15));
         setBorder(new EmptyBorder(20, 20, 20, 20));
-        initializeDashboard();
+        
+        try {
+            // Initialize components first with proper exception handling
+            initializeComponents();
+            componentsInitialized = true;
+            
+            // Then initialize dashboard
+            initializeDashboard();
+        } catch (Exception e) {
+            System.err.println("Error initializing dashboard: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Create a simple error panel to display instead of crashing
+            JPanel errorPanel = new JPanel(new BorderLayout());
+            errorPanel.setBackground(ThemeColors.BACKGROUND);
+            
+            JLabel errorLabel = new JLabel("Error initializing dashboard. Please try again.");
+            errorLabel.setForeground(Color.RED);
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            errorLabel.setFont(ThemeFonts.BOLD_LARGE);
+            
+            errorPanel.add(errorLabel, BorderLayout.CENTER);
+            add(errorPanel, BorderLayout.CENTER);
+        }
     }
     
     /**
@@ -55,14 +79,44 @@ public abstract class BaseDashboardPanel extends BasePanel {
         // Create recent activity panel
         createRecentActivityPanel();
         
+        // Only create role-specific panel if components are initialized
+        JPanel rolePanel = null;
+        try {
+            if (componentsInitialized) {
+                rolePanel = createRoleSpecificPanel();
+            } else {
+                rolePanel = createEmptyPanel("Dashboard components are not ready");
+            }
+        } catch (Exception e) {
+            System.err.println("Error creating role-specific panel: " + e.getMessage());
+            e.printStackTrace();
+            rolePanel = createEmptyPanel("Error creating dashboard components");
+        }
+        
         // Add panels to content
         contentPanel.add(statsPanel, BorderLayout.NORTH);
-        contentPanel.add(createRoleSpecificPanel(), BorderLayout.CENTER);
+        contentPanel.add(rolePanel, BorderLayout.CENTER);
         contentPanel.add(recentActivityPanel, BorderLayout.EAST);
         
         // Add to main layout
         add(headerPanel, BorderLayout.NORTH);
         add(contentPanel, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Create an empty panel with an error message
+     */
+    private JPanel createEmptyPanel(String message) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(ThemeColors.BACKGROUND);
+        
+        JLabel label = new JLabel(message);
+        label.setForeground(Color.RED);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setFont(ThemeFonts.BOLD_MEDIUM);
+        
+        panel.add(label, BorderLayout.CENTER);
+        return panel;
     }
     
     /**
@@ -240,7 +294,7 @@ public abstract class BaseDashboardPanel extends BasePanel {
         
         JLabel timeLabel = new JLabel(activity.getTime());
         timeLabel.setFont(ThemeFonts.ITALIC_SMALL);
-        timeLabel.setForeground(ThemeColors.TEXT_TERTIARY);
+        timeLabel.setForeground(ThemeColors.TEXT_SECONDARY);
         timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         contentPanel.add(titleLabel);

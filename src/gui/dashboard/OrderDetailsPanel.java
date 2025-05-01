@@ -6,20 +6,29 @@ import gui.components.StyledButton;
 import gui.theme.ThemeColors;
 import gui.theme.ThemeFonts;
 import gui.theme.ThemeIcons;
+import gui.theme.ThemeSizes;
 import models.Order;
 import models.OrderItem;
+import models.Patient;
+import models.User;
 import models.Medicine;
+import services.PharmacyService;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class OrderDetailsPanel extends BasePanel {
-    private final Order order;
-    private JPanel mainContent;
+    private Order order;
+    private JLabel statusLabel;
+    private DefaultTableModel tableModel;
+    private JTable itemsTable;
 
     public OrderDetailsPanel(MainFrame mainFrame, Order order) {
         super(mainFrame);
@@ -29,45 +38,58 @@ public class OrderDetailsPanel extends BasePanel {
 
     @Override
     protected void initializeComponents() {
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout());
         setBorder(new EmptyBorder(20, 20, 20, 20));
+        setBackground(ThemeColors.BACKGROUND);
 
-        // Header
+        // Create header
         JPanel headerPanel = createHeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
 
-        // Main content
-        mainContent = new JPanel(new BorderLayout(10, 10));
-        mainContent.setBackground(ThemeColors.SURFACE);
-        mainContent.setBorder(new CompoundBorder(
-            new LineBorder(ThemeColors.BORDER, 1),
-            new EmptyBorder(15, 15, 15, 15)
-        ));
+        // Create content
+        JPanel contentPanel = createContentPanel();
+        add(contentPanel, BorderLayout.CENTER);
 
-        // Order details
-        JPanel detailsPanel = createDetailsPanel();
-        mainContent.add(detailsPanel, BorderLayout.CENTER);
-
-        add(mainContent, BorderLayout.CENTER);
-
-        // Bottom buttons
-        JPanel buttonsPanel = createButtonsPanel();
-        add(buttonsPanel, BorderLayout.SOUTH);
+        // Create footer
+        JPanel footerPanel = createFooterPanel();
+        add(footerPanel, BorderLayout.SOUTH);
+        
+        // Load order details
+        loadOrderDetails();
     }
 
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(ThemeColors.SURFACE);
+        panel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        
+        // Order title
+        JLabel titleLabel = new JLabel("Order Details #" + order.getId());
+        titleLabel.setFont(ThemeFonts.BOLD_TITLE);
+        titleLabel.setForeground(ThemeColors.PRIMARY);
+        
+        // Status label
+        statusLabel = new JLabel("Status: " + order.getStatus().getDisplayName());
+        statusLabel.setFont(ThemeFonts.BOLD_MEDIUM);
+        statusLabel.setForeground(ThemeColors.TEXT_PRIMARY);
+        
+        panel.add(titleLabel, BorderLayout.WEST);
+        panel.add(statusLabel, BorderLayout.EAST);
+        
+        return panel;
+    }
+
+    private JPanel createContentPanel() {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBackground(ThemeColors.SURFACE);
         panel.setBorder(new CompoundBorder(
             new LineBorder(ThemeColors.BORDER, 1),
             new EmptyBorder(15, 15, 15, 15)
         ));
 
-        JLabel titleLabel = new JLabel("Order Details");
-        titleLabel.setFont(ThemeFonts.BOLD_XXLARGE);
-        titleLabel.setForeground(ThemeColors.PRIMARY);
-        titleLabel.setIcon(ThemeIcons.ORDER);
-        panel.add(titleLabel, BorderLayout.WEST);
+        // Order details
+        JPanel detailsPanel = createDetailsPanel();
+        panel.add(detailsPanel, BorderLayout.CENTER);
 
         return panel;
     }
@@ -82,7 +104,7 @@ public class OrderDetailsPanel extends BasePanel {
         // Basic information
         addDetailRow(panel, gbc, 0, "Order ID:", String.valueOf(order.getId()));
         addDetailRow(panel, gbc, 1, "Order Date:", order.getOrderDate().toString());
-        addDetailRow(panel, gbc, 2, "Status:", order.getStatus());
+        addDetailRow(panel, gbc, 2, "Status:", order.getStatus().getDisplayName());
         addDetailRow(panel, gbc, 3, "Total Amount:", String.format("L.E %.2f", order.calculateTotal()));
 
         // Order items table
@@ -134,7 +156,7 @@ public class OrderDetailsPanel extends BasePanel {
             data[i][3] = String.format("L.E %.2f", item.getQuantity() * item.getUnitPrice());
         }
 
-        JTable table = new JTable(data, columns);
+        gui.components.StyledTable<Object> table = new gui.components.StyledTable<>(new javax.swing.table.DefaultTableModel(data, columns));
         table.setFillsViewportHeight(true);
         table.setBackground(ThemeColors.BACKGROUND);
         table.getTableHeader().setBackground(ThemeColors.SURFACE);
@@ -155,7 +177,7 @@ public class OrderDetailsPanel extends BasePanel {
         return scrollPane;
     }
 
-    private JPanel createButtonsPanel() {
+    private JPanel createFooterPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel.setBackground(ThemeColors.SURFACE);
         panel.setBorder(new CompoundBorder(
@@ -190,9 +212,15 @@ public class OrderDetailsPanel extends BasePanel {
                 .orElse(null);
             
             if (medicine != null) {
-                mainFrame.getCurrentUser().getCartOrder().addItem(medicine, item.getQuantity());
+                // Create a new order if needed
+                Order newOrder = new Order(order.getId() + 1, mainFrame.getCurrentUser().getId());
+                newOrder.addMedicine(medicine, item.getQuantity());
+                
                 message.append("- ").append(medicine.getName())
                        .append(" (Qty: ").append(item.getQuantity()).append(")\n");
+                
+                // Add the order to the service's orders list
+                mainFrame.getService().getOrders().add(newOrder);
             }
         }
 
@@ -200,5 +228,24 @@ public class OrderDetailsPanel extends BasePanel {
             message.toString(),
             "Added to Cart",
             JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void loadOrderDetails() {
+        if (order != null) {
+            // Update status label
+            statusLabel.setText("Status: " + order.getStatus().getDisplayName());
+            
+            // Update table model with order items
+            tableModel.setRowCount(0);
+            for (OrderItem item : order.getItems()) {
+                Object[] row = {
+                    item.getMedicineName(),
+                    item.getQuantity(),
+                    String.format("%.2f", item.getUnitPrice()),
+                    String.format("%.2f", item.getTotalPrice())
+                };
+                tableModel.addRow(row);
+            }
+        }
     }
 } 

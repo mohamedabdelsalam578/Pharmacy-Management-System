@@ -1,0 +1,82 @@
+Here's a detailed description of the class relationships and their cardinality for your Pharmacy Management System class diagram:
+
+## User Hierarchy Relationships
+
+- **User (Abstract Parent Class)**:
+    - **Admin (1:1)**: An Admin is a User
+    - **Patient (1:1)**: A Patient is a User
+    - **Doctor (1:1)**: A Doctor is a User
+    - **Pharmacist (1:1)**: A Pharmacist is a User
+
+## Patient Relationships
+
+- **Patient (1:n) → Order**: A Patient can have multiple Orders (0 or more)
+- **Patient (1:n) → Prescription**: A Patient can have multiple Prescriptions (0 or more)
+- **Patient (1:1) → Wallet**: A Patient has exactly one Wallet
+- **Patient (1:n) → MedicalReport**: A Patient can have multiple Medical Reports (0 or more)
+- **Patient (1:n) → Consultation**: A Patient can have multiple Consultations (0 or more)
+
+## Doctor Relationships
+
+- **Doctor (1:n) → Prescription**: A Doctor can issue multiple Prescriptions (0 or more)
+- **Doctor (1:n) → MedicalReport**: A Doctor can create multiple Medical Reports (0 or more)
+- **Doctor (1:n) → Consultation**: A Doctor can have multiple Consultations (0 or more)
+- **Doctor (1:1) → Specialization (attribute)**: A Doctor has one specialization
+
+## Pharmacist Relationships
+
+- **Pharmacist (1:1) → Pharmacy**: A Pharmacist works at one Pharmacy
+- **Pharmacist (1:n) → Prescription**: A Pharmacist can fill multiple Prescriptions (0 or more)
+- **Pharmacist (n:1) ← Pharmacy**: Multiple Pharmacists can work at one Pharmacy
+
+## Prescription Relationships
+
+- **Prescription (n:1) ← Patient**: A Prescription belongs to one Patient
+- **Prescription (n:1) ← Doctor**: A Prescription is issued by one Doctor
+- **Prescription (n:1) → Pharmacy**: A Prescription is sent to one Pharmacy (can be null)
+- **Prescription (n:0..1) → Pharmacist**: A Prescription may be filled by one Pharmacist (or none)
+- **Prescription (n:m) → Medicine**: A Prescription can contain multiple Medicines (1 or more)
+
+## Order Relationships
+
+- **Order (n:1) ← Patient**: An Order is placed by one Patient
+- **Order (n:m) → Medicine**: An Order can contain multiple Medicines (1 or more)
+
+## Pharmacy Relationships
+
+- **Pharmacy (1:n) → Pharmacist**: A Pharmacy employs multiple Pharmacists (1 or more)
+- **Pharmacy (1:n) → Medicine**: A Pharmacy stocks multiple Medicines (0 or more)
+- **Pharmacy (1:n) → Prescription**: A Pharmacy can receive multiple Prescriptions (0 or more)
+
+## Wallet Relationships
+
+- **Wallet (1:1) ← Patient**: A Wallet belongs to one Patient
+- **Wallet (1:n) → Transaction**: A Wallet has multiple Transactions (0 or more)
+- **Wallet (1:n) → CreditCard**: A Wallet can store multiple CreditCards (0 or more)
+
+## Medicine Relationships
+
+- **Medicine (n:m) ← Prescription**: A Medicine can be in multiple Prescriptions (0 or more)
+- **Medicine (n:m) ← Order**: A Medicine can be in multiple Orders (0 or more)
+- **Medicine (n:m) ← Pharmacy**: A Medicine can be stocked in multiple Pharmacies (0 or more)
+
+## Consultation Relationships
+
+- **Consultation (n:1) ← Patient**: A Consultation involves one Patient
+- **Consultation (n:1) ← Doctor**: A Consultation involves one Doctor
+- **Consultation (1:n) → Message**: A Consultation contains multiple Messages (0 or more)
+
+## Additional Relationships
+
+- **MedicalReport (n:1) ← Patient**: A Medical Report belongs to one Patient
+- **MedicalReport (n:1) ← Doctor**: A Medical Report is created by one Doctor
+- **MedicalReport (1:n) → Prescription**: A Medical Report can reference multiple Prescriptions (0 or more)
+- **Message (n:1) ← Consultation**: A Message belongs to one Consultation
+
+## Interface Implementations
+
+- **Serializable**: Implemented by all model classes for data persistence
+
+---
+
+This comprehensive relationship map covers all the connections between classes in your Pharmacy Management System with proper cardinality notation for your class diagram.

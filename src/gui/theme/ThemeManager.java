@@ -13,6 +13,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 import java.util.Map;
@@ -556,5 +557,294 @@ public class ThemeManager {
         public Color getSurfaceColor() {
             return surfaceColor;
         }
+    }
+    
+    /* Modern UI Enhancements for Standard Swing Components */
+    
+    /**
+     * Applies modern styling to JOptionPane dialogs
+     * Should be called once at application startup
+     */
+    public static void modernizeOptionPanes() {
+        // Set default styling for option panes
+        UIManager.put("OptionPane.background", ThemeColors.SURFACE);
+        UIManager.put("OptionPane.messageForeground", ThemeColors.TEXT_PRIMARY);
+        UIManager.put("OptionPane.messageFont", ThemeFonts.REGULAR_MEDIUM);
+        UIManager.put("OptionPane.buttonFont", ThemeFonts.REGULAR_MEDIUM);
+        UIManager.put("OptionPane.titleFont", ThemeFonts.BOLD_MEDIUM);
+        
+        // Style the option pane buttons
+        UIManager.put("OptionPane.buttonPadding", 8);
+        UIManager.put("OptionPane.sameSizeButtons", true);
+        
+        // Set custom button styling
+        UIManager.put("OptionPane.okButtonText", "OK");
+        UIManager.put("OptionPane.cancelButtonText", "Cancel");
+        UIManager.put("OptionPane.yesButtonText", "Yes");
+        UIManager.put("OptionPane.noButtonText", "No");
+        
+        // Add more padding to message area
+        UIManager.put("OptionPane.messageAreaBorder", new EmptyBorder(16, 16, 16, 16));
+        UIManager.put("OptionPane.buttonAreaBorder", new EmptyBorder(0, 16, 16, 16));
+    }
+    
+    /**
+     * Applies enhanced styling to JTables
+     * Should be called once at application startup
+     */
+    public static void modernizeTables() {
+        // Table header styling
+        UIManager.put("TableHeader.font", ThemeFonts.BOLD_MEDIUM);
+        UIManager.put("TableHeader.background", ThemeColors.SURFACE_VARIANT);
+        UIManager.put("TableHeader.foreground", ThemeColors.TEXT_PRIMARY);
+        UIManager.put("TableHeader.cellBorder", BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 1, ThemeColors.BORDER),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
+        
+        // Table cell styling
+        UIManager.put("Table.font", ThemeFonts.REGULAR_MEDIUM);
+        UIManager.put("Table.background", ThemeColors.SURFACE);
+        UIManager.put("Table.foreground", ThemeColors.TEXT_PRIMARY);
+        UIManager.put("Table.selectionBackground", ThemeColors.PRIMARY_LIGHT);
+        UIManager.put("Table.selectionForeground", ThemeColors.TEXT_PRIMARY);
+        UIManager.put("Table.focusCellHighlightBorder", BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        UIManager.put("Table.gridColor", ThemeColors.BORDER_LIGHT);
+        
+        // Table row heights
+        UIManager.put("Table.rowHeight", 32); // Increased row height for better readability
+    }
+    
+    /**
+     * Applies modern styling to JFileChooser
+     * Should be called once at application startup
+     */
+    public static void modernizeFileChoosers() {
+        // Basic colors
+        UIManager.put("FileChooser.background", ThemeColors.SURFACE);
+        UIManager.put("FileChooser.foreground", ThemeColors.TEXT_PRIMARY);
+        
+        // Font settings
+        UIManager.put("FileChooser.font", ThemeFonts.REGULAR_MEDIUM);
+        UIManager.put("FileChooser.listFont", ThemeFonts.REGULAR_MEDIUM);
+        
+        // Button styling - ensure buttons have proper contrasting colors
+        UIManager.put("FileChooser.cancelButtonText", "Cancel");
+        UIManager.put("FileChooser.okButtonText", "OK");
+        UIManager.put("FileChooser.saveButtonText", "Save");
+        UIManager.put("FileChooser.openButtonText", "Open");
+        
+        // Ensure cancel button has good contrast
+        Color darkGray = new Color(80, 80, 80);
+        UIManager.put("FileChooser.cancelButtonBackground", darkGray);
+        UIManager.put("FileChooser.cancelButtonForeground", Color.WHITE);
+        
+        // Make sure buttons are opaque to show background color
+        UIManager.put("FileChooser.buttonOpaque", Boolean.TRUE);
+        
+        // Icon customization (maintain consistency with application icons)
+        UIManager.put("FileChooser.homeFolderIcon", ThemeIcons.HOME);
+        UIManager.put("FileChooser.upFolderIcon", ThemeIcons.BACK);
+        UIManager.put("FileChooser.newFolderIcon", ThemeIcons.ADD);
+        UIManager.put("FileChooser.detailsViewIcon", ThemeIcons.VIEW);
+        UIManager.put("FileChooser.listViewIcon", ThemeIcons.LIST);
+        
+        // Layout adjustments
+        UIManager.put("FileChooser.listViewBorder", BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        UIManager.put("FileChooser.detailsViewBorder", BorderFactory.createEmptyBorder(8, 8, 8, 8));
+    }
+    
+    /**
+     * Creates and returns a modern option pane with custom styling
+     * 
+     * @param message The message to display
+     * @param title The dialog title
+     * @param messageType The type of message (JOptionPane constants)
+     * @param optionType The type of options (JOptionPane constants)
+     * @param icon The icon to display
+     * @return The styled JOptionPane
+     */
+    public static JOptionPane createStyledOptionPane(
+            Object message, 
+            String title, 
+            int messageType, 
+            int optionType, 
+            Icon icon) {
+            
+        JOptionPane pane = new JOptionPane(message, messageType, optionType, icon);
+        pane.setBackground(ThemeColors.SURFACE);
+        
+        // Style the message component
+        if (message instanceof Component) {
+            ((Component) message).setFont(ThemeFonts.REGULAR_MEDIUM);
+            ((Component) message).setForeground(ThemeColors.TEXT_PRIMARY);
+        } else if (message instanceof String) {
+            JLabel label = new JLabel((String) message);
+            label.setFont(ThemeFonts.REGULAR_MEDIUM);
+            label.setForeground(ThemeColors.TEXT_PRIMARY);
+            pane.setMessage(label);
+        }
+        
+        // Apply button styling
+        JButton[] buttons = getOptionPaneButtons(pane);
+        if (buttons != null) {
+            for (JButton button : buttons) {
+                styleButton(button);
+            }
+        }
+        
+        return pane;
+    }
+    
+    /**
+     * Get the buttons from a JOptionPane
+     * 
+     * @param pane The option pane
+     * @return Array of buttons or null if not found
+     */
+    private static JButton[] getOptionPaneButtons(JOptionPane pane) {
+        Component[] components = pane.getComponents();
+        for (Component component : components) {
+            if (component instanceof JPanel) {
+                Component[] subComponents = ((JPanel) component).getComponents();
+                for (Component subComponent : subComponents) {
+                    if (subComponent instanceof JPanel) {
+                        Component[] possibleButtons = ((JPanel) subComponent).getComponents();
+                        if (possibleButtons.length > 0 && possibleButtons[0] instanceof JButton) {
+                            JButton[] buttons = new JButton[possibleButtons.length];
+                            for (int i = 0; i < possibleButtons.length; i++) {
+                                buttons[i] = (JButton) possibleButtons[i];
+                            }
+                            return buttons;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Style a button with modern appearance
+     * 
+     * @param button The button to style
+     */
+    private static void styleButton(JButton button) {
+        button.setFont(ThemeFonts.REGULAR_MEDIUM);
+        
+        // Default styling - dark background with white text
+        button.setForeground(Color.WHITE);
+        button.setBackground(ThemeColors.PRIMARY);
+        
+        // Make sure button is opaque to show background
+        button.setOpaque(true);
+        button.setContentAreaFilled(true);
+        
+        button.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY_DARK, 1),
+            BorderFactory.createEmptyBorder(8, 16, 8, 16)
+        ));
+        button.setFocusPainted(false);
+        
+        // Add hover effects
+        MouseAdapter hoverListener = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(ThemeColors.PRIMARY_HOVER);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(ThemeColors.PRIMARY);
+            }
+        };
+        
+        // Remove existing mouse listeners to avoid duplicates
+        for (MouseListener listener : button.getMouseListeners()) {
+            if (listener instanceof MouseAdapter) {
+                button.removeMouseListener(listener);
+            }
+        }
+        
+        button.addMouseListener(hoverListener);
+        
+        // Style specific buttons
+        String text = button.getText();
+        if (text != null) {
+            if (text.equals("Cancel") || text.equals("No")) {
+                button.setBackground(ThemeColors.SECONDARY);
+                button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(ThemeColors.SECONDARY_DARK, 1),
+                    BorderFactory.createEmptyBorder(8, 16, 8, 16)
+                ));
+                
+                // Update hover colors
+                MouseAdapter secondaryHoverListener = new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        button.setBackground(ThemeColors.SECONDARY_DARK);
+                    }
+                    
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        button.setBackground(ThemeColors.SECONDARY);
+                    }
+                };
+                
+                // Replace the listener
+                button.removeMouseListener(hoverListener);
+                button.addMouseListener(secondaryHoverListener);
+            }
+        }
+    }
+    
+    /**
+     * Initialize all modern UI styling
+     * Call this once at application startup
+     */
+    public static void initializeModernUI() {
+        // Apply standard button styling for all option panes
+        UIManager.put("Button.background", ThemeColors.PRIMARY);
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Button.focus", ThemeColors.PRIMARY_DARK);
+        UIManager.put("Button.select", ThemeColors.PRIMARY_HOVER);
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY_DARK, 1),
+            BorderFactory.createEmptyBorder(8, 16, 8, 16)
+        ));
+        
+        // Make sure button UI uses our colors
+        UIManager.put("Button.defaultButtonFollowsFocus", Boolean.FALSE);
+        UIManager.put("Button.disabledText", ThemeColors.TEXT_DISABLED);
+        UIManager.put("Button.disabledBackground", ThemeColors.DISABLED);
+        
+        // Dialog and OptionPane styling
+        UIManager.put("OptionPane.buttonOpaque", Boolean.TRUE);
+        UIManager.put("OptionPane.buttonBorder", BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY_DARK, 1),
+            BorderFactory.createEmptyBorder(8, 16, 8, 16)
+        ));
+        
+        // File chooser specific styling
+        UIManager.put("FileChooser.cancelButtonText", "Cancel");
+        UIManager.put("FileChooser.cancelButtonToolTipText", "Cancel file selection");
+        // Dark gray background for cancel buttons
+        Color cancelButtonBackground = new Color(80, 80, 80);
+        UIManager.put("FileChooser.cancelButtonBackground", cancelButtonBackground);
+        UIManager.put("FileChooser.cancelButtonForeground", Color.WHITE);
+        
+        // Override JOptionPane cancel button coloring 
+        UIManager.put("OptionPane.cancelButtonBackground", new Color(80, 80, 80));
+        UIManager.put("OptionPane.cancelButtonForeground", Color.WHITE);
+        
+        // General styling for all dialogs
+        UIManager.put("Panel.background", ThemeColors.SURFACE);
+        UIManager.put("OptionPane.background", ThemeColors.SURFACE);
+        UIManager.put("OptionPane.foreground", ThemeColors.TEXT_PRIMARY);
+        
+        // Apply all the modernized UI components
+        modernizeOptionPanes();
+        modernizeTables();
+        modernizeFileChoosers();
     }
 } 

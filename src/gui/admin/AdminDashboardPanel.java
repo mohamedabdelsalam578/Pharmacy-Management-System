@@ -111,7 +111,8 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             ThemeIcons.PROFILE
         );
         userManagementBtn.addActionListener(e -> {
-            mainFrame.navigateTo("USER_MANAGEMENT");
+            System.out.println("AdminDashboardPanel: User Management button clicked, navigating to USERS");
+            mainFrame.navigateTo("USERS");
         });
         
         ActionButton inventoryManagementBtn = new ActionButton(
@@ -120,7 +121,8 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             ThemeIcons.MEDICINE
         );
         inventoryManagementBtn.addActionListener(e -> {
-            mainFrame.navigateTo("INVENTORY_MANAGEMENT");
+            System.out.println("AdminDashboardPanel: Inventory Management button clicked, navigating to MEDICINES");
+            mainFrame.navigateTo("MEDICINES");
         });
         
         ActionButton reportsBtn = new ActionButton(
@@ -129,6 +131,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             ThemeIcons.REPORT
         );
         reportsBtn.addActionListener(e -> {
+            System.out.println("AdminDashboardPanel: Reports button clicked, navigating to REPORTS");
             mainFrame.navigateTo("REPORTS");
         });
         
@@ -255,9 +258,8 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
                     
                     if (orderDate.getMonth() == now.getMonth() && 
                         orderDate.getYear() == now.getYear() &&
-                        (order.getStatus().toString().equals("COMPLETED") || 
-                         order.getStatus().toString().equals("PAID") ||
-                         order.getStatus().toString().equals("DELIVERED"))) {
+                        (order.getStatus() == Order.Status.COMPLETED || 
+                         order.getStatus() == Order.Status.DELIVERED)) {
                         
                         for (OrderItem item : order.getItems()) {
                             monthlyRevenue += item.getTotalPrice();
@@ -326,7 +328,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             
             // Calculate revenue by iterating through all orders and their items
             for (Order order : orders) {
-                if (order.getStatus().toString().equals("COMPLETED") || order.getStatus().toString().equals("PAID")) {
+                if (order.getStatus() == Order.Status.COMPLETED || order.getStatus() == Order.Status.DELIVERED) {
                     for (OrderItem item : order.getItems()) {
                         double itemTotal = item.getTotalPrice();
                         totalRevenue += itemTotal;
@@ -390,11 +392,11 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
                         count++;
                         
                         // Track counts by status
-                        String status = order.getStatus().toString();
+                        String status = order.getStatus().getDisplayName();
                         orderStatusCounts.put(status, orderStatusCounts.getOrDefault(status, 0) + 1);
                         
                         // Calculate revenue for COMPLETED and PAID orders
-                        if ("COMPLETED".equals(status) || "PAID".equals(status)) {
+                        if (order.getStatus() == Order.Status.COMPLETED || order.getStatus() == Order.Status.DELIVERED) {
                             for (OrderItem item : order.getItems()) {
                                 monthlyRevenue += item.getTotalPrice();
                             }
@@ -460,7 +462,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
                 LocalDateTime orderDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
                 
                 if (orderDate.toLocalDate().equals(yesterday.toLocalDate()) && 
-                    (order.getStatus().equals("COMPLETED") || order.getStatus().equals("PAID"))) {
+                    (order.getStatus() == Order.Status.COMPLETED || order.getStatus() == Order.Status.DELIVERED)) {
                     for (OrderItem item : order.getItems()) {
                         yesterdayRevenue += item.getTotalPrice();
                     }
@@ -477,7 +479,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
                 LocalDateTime orderDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
                 
                 if (orderDate.isAfter(weekStart) && 
-                    (order.getStatus().equals("COMPLETED") || order.getStatus().equals("PAID"))) {
+                    (order.getStatus() == Order.Status.COMPLETED || order.getStatus() == Order.Status.DELIVERED)) {
                     for (OrderItem item : order.getItems()) {
                         weeklyRevenue += item.getTotalPrice();
                     }
@@ -488,7 +490,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             // Calculate profit estimation (assuming 30% profit margin)
             double estimatedProfit = 0.0;
             for (Order order : orders) {
-                if (order.getStatus().equals("COMPLETED") || order.getStatus().equals("PAID")) {
+                if (order.getStatus() == Order.Status.COMPLETED || order.getStatus() == Order.Status.DELIVERED) {
                     double orderTotal = 0.0;
                     for (OrderItem item : order.getItems()) {
                         orderTotal += item.getTotalPrice();
@@ -581,7 +583,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             Map<String, Double> medicineRevenue = new HashMap<>();
             
             for (Order order : service.getOrders()) {
-                if (order.getStatus().equals("COMPLETED") || order.getStatus().equals("PAID")) {
+                if (order.getStatus() == Order.Status.COMPLETED || order.getStatus() == Order.Status.DELIVERED) {
                     for (OrderItem item : order.getItems()) {
                         String medicineName = item.getMedicineName();
                         int quantity = item.getQuantity();

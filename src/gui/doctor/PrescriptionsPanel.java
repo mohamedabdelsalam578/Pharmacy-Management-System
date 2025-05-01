@@ -10,6 +10,7 @@ import models.Doctor;
 import models.Medicine;
 import models.Patient;
 import models.Prescription;
+import models.PrescriptionStatus;
 import services.PharmacyService;
 
 import javax.swing.*;
@@ -552,9 +553,15 @@ public class PrescriptionsPanel extends BasePanel {
         }
         
         if (selectedPrescription != null) {
-            String[] statuses = {"Created", "Active", "Filled", "Completed", "Expired", "Canceled"};
+            String[] statuses = {
+                PrescriptionStatus.PENDING.getDisplayName(),
+                PrescriptionStatus.VALIDATED.getDisplayName(),
+                PrescriptionStatus.REJECTED.getDisplayName(),
+                PrescriptionStatus.COMPLETED.getDisplayName(),
+                PrescriptionStatus.CANCELLED.getDisplayName()
+            };
             JComboBox<String> statusComboBox = new JComboBox<>(statuses);
-            statusComboBox.setSelectedItem(selectedPrescription.getStatus());
+            statusComboBox.setSelectedItem(selectedPrescription.getStatus().getDisplayName());
             
             int result = JOptionPane.showConfirmDialog(
                     this,
@@ -565,7 +572,8 @@ public class PrescriptionsPanel extends BasePanel {
             );
             
             if (result == JOptionPane.OK_OPTION) {
-                String newStatus = (String) statusComboBox.getSelectedItem();
+                String newStatusStr = (String) statusComboBox.getSelectedItem();
+                PrescriptionStatus newStatus = PrescriptionStatus.fromString(newStatusStr);
                 selectedPrescription.setStatus(newStatus);
                 
                 // Save the updated prescription to ensure changes are persisted
@@ -605,6 +613,21 @@ public class PrescriptionsPanel extends BasePanel {
 
         if (selectedPrescription != null) {
             addMedicationsToPrescription(selectedPrescription);
+        }
+    }
+
+    private void updatePrescriptionStatus(int prescriptionId, PrescriptionStatus newStatus) {
+        PharmacyService service = mainFrame.getPharmacyService();
+        if (service != null) {
+            Doctor doctor = (Doctor) mainFrame.getCurrentUser();
+            if (doctor != null) {
+                if (newStatus == PrescriptionStatus.VALIDATED) {
+                    doctor.validatePrescription(prescriptionId);
+                } else if (newStatus == PrescriptionStatus.REJECTED) {
+                    doctor.rejectPrescription(prescriptionId);
+                }
+                loadPrescriptionData();
+            }
         }
     }
 } 

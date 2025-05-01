@@ -1,0 +1,120 @@
+# Methods and Collections Used in Pharmacy Management System
+
+Here's a comprehensive table of Java methods and collections used throughout the codebase for your team:
+
+## Java Collections
+
+| Collection | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `ArrayList<T>` | Resizable array implementation of List interface | User classes, Service classes | Storing lists of objects (medicines, orders, prescriptions, users) |
+| `List<T>` | Interface for ordered collections | Most service classes | Declaring type for collections passed between methods |
+| `Map<K,V>` | Interface for key-value associations | Prescription class | Storing medicine-quantity pairs in prescriptions |
+| `HashMap<K,V>` | Hash table implementation of Map | Prescription, Pharmacy classes | Implementing medicine-quantity associations |
+| `Set<T>` | Interface for collections that don't allow duplicates | Some filtering operations | When ensuring unique items |
+
+## Stream API Methods
+
+| Method | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `stream()` | Creates a sequential stream from a collection | Service classes | Starting stream operations for filtering data |
+| `filter()` | Filters elements based on a predicate | All service classes | Finding objects by ID or other criteria |
+| `findFirst()` | Returns first element of stream (Optional) | ID-based lookups | Finding a specific object by ID |
+| `orElse(null)` | Returns the value or alternate if empty | After findFirst() | Handling case when object isn't found |
+| `forEach()` | Performs action on each element | Display methods | Iterating through collections for display |
+| `collect()` | Accumulates elements into a collection | Some filtering methods | Collecting filtered results into a new list |
+| `map()` | Transforms each element using function | Some data processing | Transforming data from one form to another |
+
+## String Methods
+
+| Method | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `isEmpty()` | Checks if string has length 0 | Input validation | Verifying user provided input |
+| `substring()` | Returns a substring | CreditCard.maskCardNumber | Extracting last 4 digits of credit card |
+| `replaceAll()` | Replaces all matches of regex | CreditCard.maskCardNumber | Removing spaces/dashes from card numbers |
+| `format()` | Returns formatted string | Display methods | Formatting currency with proper symbol (LE) |
+| `equals()` | Compares string content | Status checking | Checking prescription/order status values |
+| `toLowerCase()` | Converts to lowercase | Input validation | Case-insensitive comparisons |
+| `charAt()` | Returns char at specified index | CreditCard formatting | Building masked credit card display |
+| `toString()` | Converts object to string | Many display methods | Converting objects for display |
+| `replace()` | Replaces characters | Transaction display | Formatting datetime display |
+
+## Date/Time Methods
+
+| Method | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `LocalDate.now()` | Gets current date | Prescription creation | Setting issue date for new prescriptions |
+| `LocalDate.plusDays()` | Adds days to a date | Prescription creation | Setting expiry date from current date |
+| `LocalDateTime.now()` | Gets current date and time | Transaction recording | Recording timestamp for wallet transactions |
+| `isAfter()` | Compares if date is after another | expiry checking | Determining if medicine/prescription expired |
+| `isBefore()` | Compares if date is before another | expiry checking | Determining if medicine/prescription is valid |
+| `parse()` | Parses a string to date | Input processing | Converting string dates to LocalDate objects |
+| `format()` | Formats date to string | Display methods | Formatting dates for display |
+
+## I/O and Scanner Methods
+
+| Method | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `Scanner.nextLine()` | Reads line of input | All interactive menus | Getting user input |
+| `Integer.parseInt()` | Parses string to int | User input processing | Converting string input to numeric values |
+| `Double.parseDouble()` | Parses string to double | User input processing | Converting string input to decimal values |
+| `System.out.println()` | Prints output with newline | Throughout the application | Displaying information to user |
+| `System.out.printf()` | Formatted printing | Transaction display | Formatting tabular data |
+
+## File Handling Methods
+
+| Method | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `Files.exists()` | Checks if file exists | FileHandler.initializeFiles | Checking if data files exist |
+| `Files.createDirectories()` | Creates directories | FileHandler.initializeFiles | Creating data directory if needed |
+| `Files.createFile()` | Creates a new file | FileHandler.initializeFiles | Creating data files if needed |
+| `ObjectOutputStream.writeObject()` | Serializes object | FileHandler.saveUsers, etc. | Saving objects to files |
+| `ObjectInputStream.readObject()` | Deserializes object | FileHandler.loadUsers, etc. | Loading objects from files |
+
+## Collection Operations
+
+| Operation | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `add()` | Adds element to collection | Throughout the application | Adding new items to lists |
+| `remove()` | Removes element from collection | User interactions with lists | Removing items from collections |
+| `get()` | Gets element at specified position | Menu selection handling | Retrieving items by index |
+| `size()` | Returns number of elements | Various validation checks | Getting collection size |
+| `isEmpty()` | Checks if collection is empty | Display methods | Checking if collections have data |
+| `contains()` | Checks if collection contains element | Validation checks | Verifying item existence in collections |
+| `put()` | Associates key with value | Prescription.addMedicine | Adding medicine with quantity |
+| `keySet()` | Returns set of keys in map | Prescription.getMedicines | Getting medicines in prescription |
+| `entrySet()` | Returns set of key-value pairs | Filling prescriptions | Iterating through medicine-quantity pairs |
+| `containsKey()` | Checks if map contains key | Prescription.containsMedicine | Checking if medicine is in prescription |
+
+## Object-Oriented Programming Features
+
+| Feature | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| Inheritance | Extends class capabilities | User hierarchy | Creating specialized user types |
+| Polymorphism | Method behaving differently | displayInfo() | Different display for different objects |
+| Encapsulation | Data hiding | All model classes | Private fields with public getters/setters |
+| Abstraction | Hiding implementation details | User as abstract class | Forcing subclasses to implement methods |
+| Interface implementation | Implementing interfaces | Serializable | Enabling object serialization |
+| Inner classes | Class within another class | Wallet.Transaction | Grouping related classes |
+| Method overloading | Multiple methods with same name | Constructors | Different ways to create objects |
+| Static fields/methods | Shared across instances | Constants, utility methods | Shared functionality not tied to instances |
+
+## Exception Handling
+
+| Feature | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| `try-catch` | Handles exceptions | Input processing, file I/O | Graceful error handling |
+| `throw` | Throws an exception | Validation methods | Signaling error conditions |
+| `NumberFormatException` | Exception for number parsing | Input validation | Handling invalid numeric input |
+| `IOException` | Exception for I/O operations | File operations | Handling file read/write errors |
+| `ClassNotFoundException` | Exception for class loading | File deserialization | Handling missing class definitions |
+
+## Security Features
+
+| Feature | Description | Used In | Purpose |
+| --- | --- | --- | --- |
+| Password hashing | Converting passwords to secure form | AuthenticationService | Securely storing passwords |
+| Login attempt limiting | Restricting login attempts | AuthenticationService | Preventing brute force attacks |
+| Data masking | Hiding sensitive data | CreditCard | Masking credit card numbers |
+| Input validation | Checking input validity | Throughout application | Preventing invalid data entry |
+
+This table covers the main Java methods and collections used in the Pharmacy Management System. Let me know if you'd like more details about any specific areas.

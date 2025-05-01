@@ -194,17 +194,35 @@ public class LoginScreen extends BasePanel {
                     user = mainFrame.getService().authenticateDoctor(username, password);
                     break;
                 case "PHARMACIST":
+                    // Extra debug and validation for pharmacist login
+                    System.out.println("Attempting to log in as pharmacist: " + username);
+                    int pharmacistCount = mainFrame.getService().getPharmacists().size();
+                    System.out.println("Loaded pharmacists count: " + pharmacistCount);
+                    
+                    // Check if pharmacist data exists
+                    if (pharmacistCount == 0) {
+                        System.err.println("No pharmacists found in the system.");
+                        mainFrame.getService().reloadPharmacistData(); // Reload pharmacist data specifically
+                        pharmacistCount = mainFrame.getService().getPharmacists().size();
+                        System.out.println("After reload, pharmacist count: " + pharmacistCount);
+                    }
+                    
                     user = mainFrame.getService().authenticatePharmacist(username, password);
                     break;
             }
             
             if (user != null) {
+                // Ensure data is saved before navigating to dashboard
+                mainFrame.getService().saveDataToFiles();
+                
                 mainFrame.setCurrentUser(user);
+                mainFrame.navigateTo("DASHBOARD");  // Navigate to dashboard after successful login
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid credentials", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             // Print detailed error for debugging
+            System.err.println("Login error details:");
             e.printStackTrace();
             
             // Show detailed error to user

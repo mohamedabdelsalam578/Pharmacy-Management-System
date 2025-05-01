@@ -65,6 +65,10 @@ public class ThemeIcons {
     public static final ImageIcon REJECT = createIcon(24, 24, ThemeColors.DANGER);
     public static final ImageIcon REMOVE = createIcon(24, 24, ThemeColors.DANGER);
 
+    // File chooser and navigation icons
+    public static final ImageIcon HOME = createIcon(24, 24, ThemeColors.PRIMARY);
+    public static final ImageIcon LIST = createIcon(24, 24, ThemeColors.PRIMARY);
+
     private static ImageIcon createIcon(int width, int height, Color color) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();

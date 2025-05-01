@@ -84,7 +84,7 @@ public class PatientDashboardPanel extends BaseDashboardPanel {
             profilePanel.add(val, gbcProfile);
             idx++;
         }
-        tabbedPane.addTab("Profile", ThemeIcons.PROFILE, profilePanel);
+
 
         // Prescriptions Tab
         JPanel prescriptionsPanel = new JPanel(new BorderLayout());
@@ -194,9 +194,45 @@ public class PatientDashboardPanel extends BaseDashboardPanel {
         addToCartButton.addActionListener(e -> {
             Medicine selected = medicinesTable.getSelectedItem();
             if (selected != null) {
-                currentPatient.getCartOrder().addItem(new OrderItem(selected, 1));
-                if (cartPanel != null) cartPanel.refreshData();
-                JOptionPane.showMessageDialog(this, selected.getName() + " added to cart.");
+                // Get current patient's cart order, create if needed
+                Order cartOrder = currentPatient.getCartOrder();
+                if (cartOrder == null) {
+                    System.out.println("Creating new cart for patient");
+                    cartOrder = new Order(0, currentPatient.getId());
+                    currentPatient.setCartOrder(cartOrder);
+                }
+                
+                // Add the selected medicine
+                cartOrder.addItem(new OrderItem(selected, 1));
+                
+                // Force refresh cart panel UI
+                if (cartPanel != null) {
+                    System.out.println("Refreshing cart panel with new item: " + selected.getName());
+                    cartPanel.refreshData();
+                    
+                    // Select the cart tab to show the addition
+                    int cartTabIndex = 3; // Usually the 4th tab
+                    JTabbedPane parentTabbedPane = (JTabbedPane) cartPanel.getParent();
+                    if (parentTabbedPane != null) {
+                        parentTabbedPane.setSelectedIndex(cartTabIndex);
+                    }
+                }
+                
+                // Show success message with details
+                String message = selected.getName() + " added to cart.\n" + 
+                                "Price: L.E " + selected.getPrice() + 
+                                "\nQuantity: 1";
+                JOptionPane.showMessageDialog(this, 
+                    message,
+                    "Added to Cart",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    ThemeIcons.SUCCESS);
+            } else {
+                // User didn't select a medicine first
+                JOptionPane.showMessageDialog(this,
+                    "Please select a medicine from the list first.",
+                    "Selection Required", 
+                    JOptionPane.WARNING_MESSAGE);
             }
         });
         medicinesPanel.add(addToCartButton, BorderLayout.SOUTH);
@@ -256,6 +292,7 @@ public class PatientDashboardPanel extends BaseDashboardPanel {
         
         // Add wallet tab before cart
         tabbedPane.addTab("Wallet", walletPanel);
+        tabbedPane.addTab("Profile", ThemeIcons.PROFILE, profilePanel);
         
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(ThemeColors.BACKGROUND);
@@ -273,6 +310,16 @@ public class PatientDashboardPanel extends BaseDashboardPanel {
         // Get current patient
         Patient currentPatient = (Patient) mainFrame.getCurrentUser();
         
+        // Count completed orders
+        List<Order> allOrders = currentPatient.getOrders();
+        long completedOrdersCount = 0;
+        if (allOrders != null) {
+            completedOrdersCount = allOrders.stream()
+                .filter(order -> order.getStatus() == Order.Status.COMPLETED || 
+                                 order.getStatus() == Order.Status.DELIVERED)
+                .count();
+        }
+        
         // Create stats
         return new DashboardStat[] {
             new DashboardStat("Prescriptions", 
@@ -283,9 +330,9 @@ public class PatientDashboardPanel extends BaseDashboardPanel {
                 String.valueOf(currentPatient.getOrders().size()), 
                 ThemeIcons.ORDER, 
                 ThemeColors.SUCCESS),
-            new DashboardStat("Available Medicines", 
-                String.valueOf(mainFrame.getService().getMedicines().size()), 
-                ThemeIcons.MEDICINE, 
+            new DashboardStat("Completed Orders", 
+                String.valueOf(completedOrdersCount), 
+                ThemeIcons.COMPLETE, 
                 ThemeColors.INFO)
         };
     }

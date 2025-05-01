@@ -225,8 +225,8 @@ public class Doctor extends User {
             this.getId(),
             LocalDate.now(),
             LocalDate.now().plusMonths(1),
-            "Created",
-            instructions
+            instructions,
+            PrescriptionStatus.PENDING
         );
         
         issuedPrescriptions.add(prescription);
@@ -301,5 +301,23 @@ public class Doctor extends User {
     public String toString() {
         return String.format("Doctor [ID: %d, Name: %s, Specialization: %s, License: %s]", 
                 getId(), getName(), getSpecialization(), getLicenseNumber());
+    }
+
+    public void validatePrescription(int prescriptionId) {
+        for (Prescription prescription : issuedPrescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                prescription.setStatus(PrescriptionStatus.VALIDATED);
+                break;
+            }
+        }
+    }
+    
+    public void rejectPrescription(int prescriptionId) {
+        for (Prescription prescription : issuedPrescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                prescription.setStatus(PrescriptionStatus.REJECTED);
+                break;
+            }
+        }
     }
 }

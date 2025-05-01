@@ -71,7 +71,7 @@ public class Order {
     private int id;
     private int patientId;
     private Date orderDate;
-    private OrderStatus status;
+    private Status status;
     private List<OrderItem> items;
     private double totalAmount;
     private PaymentMethod paymentMethod;
@@ -101,7 +101,7 @@ public class Order {
         this.patientId = patientId;
         this.items = new ArrayList<>();
         this.orderDate = new Date();
-        this.status = OrderStatus.PENDING;
+        this.status = Status.PENDING;
         this.totalAmount = 0.0;
         this.paymentMethod = PaymentMethod.NOT_PAID;
         this.deliveryMethod = DeliveryMethod.PICKUP;
@@ -119,7 +119,7 @@ public class Order {
         this.id = id;
         this.patientId = patientId;
         this.items = new ArrayList<>();
-        this.status = OrderStatus.PENDING;
+        this.status = Status.PENDING;
         this.paymentMethod = PaymentMethod.NOT_PAID;
         this.deliveryMethod = DeliveryMethod.PICKUP;
         this.isPaid = false;
@@ -146,7 +146,7 @@ public class Order {
         this.patientId = patientId;
         this.orderDate = orderDate;
         this.items = new ArrayList<>();
-        this.status = OrderStatus.PENDING;
+        this.status = Status.PENDING;
         this.totalAmount = 0.0;
         this.paymentMethod = PaymentMethod.NOT_PAID;
         this.deliveryMethod = DeliveryMethod.PICKUP;
@@ -265,7 +265,7 @@ public class Order {
             // Use UUID for unique reference instead of timestamp for better compatibility
             this.paymentReference = "Wallet Transaction: " + UUID.randomUUID().toString();
             
-            if (this.status == Status.PAYMENT_PENDING) {
+            if (this.status == Status.PAYMENT_PENDING || this.status == Status.PAYMENT_FAILED) {
                 this.status = Status.PROCESSING;
             }
         } else {
@@ -319,7 +319,7 @@ public class Order {
             // Create a reference with the UUID and the last 4 digits of the card
             this.paymentReference = "Card Transaction: " + UUID.randomUUID().toString() + "-" + cardNumber.substring(cardNumber.length() - 4);
             
-            if (this.status == Status.PAYMENT_PENDING) {
+            if (this.status == Status.PAYMENT_PENDING || this.status == Status.PAYMENT_FAILED) {
                 this.status = Status.PROCESSING;
             }
         } else {
@@ -414,20 +414,20 @@ public class Order {
     }
     
     /**
-     * Get the status of this order
+     * Get the current status of the order
      * 
-     * @return The status
+     * @return The order status
      */
-    public OrderStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
     
     /**
-     * Set the status of this order
+     * Set the status of the order
      * 
-     * @param status The status
+     * @param status The new status
      */
-    public void setStatus(OrderStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
     

@@ -1,0 +1,5 @@
+3|Dr. Ahmed Mahmoud|dr_ahmed|$SHA$nnb67NRPmEZLl0ZzIcqV/w==$2I8AUzfSF3p4OBbKceLJoL1B5aRzv891yUjcI7xW8CE=|null|null|Cardiology|EGP12345
+4|Dr. Nour El-Din|dr_nour|password|null|null|Neurology|EGP67890
+5|Dr. Mohamed Hassan|dr_mohamed|dr123|null|null|General Medicine|Medical License 12345
+6|Dr. Ahmed Mahmoud|dr_ahmed|1234|ahmed@elta3ban.com|01212345678|Cardiology|EGP12345
+7|Dr. Nour El-Din|dr_nour|password|nour@elta3ban.com|01512345678|Neurology|EGP67890

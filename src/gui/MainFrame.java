@@ -120,7 +120,9 @@ public class MainFrame extends JFrame {
             System.err.println("Auto-save failed: " + ex.getMessage());
         }
         
-        // Debug logging removed
+        // Debug logging
+        System.out.println("NAVIGATION: Requested to navigate to '" + destination + "'");
+        
         if (destination.equals("LOGOUT")) {
             logout();
             return;
@@ -136,6 +138,7 @@ public class MainFrame extends JFrame {
                 if (currentUser != null) {
                     switch (currentUser.getRole()) {
                         case ADMIN:
+                            System.out.println("NAVIGATION: Creating AdminDashboardPanel");
                             panel = new gui.admin.AdminDashboardPanel(this);
                             break;
                         case DOCTOR:
@@ -143,8 +146,7 @@ public class MainFrame extends JFrame {
                             panel = new gui.doctor.DoctorDashboard(this);
                             break;
                         case PHARMACIST:
-                            // TODO: Create pharmacist dashboard panel
-                            panel = new gui.admin.AdminDashboardPanel(this); // Temporary fallback
+                            panel = new gui.dashboard.PharmacistDashboardPanel(this);
                             break;
                         case PATIENT:
                             panel = new gui.dashboard.PatientDashboardPanel(this);
@@ -154,30 +156,37 @@ public class MainFrame extends JFrame {
                 break;
             case "MEDICINES":
                 // Create and show medicines panel
+                System.out.println("NAVIGATION: Creating MedicineManagementPanel via MEDICINES");
                 panel = new gui.admin.MedicineManagementPanel(this);
                 break;
             case "USERS":
                 // Create and show users panel
+                System.out.println("NAVIGATION: Creating UserManagementPanel via USERS");
                 panel = new gui.admin.UserManagementPanel(this);
                 break;
             case "REPORTS":
                 // Create and show reports panel
+                System.out.println("NAVIGATION: Creating ReportsPanel via REPORTS");
                 panel = new gui.admin.ReportsPanel(this);
                 break;
             case "MEDICINE_MANAGEMENT":
                 // Create and show medicine management panel
+                System.out.println("NAVIGATION: Creating MedicineManagementPanel via MEDICINE_MANAGEMENT");
                 panel = new gui.admin.MedicineManagementPanel(this);
                 break;
             case "USER_MANAGEMENT":
                 // Create and show user management panel
+                System.out.println("NAVIGATION: Creating UserManagementPanel via USER_MANAGEMENT");
                 panel = new gui.admin.UserManagementPanel(this);
                 break;
             case "INVENTORY_MANAGEMENT":
                 // Create and show inventory management panel (alias for medicine management)
+                System.out.println("NAVIGATION: Creating MedicineManagementPanel via INVENTORY_MANAGEMENT");
                 panel = new gui.admin.MedicineManagementPanel(this);
                 break;
             case "SYSTEM_SETTINGS":
                 // Create and show reports panel
+                System.out.println("NAVIGATION: Creating ReportsPanel via SYSTEM_SETTINGS");
                 panel = new gui.admin.ReportsPanel(this);
                 break;
             case "ORDERS":
@@ -185,18 +194,19 @@ public class MainFrame extends JFrame {
                 panel = new gui.dashboard.OrderManagementPanel(this);
                 break;
             case "PRESCRIPTIONS":
-                if (currentUser != null && currentUser.getRole() == UserRole.DOCTOR) {
-                    // TODO: Create and show doctor prescriptions panel
-                    panel = new gui.doctor.PrescriptionsPanel(this);
-                } else {
-                    // TODO: Create and show prescriptions panel for other users
-                    JOptionPane.showMessageDialog(this, 
-                        "Prescriptions panel will be implemented soon.", 
-                        "Coming Soon", 
-                        JOptionPane.INFORMATION_MESSAGE);
-                    // For now, return to dashboard
-                    navigateTo("DASHBOARD");
-                    return;
+                if (currentUser != null) {
+                    if (currentUser.getRole() == UserRole.DOCTOR) {
+                        panel = new gui.doctor.PrescriptionsPanel(this);
+                    } else if (currentUser.getRole() == UserRole.PHARMACIST) {
+                        panel = new gui.pharmacist.PrescriptionManagementPanel(this);
+                    } else {
+                        JOptionPane.showMessageDialog(this, 
+                            "Access denied. Only doctors and pharmacists can access prescriptions.", 
+                            "Access Denied", 
+                            JOptionPane.WARNING_MESSAGE);
+                        navigateTo("DASHBOARD");
+                        return;
+                    }
                 }
                 break;
             case "PATIENT_LIST":
@@ -235,12 +245,18 @@ public class MainFrame extends JFrame {
                     return;
                 }
                 break;
+            default:
+                System.out.println("NAVIGATION: Unknown destination '" + destination + "'");
+                break;
         }
         
         if (panel != null) {
+            System.out.println("NAVIGATION: Adding panel to mainContent: " + panel.getClass().getSimpleName());
             mainContent.add(panel, "CURRENT");
             CardLayout cl = (CardLayout)(mainContent.getLayout());
             cl.show(mainContent, "CURRENT");
+        } else {
+            System.err.println("NAVIGATION: Failed to create panel for destination '" + destination + "'");
         }
         
         mainContent.revalidate();

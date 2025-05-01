@@ -25,7 +25,7 @@ import java.util.List;
  * Panel for managing orders in the pharmacy system
  */
 public class OrderManagementPanel extends BasePanel {
-    private JTable orderTable;
+    private gui.components.StyledTable<Order> orderTable;
     private DefaultTableModel tableModel;
     private JTextField searchField;
     private JComboBox<String> statusFilterComboBox;
@@ -140,8 +140,8 @@ public class OrderManagementPanel extends BasePanel {
             }
         };
         
-        // Create table
-        orderTable = new JTable(tableModel);
+        // Create table using StyledTable for consistent theming
+        orderTable = new gui.components.StyledTable<>(tableModel);
         orderTable.setFont(ThemeFonts.REGULAR_MEDIUM);
         orderTable.setRowHeight(30);
         orderTable.setShowGrid(true);
@@ -223,7 +223,7 @@ public class OrderManagementPanel extends BasePanel {
             for (Order order : orders) {
                 // Apply status filter if needed
                 String selectedStatus = (String) statusFilterComboBox.getSelectedItem();
-                if (!"All Orders".equals(selectedStatus) && !order.getStatus().equals(selectedStatus)) {
+                if (!"All Orders".equals(selectedStatus) && !order.getStatus().getDisplayName().equals(selectedStatus)) {
                     continue;
                 }
                 
@@ -248,7 +248,7 @@ public class OrderManagementPanel extends BasePanel {
                     patientName,
                     dateFormat.format(order.getOrderDate()),
                     total,
-                    order.getStatus(),
+                    order.getStatus().getDisplayName(),
                     order.getItems().size()
                 };
                 tableModel.addRow(row);
@@ -280,7 +280,7 @@ public class OrderManagementPanel extends BasePanel {
             for (Order order : orders) {
                 // Apply status filter if needed
                 String selectedStatus = (String) statusFilterComboBox.getSelectedItem();
-                if (!"All Orders".equals(selectedStatus) && !order.getStatus().equals(selectedStatus)) {
+                if (!"All Orders".equals(selectedStatus) && !order.getStatus().getDisplayName().equals(selectedStatus)) {
                     continue;
                 }
                 
@@ -309,7 +309,7 @@ public class OrderManagementPanel extends BasePanel {
                         patientName,
                         dateFormat.format(order.getOrderDate()),
                         total,
-                        order.getStatus(),
+                        order.getStatus().getDisplayName(),
                         order.getItems().size()
                     };
                     tableModel.addRow(row);
@@ -369,7 +369,7 @@ public class OrderManagementPanel extends BasePanel {
                 
                 if (order != null) {
                     // Update order status to processing
-                    order.setStatus("Processing");
+                    order.setStatus(Order.Status.PROCESSING);
                     
                     // Refresh the table
                     loadOrdersData();
@@ -426,7 +426,7 @@ public class OrderManagementPanel extends BasePanel {
                 
                 if (order != null) {
                     // Update order status to cancelled
-                    order.setStatus("Cancelled");
+                    order.setStatus(Order.Status.CANCELLED);
                     
                     // Refresh the table
                     loadOrdersData();

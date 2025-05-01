@@ -349,6 +349,21 @@ public class RegistrationScreen extends BasePanel {
             return false;
         }
         
+        // Check for duplicate username across ALL user types upfront for better UX
+        String desiredUsername = usernameField.getText().trim();
+        if (service != null) {
+            boolean taken = service.getPatients().stream().anyMatch(p -> p.getUsername().equalsIgnoreCase(desiredUsername)) ||
+                           service.getDoctors().stream().anyMatch(d -> d.getUsername().equalsIgnoreCase(desiredUsername)) ||
+                           service.getPharmacists().stream().anyMatch(ph -> ph.getUsername().equalsIgnoreCase(desiredUsername)) ||
+                           service.getAdmins().stream().anyMatch(a -> a.getUsername().equalsIgnoreCase(desiredUsername));
+            if (taken) {
+                JOptionPane.showMessageDialog(this,
+                    "Username already exists. Please choose a different username.",
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        
         return true;
     }
     
@@ -451,6 +466,20 @@ public class RegistrationScreen extends BasePanel {
         String userType = (String) userTypeComboBox.getSelectedItem();
         
         try {
+            // Force initialize pharmacy service if needed
+            if (service == null) {
+                System.err.println("Service is null - trying to reinitialize");
+                service = mainFrame.getPharmacyService();
+                
+                if (service == null) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Cannot register: Service initialization failed", 
+                        "System Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            
             User newUser = null;
             boolean success = false;
             
@@ -460,6 +489,9 @@ public class RegistrationScreen extends BasePanel {
             String password = new String(passwordField.getPassword());
             String email = emailField.getText();
             String phone = phoneField.getText();
+            
+            System.out.println("Attempting to register a new " + userType + " account:");
+            System.out.println("Username: " + username);
             
             switch (userType) {
                 case "Patient":
@@ -486,26 +518,53 @@ public class RegistrationScreen extends BasePanel {
                     break;
             }
             
+            if (!success) {
+                System.err.println("Registration failed for userType=" + userType + " username=" + username);
+                String errorDetails = (newUser == null) ? "User creation failed." : "User created but not added to system.";
+                JOptionPane.showMessageDialog(this, 
+                    "Registration failed. " + errorDetails + "\nCheck console for details.", 
+                    "Registration Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             if (success && newUser != null) {
+                // Force save again to ensure data persistence
+                try {
+                    service.saveDataToFiles();
+                    System.out.println("All service data saved after successful registration");
+                } catch (Exception e) {
+                    System.err.println("Warning: Additional data save after registration failed: " + e.getMessage());
+                }
+                
                 JOptionPane.showMessageDialog(this, 
                     "Registration successful!\nPlease login with your new credentials.", 
                     "Success", JOptionPane.INFORMATION_MESSAGE);
                 clearFields();
                 mainFrame.showLoginScreen();
-            } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Registration failed. Please try again.", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
             }
             
         } catch (Exception e) {
+            System.err.println("Exception during registration: " + e.getMessage());
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, 
-                "An error occurred during registration: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE);
+                "An error occurred during registration:\n" + e.getMessage(), 
+                "Registration Error", 
+                JOptionPane.ERROR_MESSAGE);
         }
     }
     
     private Patient createPatient(String name, String username, String password, String email, String phone, String address) {
+        // Check if service is null
+        if (service == null) {
+            System.err.println("ERROR: PharmacyService is null in RegistrationScreen!");
+            JOptionPane.showMessageDialog(this, 
+                "Cannot register: Service is unavailable", 
+                "Service Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        
         // Check if username already exists
         if (service.getPatients().stream().anyMatch(p -> p.getUsername().equals(username))) {
             JOptionPane.showMessageDialog(this, 
@@ -520,11 +579,27 @@ public class RegistrationScreen extends BasePanel {
             .max()
             .orElse(0) + 1;
         
-        // Create and register the patient
+        System.out.println("Creating new patient with ID: " + nextPatientId);
+        
+        // Create the patient
         Patient newPatient = new Patient(nextPatientId, name, username, password, email, phone, address);
         
-        if (service.getPatientService().createAccount(newPatient)) {
-            return newPatient;
+        // Add to service and verify it was added successfully
+        boolean added = service.addPatient(newPatient);
+        System.out.println("Patient added to service: " + added);
+        
+        if (added) {
+            try {
+                // Explicitly save to files
+                utils.FileHandler.savePatients(service.getPatients());
+                System.out.println("Patient data saved to file");
+                return newPatient;
+            } catch (Exception e) {
+                System.err.println("Error saving patient data: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("PharmacyService.addPatient() returned false");
         }
         
         return null;
@@ -532,6 +607,16 @@ public class RegistrationScreen extends BasePanel {
     
     private Doctor createDoctor(String name, String username, String password, String email, String phone, 
                              String licenseNumber, String specialty) {
+        // Check if service is null
+        if (service == null) {
+            System.err.println("ERROR: PharmacyService is null in RegistrationScreen!");
+            JOptionPane.showMessageDialog(this, 
+                "Cannot register: Service is unavailable", 
+                "Service Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        
         // Check if username already exists
         if (service.getDoctors().stream().anyMatch(d -> d.getUsername().equals(username))) {
             JOptionPane.showMessageDialog(this, 
@@ -546,11 +631,27 @@ public class RegistrationScreen extends BasePanel {
             .max()
             .orElse(0) + 1;
         
-        // Create and register the doctor
-        Doctor newDoctor = new Doctor(nextDoctorId, name, username, password, email, phone, licenseNumber, specialty);
+        System.out.println("Creating new doctor with ID: " + nextDoctorId);
         
-        if (service.getDoctorService().createAccount(newDoctor)) {
-            return newDoctor;
+        // Create the doctor
+        Doctor newDoctor = new Doctor(nextDoctorId, name, username, password, email, phone, specialty, licenseNumber);
+        
+        // Add to service and verify it was added successfully
+        boolean added = service.addDoctor(newDoctor);
+        System.out.println("Doctor added to service: " + added);
+        
+        if (added) {
+            try {
+                // Explicitly save to files
+                utils.FileHandler.saveDoctors(service.getDoctors());
+                System.out.println("Doctor data saved to file");
+                return newDoctor;
+            } catch (Exception e) {
+                System.err.println("Error saving doctor data: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("PharmacyService.addDoctor() returned false");
         }
         
         return null;
@@ -558,11 +659,44 @@ public class RegistrationScreen extends BasePanel {
     
     private Pharmacist createPharmacist(String name, String username, String password, String email, String phone, 
                                      String licenseNumber, String qualification) {
+        // Check if service is null
+        if (service == null) {
+            System.err.println("ERROR: PharmacyService is null in RegistrationScreen!");
+            JOptionPane.showMessageDialog(this, 
+                "Cannot register: Service is unavailable", 
+                "Service Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        
         // Check if username already exists
         if (service.getPharmacists().stream().anyMatch(p -> p.getUsername().equals(username))) {
             JOptionPane.showMessageDialog(this, 
                 "Username already exists. Please choose a different username.", 
                 "Registration Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        
+        // Validate all required fields have appropriate content
+        if (name == null || name.trim().isEmpty() ||
+            username == null || username.trim().isEmpty() ||
+            password == null || password.trim().isEmpty() ||
+            email == null || email.trim().isEmpty() ||
+            phone == null || phone.trim().isEmpty() ||
+            licenseNumber == null || licenseNumber.trim().isEmpty() ||
+            qualification == null || qualification.trim().isEmpty()) {
+            
+            System.err.println("ERROR: One or more pharmacist fields are empty or null");
+            System.err.println("Name: " + (name != null ? name.length() : "null"));
+            System.err.println("Username: " + (username != null ? username.length() : "null"));
+            System.err.println("Email: " + (email != null ? email.length() : "null"));
+            System.err.println("Phone: " + (phone != null ? phone.length() : "null"));
+            System.err.println("License: " + (licenseNumber != null ? licenseNumber.length() : "null"));
+            System.err.println("Qualification: " + (qualification != null ? qualification.length() : "null"));
+            
+            JOptionPane.showMessageDialog(this, 
+                "Please fill in all required fields for pharmacist registration.", 
+                "Validation Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
         
@@ -572,12 +706,65 @@ public class RegistrationScreen extends BasePanel {
             .max()
             .orElse(0) + 1;
         
-        // Create and register the pharmacist
-        Pharmacist newPharmacist = new Pharmacist(nextPharmacistId, name, username, password, email, phone, 
-                                              licenseNumber, qualification);
+        System.out.println("Creating new pharmacist with ID: " + nextPharmacistId);
         
-        if (service.getPharmacistService().createAccount(newPharmacist)) {
-            return newPharmacist;
+        try {
+            // Create the pharmacist - tracing all the steps
+            System.out.println("Creating pharmacist with parameters:");
+            System.out.println("ID: " + nextPharmacistId);
+            System.out.println("Name: " + name);
+            System.out.println("Username: " + username);
+            System.out.println("Email: " + email);
+            System.out.println("Phone: " + phone);
+            System.out.println("License: " + licenseNumber);
+            System.out.println("Qualification: " + qualification);
+            
+            Pharmacist newPharmacist = new Pharmacist(nextPharmacistId, name, username, password, email, phone, 
+                                                  licenseNumber, qualification);
+            
+            if (newPharmacist == null) {
+                System.err.println("ERROR: Pharmacist constructor returned null");
+                return null;
+            }
+            
+            // Log before attempting to add to service
+            System.out.println("Pharmacist created successfully, adding to service");
+            
+            // Add to service and verify it was added successfully
+            boolean added = service.addPharmacist(newPharmacist);
+            System.out.println("Pharmacist added to service: " + added);
+            
+            if (added) {
+                try {
+                    // Explicitly save to files
+                    utils.FileHandler.savePharmacists(service.getPharmacists());
+                    System.out.println("Pharmacist data saved to file");
+                    return newPharmacist;
+                } catch (Exception e) {
+                    System.err.println("Error saving pharmacist data: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("PharmacyService.addPharmacist() returned false");
+                
+                // Try manual persistence as a workaround
+                try {
+                    System.out.println("Attempting manual addition to pharmacists list");
+                    service.getPharmacists().add(newPharmacist);
+                    utils.FileHandler.savePharmacists(service.getPharmacists());
+                    System.out.println("Manually added pharmacist to list and saved");
+                    return newPharmacist;
+                } catch (Exception e) {
+                    System.err.println("Manual save failed: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Exception creating pharmacist: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Error creating pharmacist account: " + e.getMessage(), 
+                "Registration Error", JOptionPane.ERROR_MESSAGE);
         }
         
         return null;

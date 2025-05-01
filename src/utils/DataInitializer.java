@@ -4,12 +4,94 @@ import models.*;
 import services.PharmacyService;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DataInitializer provides methods to initialize the pharmacy with test data
  * and to test various functionalities
  */
 public class DataInitializer {
+    
+    private List<Admin> admins;
+    private List<Doctor> doctors;
+    private List<Patient> patients;
+    private List<Pharmacist> pharmacists;
+    private List<Medicine> medicines;
+    private List<Order> orders;
+    private List<Prescription> prescriptions;
+    
+    public DataInitializer() {
+        admins = new ArrayList<>();
+        doctors = new ArrayList<>();
+        patients = new ArrayList<>();
+        pharmacists = new ArrayList<>();
+        medicines = new ArrayList<>();
+        orders = new ArrayList<>();
+        prescriptions = new ArrayList<>();
+        
+        initializeData();
+    }
+    
+    private void initializeData() {
+        initializeAdmins();
+        initializeDoctors();
+        initializePatients();
+        initializePharmacists();
+        initializeMedicines();
+        initializePrescriptions();
+        initializeOrders();
+    }
+    
+    private void initializeAdmins() {
+        Admin admin = new Admin(1, "Admin", "admin", "admin123", "admin@pharmacy.com", "01234567890", "Manager", "Management");
+        admins.add(admin);
+    }
+
+    private void initializeDoctors() {
+        Doctor doctor = new Doctor(1, "Dr. John", "doctor", "doctor123", "doctor@hospital.com", "01234567891", "General Medicine", "L12345");
+        doctors.add(doctor);
+    }
+
+    private void initializePatients() {
+        Patient patient = new Patient(1, "Patient One", "patient", "patient123", "patient@email.com", "01234567892", "123 Main St");
+        patients.add(patient);
+    }
+
+    private void initializePharmacists() {
+        Pharmacist pharmacist = new Pharmacist(1, "Pharmacist One", "pharmacist", "pharm123", "pharmacist@pharmacy.com", "01234567893", "PH12345", "Clinical");
+        pharmacists.add(pharmacist);
+    }
+
+    private void initializeMedicines() {
+        medicines.add(new Medicine(1, "Aspirin", "Pain reliever", "Pharma Co", 10.0, 100, "Pain Relief", false));
+        medicines.add(new Medicine(2, "Amoxicillin", "Antibiotic", "Pharma Co", 20.0, 50, "Antibiotics", true));
+    }
+
+    private void initializePrescriptions() {
+        if (!doctors.isEmpty() && !patients.isEmpty()) {
+            Prescription prescription = new Prescription(
+                1,
+                patients.get(0).getId(),
+                doctors.get(0).getId(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(30),
+                "Take as directed",
+                PrescriptionStatus.PENDING
+            );
+            prescriptions.add(prescription);
+        }
+    }
+
+    private void initializeOrders() {
+        if (!patients.isEmpty()) {
+            Order order = new Order(1, patients.get(0).getId());
+            if (!medicines.isEmpty()) {
+                order.addMedicine(medicines.get(0), 2);
+            }
+            orders.add(order);
+        }
+    }
     
     /**
      * Initialize pharmacy with test data and run test scenarios
@@ -321,7 +403,8 @@ public class DataInitializer {
             doctor.getId(), 
             LocalDate.now(), 
             LocalDate.now().plusDays(30), 
-            "Take as directed after meals"
+            "Take as directed after meals",
+            PrescriptionStatus.PENDING
         );
         
         // Add medicines to prescription
@@ -512,4 +595,13 @@ public class DataInitializer {
         
         System.out.println("Patient prescription functionalities tested successfully.");
     }
+
+    // Getters
+    public List<Admin> getAdmins() { return admins; }
+    public List<Doctor> getDoctors() { return doctors; }
+    public List<Patient> getPatients() { return patients; }
+    public List<Pharmacist> getPharmacists() { return pharmacists; }
+    public List<Medicine> getMedicines() { return medicines; }
+    public List<Order> getOrders() { return orders; }
+    public List<Prescription> getPrescriptions() { return prescriptions; }
 }

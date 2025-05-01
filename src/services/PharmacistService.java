@@ -235,7 +235,7 @@ public class PharmacistService {
         }
         
         // Update prescription status
-        selectedPrescription.setStatus(PrescriptionStatus.FILLED);
+        selectedPrescription.setStatus(PrescriptionStatus.COMPLETED);
         
         // Add to pharmacist's filled prescriptions
         pharmacist.getFilledPrescriptions().add(selectedPrescription);
@@ -660,7 +660,7 @@ public class PharmacistService {
         }
         
         // Update prescription status
-        prescription.setStatus(PrescriptionStatus.FILLED);
+        prescription.setStatus(PrescriptionStatus.COMPLETED);
         
         // Add to pharmacist's filled prescriptions
         pharmacist.getFilledPrescriptions().add(prescription);
@@ -798,5 +798,14 @@ public class PharmacistService {
         pharmacists.add(pharmacist);
         System.out.println("Pharmacist account created successfully for: " + pharmacist.getName());
         return true;
+    }
+
+    public void completePrescription(int prescriptionId) {
+        for (Prescription prescription : prescriptions) {
+            if (prescription.getId() == prescriptionId) {
+                prescription.setStatus(PrescriptionStatus.COMPLETED);
+                break;
+            }
+        }
     }
 }

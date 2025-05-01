@@ -31,7 +31,7 @@ import java.util.Map;
  * Panel for managing users in the pharmacy system
  */
 public class UserManagementPanel extends BasePanel {
-    private JTable userTable;
+    private gui.components.StyledTable<Object[]> userTable;
     private DefaultTableModel tableModel;
     private JTextField searchField;
     private JComboBox<String> userTypeComboBox;
@@ -43,6 +43,7 @@ public class UserManagementPanel extends BasePanel {
     public UserManagementPanel(MainFrame mainFrame) {
         super(mainFrame);
         setBackground(ThemeColors.BACKGROUND);
+        initializeComponents();
     }
     
     @Override
@@ -62,8 +63,32 @@ public class UserManagementPanel extends BasePanel {
         JPanel footerPanel = createFooterPanel();
         add(footerPanel, BorderLayout.SOUTH);
         
-        // Load data
-        loadUserData();
+        // Load data with error handling
+        try {
+            System.out.println("UserManagementPanel: Attempting to load user data...");
+            loadUserData();
+            System.out.println("UserManagementPanel: User data loaded successfully");
+        } catch (Exception e) {
+            System.err.println("CRITICAL ERROR in UserManagementPanel: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error loading user data: " + e.getMessage() + "\n\nCheck console for details.",
+                "Initialization Error", 
+                JOptionPane.ERROR_MESSAGE);
+            
+            // Add a label with error information instead of failing silently
+            JLabel errorLabel = new JLabel("Failed to load user data. Error: " + e.getMessage());
+            errorLabel.setForeground(Color.RED);
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            errorLabel.setFont(ThemeFonts.BOLD_MEDIUM);
+            
+            // Clear the content panel and add the error message
+            contentPanel.removeAll();
+            contentPanel.setLayout(new BorderLayout());
+            contentPanel.add(errorLabel, BorderLayout.CENTER);
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
     }
     
     private JPanel createHeaderPanel() {
@@ -152,7 +177,7 @@ public class UserManagementPanel extends BasePanel {
         };
         
         // Create table
-        userTable = new JTable(tableModel);
+        userTable = new gui.components.StyledTable<>(tableModel);
         userTable.setFont(ThemeFonts.REGULAR_MEDIUM);
         userTable.setRowHeight(30);
         userTable.setShowGrid(true);
@@ -374,12 +399,24 @@ public class UserManagementPanel extends BasePanel {
         }
         
         // Force initialize sample data if needed
-        if (service.getPatients() == null || service.getPatients().isEmpty() ||
-            service.getDoctors() == null || service.getDoctors().isEmpty()) {
-            System.out.println("No users found in service, initializing sample data");
-            service.initialize();
-            // Save to ensure data persists
-            service.saveDataToFiles();
+        try {
+            System.out.println("Checking service data availability");
+            if (service.getPatients() == null || service.getPatients().isEmpty() ||
+                service.getDoctors() == null || service.getDoctors().isEmpty()) {
+                System.out.println("No users found in service, initializing sample data");
+                service.initialize();
+                // Save to ensure data persists
+                service.saveDataToFiles();
+                System.out.println("Sample data initialized and saved");
+            }
+        } catch (Exception e) {
+            System.err.println("Error during data initialization: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error initializing data: " + e.getMessage(),
+                "Data Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
         // Log directly what's available in the service
@@ -663,44 +700,110 @@ public class UserManagementPanel extends BasePanel {
         String email = (String) tableModel.getValueAt(selectedRow, 4);
         String phone = (String) tableModel.getValueAt(selectedRow, 5);
         
-        // Create panel for user input
-        JPanel inputPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        // Create a custom dialog for editing user
+        JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Edit " + userRole, true);
+        dialog.setSize(450, 350);
+        dialog.setLocationRelativeTo(this);
         
-        // Fields for editing
-        JTextField nameField = new JTextField(userName, 20);
-        JTextField usernameField = new JTextField(username, 20);
+        // Create a panel for the dialog content
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBackground(gui.theme.ThemeColors.SURFACE);
+        
+        // Create form panel for fields
+        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        formPanel.setBackground(gui.theme.ThemeColors.SURFACE);
+        
+        // Create fields with styling
+        JTextField nameField = new JTextField(userName);
+        nameField.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        nameField.setBackground(gui.theme.ThemeColors.SURFACE);
+        nameField.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        JTextField usernameField = new JTextField(username);
+        usernameField.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        usernameField.setBackground(gui.theme.ThemeColors.SURFACE);
+        usernameField.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
         usernameField.setEnabled(false); // Don't allow username changes
-        JPasswordField passwordField = new JPasswordField(20);
-        JTextField emailField = new JTextField(email, 20);
-        JTextField phoneField = new JTextField(phone, 20);
         
-        // Add fields to panel
-        inputPanel.add(new JLabel("Name:"));
-        inputPanel.add(nameField);
-        inputPanel.add(new JLabel("Username (not editable):"));
-        inputPanel.add(usernameField);
-        inputPanel.add(new JLabel("New Password (leave blank to keep existing):"));
-        inputPanel.add(passwordField);
-        inputPanel.add(new JLabel("Email:"));
-        inputPanel.add(emailField);
-        inputPanel.add(new JLabel("Phone:"));
-        inputPanel.add(phoneField);
+        JPasswordField passwordField = new JPasswordField();
+        passwordField.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        passwordField.setBackground(gui.theme.ThemeColors.SURFACE);
+        passwordField.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
         
-        // Show input dialog
-        int result = JOptionPane.showConfirmDialog(
-            this,
-            inputPanel,
-            "Edit " + userRole,
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.PLAIN_MESSAGE
-        );
+        JTextField emailField = new JTextField(email);
+        emailField.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        emailField.setBackground(gui.theme.ThemeColors.SURFACE);
+        emailField.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
         
-        // Process input if user clicked OK
-        if (result == JOptionPane.OK_OPTION) {
+        JTextField phoneField = new JTextField(phone);
+        phoneField.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        phoneField.setBackground(gui.theme.ThemeColors.SURFACE);
+        phoneField.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        // Style labels
+        JLabel nameLabel = new JLabel("Name:");
+        nameLabel.setFont(gui.theme.ThemeFonts.BOLD_MEDIUM);
+        nameLabel.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        JLabel usernameLabel = new JLabel("Username (not editable):");
+        usernameLabel.setFont(gui.theme.ThemeFonts.BOLD_MEDIUM);
+        usernameLabel.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        JLabel passwordLabel = new JLabel("New Password (leave blank to keep existing):");
+        passwordLabel.setFont(gui.theme.ThemeFonts.BOLD_MEDIUM);
+        passwordLabel.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setFont(gui.theme.ThemeFonts.BOLD_MEDIUM);
+        emailLabel.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        JLabel phoneLabel = new JLabel("Phone:");
+        phoneLabel.setFont(gui.theme.ThemeFonts.BOLD_MEDIUM);
+        phoneLabel.setForeground(gui.theme.ThemeColors.TEXT_PRIMARY);
+        
+        // Add components to the form panel
+        formPanel.add(nameLabel);
+        formPanel.add(nameField);
+        formPanel.add(usernameLabel);
+        formPanel.add(usernameField);
+        formPanel.add(passwordLabel);
+        formPanel.add(passwordField);
+        formPanel.add(emailLabel);
+        formPanel.add(emailField);
+        formPanel.add(phoneLabel);
+        formPanel.add(phoneField);
+        
+        // Add the form panel to the main panel
+        panel.add(formPanel, BorderLayout.CENTER);
+        
+        // Create buttons panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonsPanel.setBackground(gui.theme.ThemeColors.SURFACE);
+        
+        // Create buttons with appropriate styling
+        JButton okButton = new JButton("OK");
+        okButton.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        okButton.setBackground(gui.theme.ThemeColors.PRIMARY);
+        okButton.setForeground(Color.WHITE);
+        okButton.setOpaque(true);
+        okButton.setBorderPainted(false);
+        okButton.setFocusPainted(false);
+        
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
+        cancelButton.setBackground(new Color(80, 80, 80)); // Dark gray
+        cancelButton.setForeground(Color.WHITE);
+        cancelButton.setOpaque(true);
+        cancelButton.setBorderPainted(false);
+        cancelButton.setFocusPainted(false);
+        
+        // Add action listeners
+        okButton.addActionListener(e -> {
             // Validate input
             if (nameField.getText().isEmpty() || emailField.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(
-                    this,
+                    dialog,
                     "Please fill in all required fields",
                     "Validation Error",
                     JOptionPane.ERROR_MESSAGE
@@ -712,9 +815,6 @@ public class UserManagementPanel extends BasePanel {
                 // Get user from service
                 User user = findUserById(userId);
                 if (user != null) {
-                    // Update common fields
-                    // user.setName(nameField.getText()); // Removed redundant name setting
-                    
                     // Update password if provided
                     String newPassword = new String(passwordField.getPassword());
                     if (!newPassword.isEmpty()) {
@@ -758,9 +858,12 @@ public class UserManagementPanel extends BasePanel {
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE
                     );
+                    
+                    // Close the dialog
+                    dialog.dispose();
                 } else {
                     JOptionPane.showMessageDialog(
-                        this,
+                        dialog,
                         "User not found",
                         "Error",
                         JOptionPane.ERROR_MESSAGE
@@ -768,13 +871,27 @@ public class UserManagementPanel extends BasePanel {
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(
-                    this,
+                    dialog,
                     "Error updating user: " + ex.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
                 );
             }
-        }
+        });
+        
+        // Cancel button just closes the dialog
+        cancelButton.addActionListener(e -> dialog.dispose());
+        
+        // Add buttons to the panel
+        buttonsPanel.add(okButton);
+        buttonsPanel.add(cancelButton);
+        
+        // Add buttons panel to the main panel
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
+        
+        // Add panel to dialog and show it
+        dialog.add(panel);
+        dialog.setVisible(true);
     }
     
     private User findUserById(int userId) {

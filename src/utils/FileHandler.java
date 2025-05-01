@@ -47,27 +47,30 @@ public class FileHandler {
         // Create data directory if it doesn't exist
         File dataDir = new File(DATA_DIR);
         if (!dataDir.exists()) {
-            dataDir.mkdir();
+            if (!dataDir.mkdir()) {
+                System.err.println("Failed to create data directory");
+                return;
+            }
         }
         
         // Create all files in a loop
-        Arrays.stream(ALL_FILES)
-              .map(file -> DATA_DIR + "/" + file)
-              .forEach(FileHandler::createFile);
-    }
-    
-    /**
-     * Create a file if it doesn't exist
-     * 
-     * @param filePath Path of the file to create
-     */
-    private static void createFile(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                logError("Error creating file: " + filePath, e);
+        for (String file : ALL_FILES) {
+            String filePath = DATA_DIR + "/" + file;
+            File f = new File(filePath);
+            if (!f.exists()) {
+                try {
+                    if (!f.createNewFile()) {
+                        System.err.println("Failed to create file: " + filePath);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error creating file " + filePath + ": " + e.getMessage());
+                }
+            }
+            
+            // Ensure file is readable and writable
+            if (!f.canRead() || !f.canWrite()) {
+                f.setReadable(true);
+                f.setWritable(true);
             }
         }
     }
@@ -627,12 +630,9 @@ public class FileHandler {
                 String email = parts[4].trim();
                 String phone = parts[5].trim();
                 String licenseNumber = parts[6].trim();
-                int pharmacyId = Integer.parseInt(parts[7].trim());
+                String qualification = parts[7].trim();
                 
-                Pharmacist pharmacist = new Pharmacist(id, name, username, password, email, phone, licenseNumber, "Qualified Pharmacist");
-                pharmacist.setPharmacyId(pharmacyId);
-                
-                return Optional.of(pharmacist);
+                return Optional.of(new Pharmacist(id, name, username, password, email, phone, licenseNumber, qualification));
             } catch (Exception e) {
                 logError("Error parsing pharmacist", e);
                 return Optional.empty();
@@ -646,17 +646,44 @@ public class FileHandler {
      * @param pharmacists List of Pharmacist objects to save
      */
     public static void savePharmacists(List<Pharmacist> pharmacists) {
-        saveEntities(pharmacists, PHARMACISTS_FILE, pharmacist -> 
-            String.format("%d|%s|%s|%s|%s|%s|%s|%d", 
-                pharmacist.getId(), 
-                pharmacist.getName(),
-                pharmacist.getUsername(),
-                pharmacist.getPassword(),
-                pharmacist.getEmail(),
-                pharmacist.getPhoneNumber(),
-                pharmacist.getLicenseNumber(),
-                pharmacist.getPharmacyId())
-        );
+        if (pharmacists == null) {
+            System.err.println("Cannot save null pharmacists list");
+            return;
+        }
+        
+        try {
+            // Create parent directories if they don't exist
+            File file = new File(PHARMACISTS_FILE);
+            if (!file.exists()) {
+                File parentDir = file.getParentFile();
+                if (parentDir != null && !parentDir.exists()) {
+                    parentDir.mkdirs();
+                }
+            }
+            
+            // Ensure file is writable
+            if (file.exists() && !file.canWrite()) {
+                file.setWritable(true);
+            }
+            
+            // Use saveEntities helper method to maintain consistency
+            saveEntities(pharmacists, PHARMACISTS_FILE, pharmacist -> 
+                String.format("%d|%s|%s|%s|%s|%s|%s|%s", 
+                    pharmacist.getId(), 
+                    pharmacist.getName(),
+                    pharmacist.getUsername(),
+                    pharmacist.getPassword(),
+                    pharmacist.getEmail(),
+                    pharmacist.getPhoneNumber(),
+                    pharmacist.getLicenseNumber(),
+                    pharmacist.getQualification())
+            );
+            
+            System.out.println("Successfully saved " + pharmacists.size() + " pharmacists to file");
+        } catch (Exception e) {
+            System.err.println("Error saving pharmacists to file: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     // ================ Pharmacy Methods ================
@@ -739,7 +766,7 @@ public class FileHandler {
                 LocalDate expiryDate = issueDate.plusDays(30);
                 
                 // Create prescription with appropriate constructor
-                Prescription prescription = new Prescription(id, patientId, doctorId, issueDate, expiryDate, PrescriptionStatus.PENDING, "Take as directed");
+                Prescription prescription = new Prescription(id, patientId, doctorId, issueDate, expiryDate, "Take as directed", PrescriptionStatus.PENDING);
                 
                 // Add medicines
                 if (!parts[4].trim().isEmpty()) {
@@ -808,5 +835,59 @@ public class FileHandler {
             
             return sb.toString();
         });
+    }
+
+    private static Prescription loadPrescription(String line) {
+        String[] parts = line.split(",");
+        if (parts.length >= 7) {
+            int id = Integer.parseInt(parts[0]);
+            int patientId = Integer.parseInt(parts[1]);
+            int doctorId = Integer.parseInt(parts[2]);
+            LocalDate issueDate = LocalDate.parse(parts[3]);
+            LocalDate expiryDate = LocalDate.parse(parts[4]);
+            String notes = parts[5];
+            PrescriptionStatus status = PrescriptionStatus.fromString(parts[6]);
+            
+            return new Prescription(id, patientId, doctorId, issueDate, expiryDate, notes, status);
+        }
+        return null;
+    }
+
+    /**
+     * Write a list of objects to a file
+     * 
+     * @param <T> Type of objects in the list
+     * @param filename The file to write to
+     * @param data The list of objects to write
+     * @throws IOException If an I/O error occurs
+     */
+    public static <T> void writeToFile(String filename, List<T> data) throws IOException {
+        File file = new File(filename);
+        file.getParentFile().mkdirs(); // Create directories if they don't exist
+        
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(data);
+        }
+    }
+    
+    /**
+     * Read a list of objects from a file
+     * 
+     * @param <T> Type of objects in the list
+     * @param filename The file to read from
+     * @return The list of objects read from the file
+     * @throws IOException If an I/O error occurs
+     * @throws ClassNotFoundException If the class of a serialized object cannot be found
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> readFromFile(String filename) throws IOException, ClassNotFoundException {
+        File file = new File(filename);
+        if (!file.exists()) {
+            return null;
+        }
+        
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (List<T>) ois.readObject();
+        }
     }
 }

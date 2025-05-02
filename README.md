@@ -23,14 +23,70 @@ A comprehensive pharmacy management system built in Java, featuring a complete h
 - Doctor-patient chat system
 
 ## Project Structure
-- `src/`: Source code
-  - `models/`: Data models (User, Admin, Patient, Doctor, etc.)
-  - `services/`: Business logic services
-  - `utils/`: Helper utilities and tools
-- `data/`: Data storage files
-- `docs/`: Documentation
-- `nbproject/`: NetBeans configuration
 
+```
+src/
+├── data/           # Data access and persistence
+├── gui/            # User interface components
+│   ├── admin/      # Admin-specific UI
+│   ├── components/ # Reusable UI components
+│   ├── dashboard/  # Dashboard views
+│   ├── doctor/     # Doctor-specific UI
+│   ├── navigation/ # Navigation components
+│   ├── pharmacist/ # Pharmacist-specific UI
+│   ├── screens/    # Main application screens
+│   └── theme/      # UI theming and styling
+├── models/         # Data models and entities
+├── resources/      # Application resources
+│   ├── icons/      # Application icons
+│   ├── config/     # Configuration files
+│   └── i18n/       # Internationalization
+├── services/       # Business logic and services
+└── utils/          # Utility classes
+
+test/
+├── unit/          # Unit tests
+├── integration/   # Integration tests
+└── resources/     # Test resources
+
+docs/
+├── api/           # API documentation
+├── user-guide/    # User documentation
+└── technical/     # Technical documentation
+```
+
+## Build System
+
+The project uses Maven for build automation. Key directories:
+- `target/` - Build output
+- `lib/` - External dependencies
+- `pom.xml` - Maven configuration
+
+## Development
+
+### Prerequisites
+- Java JDK 11 or higher
+- Maven 3.6 or higher
+
+### Building
+```bash
+mvn clean install
+```
+
+### Running Tests
+```bash
+mvn test
+```
+
+### Running the Application
+```bash
+mvn exec:java -Dexec.mainClass="PharmacyGUI"
+```
+
+## Documentation
+- API documentation is available in `docs/api/`
+- User guide is available in `docs/user-guide/`
+- Technical documentation is available in `docs/technical/`
 
 ## Setup in NetBeans
 

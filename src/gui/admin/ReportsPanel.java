@@ -34,6 +34,7 @@ public class ReportsPanel extends BasePanel {
     private JButton exportButton;
     private JButton printButton;
     private JButton backButton;
+    private JComboBox<String> exportFormatComboBox;
     
     public ReportsPanel(MainFrame mainFrame) {
         super(mainFrame);
@@ -170,14 +171,22 @@ public class ReportsPanel extends BasePanel {
             new EmptyBorder(15, 15, 15, 15)
         ));
         
+        // Export format combo box
+        JLabel formatLabel = new JLabel("Export Format:");
+        formatLabel.setFont(ThemeFonts.BOLD_MEDIUM);
+        exportFormatComboBox = new JComboBox<>(new String[] {"PDF", "Text"});
+        exportFormatComboBox.setFont(ThemeFonts.REGULAR_MEDIUM);
+        
         // Export button
-        exportButton = new StyledButton("Export to Text", ThemeIcons.EXPORT);
+        exportButton = new StyledButton("Export Report", ThemeIcons.EXPORT);
         exportButton.addActionListener(e -> exportReport());
         
         // Print button
         printButton = new StyledButton("Print Report", ThemeIcons.PRINT);
         printButton.addActionListener(e -> printReport());
         
+        panel.add(formatLabel);
+        panel.add(exportFormatComboBox);
         panel.add(exportButton);
         panel.add(printButton);
         
@@ -392,41 +401,48 @@ public class ReportsPanel extends BasePanel {
     
     private void exportReport() {
         try {
-            // Create file chooser for saving text file
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Save Report");
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+            String selectedFormat = (String) exportFormatComboBox.getSelectedItem();
+            String reportTitle = (String) reportTypeComboBox.getSelectedItem();
             
-            // Show save dialog
-            if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
-                return;
+            if ("PDF".equals(selectedFormat)) {
+                // Use PDFGenerator (which currently exports as text with a note about PDF limitation)
+                PDFGenerator.generatePDF(reportTitle, reportTextArea.getText(), this);
+            } else {
+                // Export directly as text file
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save Report");
+                fileChooser.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+                
+                // Show save dialog
+                if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                
+                // Get selected file and ensure it has .txt extension
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".txt")) {
+                    filePath += ".txt";
+                }
+                
+                // Write report content to file
+                try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                    fos.write(reportTextArea.getText().getBytes());
+                }
+                
+                // Show success message
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Report exported successfully to:\n" + filePath,
+                    "Export Complete",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    ThemeIcons.SUCCESS
+                );
+                
+                // Open the file
+                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                    Desktop.getDesktop().open(new File(filePath));
+                }
             }
-            
-            // Get selected file and ensure it has .txt extension
-            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-            if (!filePath.toLowerCase().endsWith(".txt")) {
-                filePath += ".txt";
-            }
-            
-            // Write report content to file
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                fos.write(reportTextArea.getText().getBytes());
-            }
-            
-            // Show success message
-            JOptionPane.showMessageDialog(
-                this,
-                "Report exported successfully to:\n" + filePath,
-                "Export Complete",
-                JOptionPane.INFORMATION_MESSAGE,
-                ThemeIcons.SUCCESS
-            );
-            
-            // Open the text file
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                Desktop.getDesktop().open(new File(filePath));
-            }
-            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                 this,

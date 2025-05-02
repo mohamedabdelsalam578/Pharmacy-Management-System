@@ -101,7 +101,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
         
         // Action buttons panel with improved layout
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new GridLayout(3, 1, 0, 6));
+        buttonsPanel.setLayout(new GridLayout(4, 1, 0, 6));
         buttonsPanel.setBackground(ThemeColors.SURFACE);
         
         // Simplified button design with more space-efficient layout
@@ -125,6 +125,17 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
             mainFrame.navigateTo("MEDICINES");
         });
         
+        // Order management button (new)
+        ActionButton orderManagementBtn = new ActionButton(
+            "Order Management",
+            "View and process customer orders",
+            ThemeIcons.ORDER
+        );
+        orderManagementBtn.addActionListener(e -> {
+            System.out.println("AdminDashboardPanel: Order Management button clicked, navigating to ORDERS");
+            mainFrame.navigateTo("ORDERS");
+        });
+        
         ActionButton reportsBtn = new ActionButton(
             "Reports",
             "Generate and view system reports",
@@ -138,6 +149,7 @@ public class AdminDashboardPanel extends BaseDashboardPanel {
         // Add buttons to panel
         buttonsPanel.add(userManagementBtn);
         buttonsPanel.add(inventoryManagementBtn);
+        buttonsPanel.add(orderManagementBtn);
         buttonsPanel.add(reportsBtn);
         
         // Add to summary panel

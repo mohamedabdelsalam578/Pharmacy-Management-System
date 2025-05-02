@@ -72,7 +72,7 @@ public class StyledTable<T> extends JTable {
         JTableHeader header = getTableHeader();
         header.setFont(ThemeFonts.BOLD_MEDIUM);
         header.setBackground(ThemeColors.PRIMARY);
-        header.setForeground(Color.WHITE);
+        header.setForeground(ThemeColors.TEXT_PRIMARY);
         header.setReorderingAllowed(false);
         
         // Set column widths

@@ -16,6 +16,7 @@ import models.Patient;
 import models.OrderItem;
 import gui.dashboard.ShoppingCartPanel;
 import models.Wallet;
+import gui.dashboard.PatientConsultationsPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -240,6 +241,7 @@ public class PatientDashboardPanel extends BaseDashboardPanel {
         // Add tabs to tabbed pane
         tabbedPane.addTab("Medicines", medicinesPanel);
         tabbedPane.addTab("Prescriptions", prescriptionsPanel);
+        tabbedPane.addTab("Consultations", new PatientConsultationsPanel(mainFrame));
         tabbedPane.addTab("Orders", ordersPanel);
         
         // Wallet Tab

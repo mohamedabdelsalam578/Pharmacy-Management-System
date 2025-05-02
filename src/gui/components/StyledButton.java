@@ -49,7 +49,7 @@ public class StyledButton extends JButton {
     
     private void initialize() {
         setFont(ThemeFonts.BOLD_SECTION);
-        setForeground(ThemeColors.TEXT_PRIMARY);
+        setForeground(Color.WHITE);
         setBackground(ThemeColors.PRIMARY);
         setFocusPainted(false);
         setBorderPainted(false);

@@ -37,6 +37,8 @@ public class OrderManagementPanel extends BasePanel {
     public OrderManagementPanel(MainFrame mainFrame) {
         super(mainFrame);
         setBackground(ThemeColors.BACKGROUND);
+        // Build UI immediately so the panel is not empty when shown
+        initializeComponents();
     }
     
     @Override

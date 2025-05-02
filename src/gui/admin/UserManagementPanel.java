@@ -784,7 +784,7 @@ public class UserManagementPanel extends BasePanel {
         // Create buttons with appropriate styling
         JButton okButton = new JButton("OK");
         okButton.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
-        okButton.setBackground(gui.theme.ThemeColors.PRIMARY);
+        okButton.setBackground(ThemeColors.PRIMARY);
         okButton.setForeground(Color.WHITE);
         okButton.setOpaque(true);
         okButton.setBorderPainted(false);
@@ -792,7 +792,7 @@ public class UserManagementPanel extends BasePanel {
         
         JButton cancelButton = new JButton("Cancel");
         cancelButton.setFont(gui.theme.ThemeFonts.REGULAR_MEDIUM);
-        cancelButton.setBackground(new Color(80, 80, 80)); // Dark gray
+        cancelButton.setBackground(ThemeColors.PRIMARY);
         cancelButton.setForeground(Color.WHITE);
         cancelButton.setOpaque(true);
         cancelButton.setBorderPainted(false);

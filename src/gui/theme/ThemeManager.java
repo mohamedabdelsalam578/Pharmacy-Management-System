@@ -578,14 +578,12 @@ public class ThemeManager {
         UIManager.put("OptionPane.sameSizeButtons", true);
         
         // Set custom button styling
-        UIManager.put("OptionPane.okButtonText", "OK");
-        UIManager.put("OptionPane.cancelButtonText", "Cancel");
-        UIManager.put("OptionPane.yesButtonText", "Yes");
-        UIManager.put("OptionPane.noButtonText", "No");
-        
-        // Add more padding to message area
-        UIManager.put("OptionPane.messageAreaBorder", new EmptyBorder(16, 16, 16, 16));
-        UIManager.put("OptionPane.buttonAreaBorder", new EmptyBorder(0, 16, 16, 16));
+        UIManager.put("Button.background", ThemeColors.PRIMARY);
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Button.select", ThemeColors.PRIMARY_HOVER);
+        UIManager.put("Button.focus", ThemeColors.PRIMARY_HOVER);
+        UIManager.put("Button.border", BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        UIManager.put("Button.defaultButtonFollowsFocus", Boolean.FALSE);
     }
     
     /**
@@ -637,7 +635,7 @@ public class ThemeManager {
         // Ensure cancel button has good contrast
         Color darkGray = new Color(80, 80, 80);
         UIManager.put("FileChooser.cancelButtonBackground", darkGray);
-        UIManager.put("FileChooser.cancelButtonForeground", Color.WHITE);
+        UIManager.put("FileChooser.cancelButtonForeground", ThemeColors.PRIMARY);
         
         // Make sure buttons are opaque to show background color
         UIManager.put("FileChooser.buttonOpaque", Boolean.TRUE);
@@ -732,16 +730,16 @@ public class ThemeManager {
     private static void styleButton(JButton button) {
         button.setFont(ThemeFonts.REGULAR_MEDIUM);
         
-        // Default styling - dark background with white text
-        button.setForeground(Color.WHITE);
-        button.setBackground(ThemeColors.PRIMARY);
+        // Default styling - dark gray background with blue text for all buttons
+        button.setForeground(ThemeColors.PRIMARY);
+        button.setBackground(new Color(80, 80, 80));
         
         // Make sure button is opaque to show background
         button.setOpaque(true);
         button.setContentAreaFilled(true);
         
         button.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ThemeColors.PRIMARY_DARK, 1),
+            BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
             BorderFactory.createEmptyBorder(8, 16, 8, 16)
         ));
         button.setFocusPainted(false);
@@ -750,12 +748,12 @@ public class ThemeManager {
         MouseAdapter hoverListener = new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(ThemeColors.PRIMARY_HOVER);
+                button.setBackground(new Color(90, 90, 90));
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(ThemeColors.PRIMARY);
+                button.setBackground(new Color(80, 80, 80));
             }
         };
         
@@ -767,35 +765,6 @@ public class ThemeManager {
         }
         
         button.addMouseListener(hoverListener);
-        
-        // Style specific buttons
-        String text = button.getText();
-        if (text != null) {
-            if (text.equals("Cancel") || text.equals("No")) {
-                button.setBackground(ThemeColors.SECONDARY);
-                button.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(ThemeColors.SECONDARY_DARK, 1),
-                    BorderFactory.createEmptyBorder(8, 16, 8, 16)
-                ));
-                
-                // Update hover colors
-                MouseAdapter secondaryHoverListener = new MouseAdapter() {
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        button.setBackground(ThemeColors.SECONDARY_DARK);
-                    }
-                    
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        button.setBackground(ThemeColors.SECONDARY);
-                    }
-                };
-                
-                // Replace the listener
-                button.removeMouseListener(hoverListener);
-                button.addMouseListener(secondaryHoverListener);
-            }
-        }
     }
     
     /**
@@ -804,12 +773,12 @@ public class ThemeManager {
      */
     public static void initializeModernUI() {
         // Apply standard button styling for all option panes
-        UIManager.put("Button.background", ThemeColors.PRIMARY);
-        UIManager.put("Button.foreground", Color.WHITE);
-        UIManager.put("Button.focus", ThemeColors.PRIMARY_DARK);
-        UIManager.put("Button.select", ThemeColors.PRIMARY_HOVER);
+        UIManager.put("Button.background", new Color(80, 80, 80));
+        UIManager.put("Button.foreground", ThemeColors.PRIMARY);
+        UIManager.put("Button.focus", new Color(90, 90, 90));
+        UIManager.put("Button.select", new Color(90, 90, 90));
         UIManager.put("Button.border", BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ThemeColors.PRIMARY_DARK, 1),
+            BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
             BorderFactory.createEmptyBorder(8, 16, 8, 16)
         ));
         
@@ -821,21 +790,19 @@ public class ThemeManager {
         // Dialog and OptionPane styling
         UIManager.put("OptionPane.buttonOpaque", Boolean.TRUE);
         UIManager.put("OptionPane.buttonBorder", BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ThemeColors.PRIMARY_DARK, 1),
+            BorderFactory.createLineBorder(new Color(60, 60, 60), 1),
             BorderFactory.createEmptyBorder(8, 16, 8, 16)
         ));
         
         // File chooser specific styling
         UIManager.put("FileChooser.cancelButtonText", "Cancel");
         UIManager.put("FileChooser.cancelButtonToolTipText", "Cancel file selection");
-        // Dark gray background for cancel buttons
-        Color cancelButtonBackground = new Color(80, 80, 80);
-        UIManager.put("FileChooser.cancelButtonBackground", cancelButtonBackground);
-        UIManager.put("FileChooser.cancelButtonForeground", Color.WHITE);
+        UIManager.put("FileChooser.cancelButtonBackground", new Color(80, 80, 80));
+        UIManager.put("FileChooser.cancelButtonForeground", ThemeColors.PRIMARY);
         
-        // Override JOptionPane cancel button coloring 
-        UIManager.put("OptionPane.cancelButtonBackground", new Color(80, 80, 80));
-        UIManager.put("OptionPane.cancelButtonForeground", Color.WHITE);
+        // Override JOptionPane button coloring for consistency
+        UIManager.put("OptionPane.buttonBackground", new Color(80, 80, 80));
+        UIManager.put("OptionPane.buttonForeground", ThemeColors.PRIMARY);
         
         // General styling for all dialogs
         UIManager.put("Panel.background", ThemeColors.SURFACE);

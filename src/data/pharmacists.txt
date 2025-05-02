@@ -1,7 +1,6 @@
-10|Ahmed Mahmoud|pharmacist|password123|ahmed@pharmacy.com|01234567890|PHR12345|Certified Pharmacist
-11|Fatima Ali|fatima|pharma456|fatima@pharmacy.com|01098765432|PHR67890|Clinical Pharmacist
-12|Mohamed Hassan|mhassan|mh1234|mhassan@pharmacy.com|01112223344|PHR22334|Hospital Pharmacist
-13|Test User|test|test|test@test.com|01000000000|PHR00000|Test Pharmacist
-100|Default Pharmacist|pharm|pharm123|default@pharmacy.com|01000000000|PHR12345|Staff Pharmacist
-
-97|Simple Pharmacist|simplepharm|pharm123|pharm@pharmacy.com|01000000000|PHR12345|Staff
+11|null|pharmacist|password123|ahmed@pharmacy.com|01234567890|PHR12345|Certified Pharmacist
+12|null|fatima|pharma456|fatima@pharmacy.com|01098765432|PHR67890|Clinical Pharmacist
+13|null|mhassan|mh1234|mhassan@pharmacy.com|01112223344|PHR22334|Hospital Pharmacist
+14|null|test|test|test@test.com|01000000000|PHR00000|Test Pharmacist
+15|null|pharm|pharm123|default@pharmacy.com|01000000000|PHR12345|Staff Pharmacist
+16|null|simplepharm|pharm123|pharm@pharmacy.com|01000000000|PHR12345|Staff

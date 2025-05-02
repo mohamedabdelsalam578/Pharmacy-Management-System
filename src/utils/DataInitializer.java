@@ -59,7 +59,7 @@ public class DataInitializer {
     }
 
     private void initializePharmacists() {
-        Pharmacist pharmacist = new Pharmacist(1, "Pharmacist One", "pharmacist", "pharm123", "pharmacist@pharmacy.com", "01234567893", "PH12345", "Clinical");
+        Pharmacist pharmacist = new Pharmacist(90, "Pharmacist One", "pharmacist", "pharm123", "pharmacist@pharmacy.com", "01234567893", "PH12345", "Clinical");
         pharmacists.add(pharmacist);
     }
 

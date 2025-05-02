@@ -48,7 +48,7 @@ public class ModernDialog {
                 // Apply specific styling to Cancel buttons
                 if ("Cancel".equals(button.getText())) {
                     button.setBackground(new Color(80, 80, 80));
-                    button.setForeground(Color.WHITE);
+                    button.setForeground(ThemeColors.PRIMARY);
                 }
             }
             // Recursively process nested containers
